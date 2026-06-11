@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Gamepad2, Users, Trophy } from 'lucide-react'
+import { Gamepad2, Users, Trophy, Shield } from 'lucide-react'
 
 const features = [
   {
@@ -12,6 +12,7 @@ const features = [
     borderColor: 'rgba(124, 58, 237, 0.4)',
     hoverShadow: '0 0 30px rgba(124, 58, 237, 0.3), 0 0 60px rgba(124, 58, 237, 0.1)',
     badge: '01',
+    stat: '128 Slots',
   },
   {
     icon: Users,
@@ -21,6 +22,7 @@ const features = [
     borderColor: 'rgba(6, 182, 212, 0.4)',
     hoverShadow: '0 0 30px rgba(6, 182, 212, 0.3), 0 0 60px rgba(6, 182, 212, 0.1)',
     badge: '02',
+    stat: '500+ Jugadores',
   },
   {
     icon: Trophy,
@@ -30,6 +32,17 @@ const features = [
     borderColor: 'rgba(245, 158, 11, 0.4)',
     hoverShadow: '0 0 30px rgba(245, 158, 11, 0.3), 0 0 60px rgba(245, 158, 11, 0.1)',
     badge: '03',
+    stat: '150+ Realizados',
+  },
+  {
+    icon: Shield,
+    title: 'Staff Profesional',
+    description: 'Equipo dedicado y comprometido que asegura la calidad del roleplay en cada momento',
+    color: '#22c55e',
+    borderColor: 'rgba(34, 197, 94, 0.4)',
+    hoverShadow: '0 0 30px rgba(34, 197, 94, 0.3), 0 0 60px rgba(34, 197, 94, 0.1)',
+    badge: '04',
+    stat: '24/7 Disponible',
   },
 ]
 
@@ -39,6 +52,16 @@ export default function Features() {
       {/* Background */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#030712] via-[#0f172a] to-[#030712]" />
       <div className="absolute inset-0 hex-pattern opacity-30" />
+
+      {/* Morphing blob accents */}
+      <div
+        className="absolute top-1/4 -right-32 w-64 h-64 bg-[#7c3aed]/5 animate-morph-blob"
+        style={{ filter: 'blur(80px)' }}
+      />
+      <div
+        className="absolute bottom-1/4 -left-32 w-72 h-72 bg-[#06b6d4]/5 animate-morph-blob"
+        style={{ filter: 'blur(80px)', animationDelay: '4s' }}
+      />
 
       <div className="relative z-10 max-w-6xl mx-auto">
         {/* Section title */}
@@ -52,17 +75,20 @@ export default function Features() {
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
             A Qué Nos <span className="text-[#7c3aed] neon-text-glow">Dedicamos</span>
           </h2>
+          <p className="text-[#94a3b8] text-base sm:text-lg max-w-2xl mx-auto mb-6">
+            Todo lo que necesitas para vivir la mejor experiencia de roleplay
+          </p>
           <div className="w-24 h-1 mx-auto rounded-full bg-gradient-to-r from-[#7c3aed] to-[#06b6d4] shadow-[0_0_15px_rgba(124,58,237,0.5)]" />
         </motion.div>
 
         {/* Feature cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
           {features.map((feature, index) => {
             const Icon = feature.icon
             return (
               <motion.div
                 key={feature.title}
-                className="group relative rounded-xl bg-[#0f172a] p-6 sm:p-8 card-3d shimmer-sweep transition-all duration-300 hover:scale-[1.02] cursor-default"
+                className="group relative rounded-xl bg-[#0f172a] p-6 sm:p-7 card-lift shimmer-sweep cursor-default overflow-hidden"
                 style={{
                   border: `1px solid ${feature.borderColor}`,
                   boxShadow: `0 0 10px ${feature.borderColor.split('0.4').join('0.1')}30`,
@@ -70,7 +96,7 @@ export default function Features() {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-50px' }}
-                transition={{ duration: 0.5, delay: index * 0.15 }}
+                transition={{ duration: 0.5, delay: index * 0.12 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.boxShadow = feature.hoverShadow
                 }}
@@ -96,39 +122,52 @@ export default function Features() {
                   }}
                 />
 
+                {/* Hover gradient overlay */}
+                <div
+                  className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"
+                  style={{
+                    background: `radial-gradient(ellipse at top, ${feature.color}08 0%, transparent 70%)`,
+                  }}
+                />
+
                 {/* Icon with pulse glow */}
                 <div
-                  className="inline-flex items-center justify-center w-16 h-16 rounded-xl mb-6 transition-all duration-300 group-hover:scale-110 animate-icon-pulse-glow"
+                  className="inline-flex items-center justify-center w-14 h-14 rounded-xl mb-5 transition-all duration-300 group-hover:scale-110 group-hover:rotate-[3deg]"
                   style={{
                     backgroundColor: `${feature.color}12`,
                     boxShadow: `0 0 15px ${feature.color}20`,
                     color: feature.color,
+                    border: `1px solid ${feature.color}25`,
                   }}
                 >
                   <Icon
-                    className="w-8 h-8 transition-all duration-300"
+                    className="w-7 h-7 transition-all duration-300"
                     style={{ color: feature.color }}
                   />
                 </div>
 
-                {/* Glow-line separator between icon and text */}
-                <div
-                  className="glow-line mb-6"
-                  style={{
-                    background: `linear-gradient(90deg, transparent, ${feature.color}60, transparent)`,
-                    boxShadow: `0 0 8px ${feature.color}30`,
-                  }}
-                />
-
                 {/* Title */}
-                <h3 className="text-xl sm:text-2xl font-bold text-white mb-3">
+                <h3 className="text-lg sm:text-xl font-bold text-white mb-2">
                   {feature.title}
                 </h3>
 
                 {/* Description */}
-                <p className="text-[#94a3b8] text-sm sm:text-base leading-relaxed">
+                <p className="text-[#94a3b8] text-sm leading-relaxed mb-4">
                   {feature.description}
                 </p>
+
+                {/* Stat badge at bottom */}
+                <div
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium"
+                  style={{
+                    backgroundColor: `${feature.color}10`,
+                    color: feature.color,
+                    border: `1px solid ${feature.color}20`,
+                  }}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: feature.color }} />
+                  {feature.stat}
+                </div>
 
                 {/* Bottom glow on hover */}
                 <div
@@ -136,6 +175,14 @@ export default function Features() {
                   style={{
                     background: `linear-gradient(90deg, transparent, ${feature.color}, transparent)`,
                     boxShadow: `0 0 15px ${feature.color}60`,
+                  }}
+                />
+
+                {/* Corner accent glow — top-left */}
+                <div
+                  className="absolute top-0 left-0 w-16 h-16 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                  style={{
+                    background: `radial-gradient(circle at top left, ${feature.color}10, transparent 70%)`,
                   }}
                 />
               </motion.div>

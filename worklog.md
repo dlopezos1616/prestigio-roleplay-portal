@@ -531,3 +531,231 @@ Stage Summary:
 12. Add more interactive features: map viewer, vehicle showcase, RP scenarios
 13. Add a "How to Connect" step-by-step guide section
 14. Implement real-time player count via WebSocket or polling from FiveM server
+
+---
+Task ID: 5
+Agent: full-stack-developer
+Task: Create Cookie Consent banner component
+
+Work Log:
+- Created `/home/z/my-project/src/components/layout/CookieConsent.tsx` with full GDPR-compliant cookie consent banner
+- Implemented glass morphism styling: `bg-[#0f172a]/90 backdrop-blur-xl border border-[#7c3aed]/20` with neon glow shadow
+- Added framer-motion AnimatePresence for slide-up/slide-down animation (spring transition, damping 25, stiffness 300)
+- Implemented lazy initialization for useState to avoid SSR mismatch: `useState(() => typeof window !== 'undefined' ? ... : null)`
+- localStorage key `prestigio-cookie-consent` stores consent state; `prestigio-cookie-consent-prefs` stores toggle preferences
+- Banner does NOT show if user already made a choice (checks localStorage on mount)
+- Three action buttons: "Rechazar Todo" (red outline), "Configurar" (cyan outline with Settings icon), "Aceptar Todo" (purple filled with neon glow)
+- Expandable preferences panel with AnimatePresence height animation
+- Three toggle switches: Essential (always on, disabled), Analytics (toggleable), Marketing (toggleable)
+- Custom toggle buttons with purple glow when active, smooth thumb transition
+- "Guardar Preferencias" button in preferences panel
+- Responsive: buttons stack vertically on mobile, horizontal on sm+
+- Cookie icon in header, Shield icon next to title
+- Added CookieConsent import and placement to `src/app/page.tsx` between BackToTop and DevLogin
+- Lint passes with zero errors
+
+Stage Summary:
+- CookieConsent.tsx component created with neon dark theme, glass morphism, GDPR compliance
+- Integrated into main layout in page.tsx
+- Persistent consent via localStorage, no SSR hydration issues
+- Responsive design with mobile-first button stacking
+
+---
+Task ID: 2
+Agent: full-stack-developer
+Task: Create Streamers/Content Creators section component
+
+Work Log:
+- Read existing project structure, worklog.md, Hero.tsx, Testimonials.tsx, Facciones.tsx, and globals.css to understand design patterns and CSS utility classes
+- Created `/home/z/my-project/src/components/sections/Streamers.tsx` with full implementation:
+  - Streamer interface with name, platform, followers, isLive, viewerCount, description, gradient fields
+  - 6 hardcoded mock streamers matching spec (RPKing_, LaJoséRP, NightCityVibes, DocMartinez, MecánicoMax, ShadowOps)
+  - Custom `useCounter` hook with eased cubic animation for follower count
+  - `TwitchIcon` inline SVG component (matching Discord icon pattern from Hero.tsx)
+  - `PlatformBadge` component with Twitch purple / YouTube red styling
+  - `LiveIndicator` with ping animation (animate-ping) + viewer count + Eye icon
+  - `OfflineIndicator` with gray dot
+  - `StreamerAvatar` with gradient fallback, platform mini-badge overlay
+  - `FeaturedStreamerCard` — large hero card with animated rotating gradient border (animate-rotate-border), radial glow, accent shimmer line, pulsing live ring, neon-text-glow name, counter animation, "Ver Stream" CTA button
+  - `StreamerCard` — compact cards with shimmer-sweep, hover scale/rotateY, border glow intensification on hover
+  - Main `Streamers` section with staggered framer-motion animations, responsive grid (1 col mobile, 2 col sm, 3 col lg), decorative glow orbs, grid pattern overlay
+  - Section header: "Creadores de Contenido" with Tv icon, subtitle, gradient divider
+  - Bottom CTA "Contáctanos" link with hover-underline
+- Added Streamers import and placed `<Streamers />` after Testimonials in page.tsx HomePage
+- Lint passes with 0 errors
+- Dev server compiles successfully
+
+Stage Summary:
+- Produced `/home/z/my-project/src/components/sections/Streamers.tsx` — complete Streamers/Content Creators section
+- Integrated into HomePage between Testimonials and StatsCounter
+- All animations (framer-motion stagger, hover scale/rotate, counter, ping, shimmer) working
+- Responsive layout: mobile single column → sm 2-col → lg 3-col grid
+- Uses existing CSS utility classes: neon-text-glow, animate-rotate-border, shimmer-sweep, accent-shimmer-line, grid-pattern, hover-underline, animate-pulse-ring
+
+---
+Task ID: 1
+Agent: full-stack-developer
+Task: Create Leaderboard/Rankings section
+
+Work Log:
+- Created `/home/z/my-project/src/components/sections/Leaderboard.tsx` with full neon dark theme
+- Implemented PlayerRank interface and hardcoded mock data for 10 players
+- Built FilterTabs component (Semana/Mes/Temporada) with pill-style tabs and active neon glow using framer-motion layoutId animation
+- Built PodiumCard component for Top 3 with Gold/Silver/Bronze styling:
+  - Gold (#ffd700): center position, Crown icon with float animation, sparkle particles, animate-popular-glow
+  - Silver (#c0c0c0): left position, Medal icon
+  - Bronze (#cd7f32): right position, Medal icon
+- Built RankRow component for ranks 4-10 with alternating backgrounds, hover neon glow intensification, responsive layout
+- Implemented useCountUp hook using requestAnimationFrame for counter animations on hours played
+- Used existing CSS classes: shimmer-sweep, glow-line, hex-pattern, neon-text-glow-amber, animate-popular-glow, sparkle
+- Used lucide-react icons: Trophy, Medal, Crown, TrendingUp, TrendingDown, Minus, Clock, Flame, Zap
+- Added AvatarCircle component with gradient fallback based on faction color
+- Added FactionBadge component with faction-colored styling
+- Responsive design: mobile single column, desktop full layout with flex ordering for podium
+- Added AnimatePresence for filter tab transitions
+- Added Leaderboard import and placement in HomePage between StatsCounter and ServerStatusWidget
+- Lint passes with 0 errors, dev server compiles successfully
+
+Stage Summary:
+- New file: `/home/z/my-project/src/components/sections/Leaderboard.tsx` (~330 lines)
+- Updated: `/home/z/my-project/src/app/page.tsx` (added import + placed in HomePage)
+- Leaderboard section now live on the home page with animated podium, filter tabs, counter animations, and rank list
+
+---
+Task ID: 3
+Agent: full-stack-developer
+Task: Create Interactive City Map page component
+
+Work Log:
+- Created `/home/z/my-project/src/components/sections/CityMap.tsx` — full interactive SVG-based city map component (~470 lines)
+- Implemented cyberpunk-style SVG map with grid lines, major roads (glowing), water areas (cyan tint), building blocks, scanline overlay, and vignette
+- Created 10 interactive location markers with category-based colors, pulse animations, hover tooltips, and icon overlays
+- Built category filter system (Policía, EMS, Negocios, Crimen, Talleres) with neon-glow toggle buttons
+- Implemented slide-in Details Panel showing location name, category, description, coordinates, and live status indicator
+- Added LocationMarker sub-component with framer-motion animate/exit transitions, pulse rings, and glow effects
+- Added BuildingBlocks SVG sub-component with colored outlines matching faction territories
+- Added quick-list category cards below the map showing location counts per category
+- Registered 'mapa' page ID in navigation.ts (pageToHash, hashToPage)
+- Added Map icon + 'Mapa' nav item in Navbar.tsx (between Facciones and Info)
+- Added CityMap import + route case in page.tsx
+- Lint passes with 0 errors, dev server compiles successfully
+
+Stage Summary:
+- New file: `/home/z/my-project/src/components/sections/CityMap.tsx` (~470 lines)
+- Updated: `/home/z/my-project/src/lib/navigation.ts` (added 'mapa' PageId + hash mappings)
+- Updated: `/home/z/my-project/src/components/layout/Navbar.tsx` (added Map icon import + nav item)
+- Updated: `/home/z/my-project/src/app/page.tsx` (added CityMap import + 'mapa' route)
+- Interactive city map accessible via navbar "Mapa" link or #mapa hash
+
+---
+Task ID: 4
+Agent: Main Agent
+Task: Enhance Hero with canvas particle system, styling improvements, and section dividers
+
+Work Log:
+- Created `/home/z/my-project/src/components/layout/ParticleCanvas.tsx` — canvas-based particle system with:
+  - 80 particles with 3 types: dot, ring, cross
+  - Mouse interaction — particles gently push away from cursor
+  - Particle connections — faint lines between nearby particles
+  - Mouse glow effect — radial gradient follows cursor
+  - Lifecycle animation — fade in/out, pulsing opacity
+- Rewrote `/home/z/my-project/src/components/sections/Hero.tsx` with major enhancements:
+  - Replaced CSS particles with canvas particle system
+  - Added parallax scrolling on background image and content (useScroll + useTransform)
+  - Added third orbit ring with amber orb for more visual depth
+  - Added quick stats row below CTA buttons (500+ Jugadores, 24/7 Online, 99.8% Uptime)
+  - Added additional radial glows (amber bottom-left, cyan top-right)
+  - Content fades out with parallax on scroll
+- Created `/home/z/my-project/src/components/layout/SectionDivider.tsx` — animated neon line divider with center dot
+  - 3 variants: default (purple), cyan, amber
+  - Animated with framer-motion whileInView
+- Added 12 section dividers between all home page sections for visual rhythm
+- Enhanced `/home/z/my-project/src/app/globals.css` with 150+ lines of new CSS utilities:
+  - `.section-divider` — neon line with pulsing center dot
+  - `.card-lift` — 3D hover lift with shadow
+  - `.neon-underline` — animated gradient underline on hover
+  - `.animate-status-glow` — pulsing glow for badges
+  - `.prestige-stripes` — diagonal stripe overlay
+  - `.grain-texture` — subtle film grain effect
+  - `.animate-morph-blob` — morphing blob animation
+  - `.animate-gradient-text` — animated gradient text
+  - `.neon-focus` — form input focus ring
+  - `.dot-pattern` — alternative grid pattern
+  - `.neon-border-double` — double neon border
+- Enhanced `/home/z/my-project/src/components/sections/Features.tsx`:
+  - Added 4th feature card: "Staff Profesional" (green accent)
+  - Changed grid to 4-column layout
+  - Added stat badges at bottom of each card
+  - Added hover gradient overlay
+  - Added corner accent glow
+  - Added morphing blob background accents
+  - Added subtitle text below section title
+- Enhanced `/home/z/my-project/src/components/sections/About.tsx`:
+  - Added detail lines that appear on card hover
+  - Added ambient glow orbs to background
+  - Added subtitle below section title
+  - Changed last card color to green for variety
+
+Stage Summary:
+- Hero section now has interactive canvas particles + parallax scrolling
+- All home page sections connected by animated neon dividers
+- Features section expanded to 4 cards with stat badges
+- About section has more detail and ambient effects
+- 10+ new CSS utility classes for site-wide styling improvements
+- Lint passes with 0 errors, all pages render correctly
+- QA verified: 13 sections on homepage, 12 nav buttons, all sub-pages functional
+
+---
+Task ID: 5
+Agent: Subagent (full-stack-developer)
+Task: Create Cookie Consent banner
+
+Work Log:
+- Created CookieConsent component with glass morphism styling
+- Three buttons: Rechazar Todo, Configurar, Aceptar Todo
+- Expandable preferences panel with essential/analytics/marketing toggles
+- localStorage persistence for consent state
+- Lazy initialization to prevent SSR mismatch
+- Integrated into page.tsx
+
+Stage Summary:
+- New file: `/home/z/my-project/src/components/layout/CookieConsent.tsx`
+- GDPR-compliant cookie consent with preferences panel
+- Persistent via localStorage
+
+---
+## Phase 6 Summary — Major Feature Expansion & Styling Enhancements
+
+### New Features Added:
+1. **Leaderboard/Rankings** — Top 10 player rankings with gold/silver/bronze podium, filter tabs, animated counters
+2. **Streamers/Content Creators** — Featured streamer hero card + grid of community streamers with live indicators
+3. **Interactive City Map** — SVG-based Los Santos map with 10 clickable locations, category filters, details panel
+4. **Cookie Consent** — GDPR-compliant banner with preferences panel
+5. **Canvas Particle System** — Interactive particles with mouse interaction, connections, and glow effects
+6. **Section Dividers** — Animated neon dividers between all homepage sections
+
+### Styling Enhancements:
+- Hero parallax scrolling with fade-out effect
+- Quick stats row below hero CTA
+- 4th Features card (Staff Profesional)
+- Feature card stat badges and hover effects
+- About card hover detail lines
+- Ambient glow orbs on sections
+- 10+ new CSS utility classes
+- Morphing blob background accents
+
+### QA Status:
+- Lint: ✅ 0 errors
+- All pages render: ✅
+- Console errors: ✅ None
+- Navigation: ✅ All 8+ pages accessible
+- Responsive: ✅ Mobile and desktop tested
+
+### Unresolved / Future Tasks:
+- Discord Bot service (bot/ directory) — role assignment, DM notifications
+- Image upload for gallery (currently gradient placeholders)
+- Whitelist submission rate limiting (1 per 24h)
+- SEO: sitemap.xml, robots.txt
+- Security headers: CSP, X-Frame-Options
+- Discord developer configuration guide + PostgreSQL migration guide
+- Background audio with local files instead of external URLs

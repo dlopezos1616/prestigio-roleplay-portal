@@ -702,3 +702,179 @@ code::selection {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(6px); }
 }
+
+/* ===== Phase 6 Enhancements ===== */
+
+/* Section divider — neon line with gradient */
+.section-divider {
+  position: relative;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.section-divider::before {
+  content: '';
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.3), rgba(6, 182, 212, 0.3), rgba(124, 58, 237, 0.3), transparent);
+  box-shadow: 0 0 8px rgba(124, 58, 237, 0.2);
+}
+.section-divider::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #7c3aed;
+  border-radius: 50%;
+  box-shadow: 0 0 12px rgba(124, 58, 237, 0.6), 0 0 24px rgba(124, 58, 237, 0.3);
+  animation: dividerDotPulse 3s ease-in-out infinite;
+}
+
+@keyframes dividerDotPulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.5); opacity: 1; }
+}
+
+/* Enhanced card hover — 3D lift with shadow */
+.card-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card-lift:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
+    0 0 20px rgba(124, 58, 237, 0.15),
+    0 0 40px rgba(124, 58, 237, 0.08);
+}
+
+/* Neon text underline animation */
+.neon-underline {
+  position: relative;
+  display: inline-block;
+}
+.neon-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #7c3aed, #06b6d4);
+  box-shadow: 0 0 8px rgba(124, 58, 237, 0.5);
+  transition: width 0.4s ease;
+  border-radius: 1px;
+}
+.neon-underline:hover::after {
+  width: 100%;
+}
+
+/* Glow pulse for status badges */
+@keyframes statusGlow {
+  0%, 100% { box-shadow: 0 0 4px currentColor; }
+  50% { box-shadow: 0 0 12px currentColor, 0 0 24px currentColor; }
+}
+
+.animate-status-glow {
+  animation: statusGlow 2s ease-in-out infinite;
+}
+
+/* Diagonal stripe overlay for premium/prestige areas */
+.prestige-stripes {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 10px,
+    rgba(124, 58, 237, 0.03) 10px,
+    rgba(124, 58, 237, 0.03) 20px
+  );
+}
+
+/* Animated border dash — for special cards */
+@keyframes dashMove {
+  0% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: 100; }
+}
+
+/* Typewriter cursor blink enhancement */
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.animate-cursor-blink {
+  animation: cursorBlink 1s step-end infinite;
+}
+
+/* Noise grain texture — subtle film grain effect */
+.grain-texture::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.015'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.5;
+}
+
+/* Morphing blob animation for background accents */
+@keyframes morphBlob {
+  0%, 100% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  }
+  25% {
+    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+  }
+  50% {
+    border-radius: 50% 60% 30% 60% / 30% 60% 70% 40%;
+  }
+  75% {
+    border-radius: 60% 40% 60% 30% / 60% 40% 30% 60%;
+  }
+}
+
+.animate-morph-blob {
+  animation: morphBlob 8s ease-in-out infinite;
+}
+
+/* Gradient text — smooth animated version */
+@keyframes gradientTextShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient-text {
+  background-size: 200% auto;
+  animation: gradientTextShift 4s linear infinite;
+}
+
+/* Focus ring for form inputs */
+.neon-focus:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.5), 0 0 15px rgba(124, 58, 237, 0.2);
+  border-color: rgba(124, 58, 237, 0.6);
+}
+
+/* Dot grid pattern — alternative to hex-pattern */
+.dot-pattern {
+  background-image: radial-gradient(circle, rgba(124, 58, 237, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Double neon border — for premium elements */
+.neon-border-double {
+  border: 1px solid rgba(124, 58, 237, 0.3);
+  box-shadow:
+    0 0 10px rgba(124, 58, 237, 0.1),
+    inset 0 0 10px rgba(124, 58, 237, 0.05),
+    0 0 0 3px rgba(124, 58, 237, 0.05);
+}
+
+/* Animated glow border with conic gradient */
+@keyframes rotateConicBorder {
+  0% { --conic-angle: 0deg; }
+  100% { --conic-angle: 360deg; }
+}

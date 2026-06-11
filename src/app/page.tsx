@@ -7,6 +7,7 @@ import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import AudioPlayer from '@/components/layout/AudioPlayer'
 import BackToTop from '@/components/layout/BackToTop'
+import CookieConsent from '@/components/layout/CookieConsent'
 import LoadingOverlay from '@/components/layout/LoadingOverlay'
 import DevLogin from '@/components/layout/DevLogin'
 import CommandPalette from '@/components/layout/CommandPalette'
@@ -26,6 +27,10 @@ import Changelog from '@/components/sections/Changelog'
 import StatsCounter from '@/components/sections/StatsCounter'
 import NextEvent from '@/components/sections/NextEvent'
 import Donaciones from '@/components/sections/Donaciones'
+import CityMap from '@/components/sections/CityMap'
+import Streamers from '@/components/sections/Streamers'
+import Leaderboard from '@/components/sections/Leaderboard'
+import SectionDivider from '@/components/layout/SectionDivider'
 import { WhitelistForm } from '@/components/whitelist/WhitelistForm'
 import StaffPanel from '@/components/staff/StaffPanel'
 import AdminPanel from '@/components/admin/AdminPanel'
@@ -41,13 +46,25 @@ function HomePage() {
   return (
     <div className="space-y-0">
       <Hero />
+      <SectionDivider />
       <About />
+      <SectionDivider variant="cyan" />
       <Features />
+      <SectionDivider variant="amber" />
       <FAQ />
+      <SectionDivider />
       <Testimonials />
+      <SectionDivider variant="cyan" />
+      <Streamers />
+      <SectionDivider variant="amber" />
       <StatsCounter />
+      <SectionDivider />
+      <Leaderboard />
+      <SectionDivider variant="cyan" />
       <ServerStatusWidget />
+      <SectionDivider variant="amber" />
       <NextEvent />
+      <SectionDivider />
       <Changelog />
       <JoinDiscord />
     </div>
@@ -131,6 +148,8 @@ export default function MainRouter() {
         return <Gallery />
       case 'facciones':
         return <Facciones />
+      case 'mapa':
+        return <CityMap />
       case 'info':
         return <ServerInfo />
       case 'donaciones':
@@ -169,6 +188,7 @@ export default function MainRouter() {
       <Footer />
       <AudioPlayer />
       <BackToTop />
+      <CookieConsent />
       <DevLogin />
       <CommandPalette />
     </div>

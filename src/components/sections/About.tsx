@@ -44,6 +44,7 @@ const aboutItems = [
     suffix: ' jugadores activos',
     color: '#7c3aed',
     glowClass: 'neon-glow',
+    detail: 'Discord, eventos y actividades diarias',
   },
   {
     icon: Shield,
@@ -52,6 +53,7 @@ const aboutItems = [
     number: null,
     color: '#06b6d4',
     glowClass: 'neon-glow-cyan',
+    detail: 'Soporte 24/7 y mediación justa',
   },
   {
     icon: Gamepad2,
@@ -60,14 +62,16 @@ const aboutItems = [
     number: null,
     color: '#f59e0b',
     glowClass: 'neon-glow-amber',
+    detail: 'Scripts custom y mapas exclusivos',
   },
   {
     icon: MessageCircle,
     title: 'Comunicación Constante',
     description: 'Siempre conectados',
     number: null,
-    color: '#7c3aed',
+    color: '#22c55e',
     glowClass: 'neon-glow',
+    detail: 'Canales de voz y texto activos',
   },
 ]
 
@@ -124,6 +128,11 @@ function AboutCard({ item, index }: { item: typeof aboutItems[number]; index: nu
         )}
       </p>
 
+      {/* Detail line */}
+      <p className="text-[#64748b] text-xs mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+        {item.detail}
+      </p>
+
       {/* Hover glow accent */}
       <div
         className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
@@ -143,6 +152,10 @@ export default function About() {
       <div className="absolute inset-0 bg-[#030712]" />
       <div className="absolute inset-0 hex-pattern opacity-50" />
 
+      {/* Ambient glow orbs */}
+      <div className="absolute top-0 left-1/4 w-64 h-64 bg-[#7c3aed]/5 rounded-full blur-[120px]" />
+      <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-[#06b6d4]/5 rounded-full blur-[120px]" />
+
       <div className="relative z-10 max-w-6xl mx-auto">
         {/* Section title */}
         <motion.div
@@ -155,6 +168,9 @@ export default function About() {
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4">
             Quiénes <span className="text-[#7c3aed] neon-text-glow">Somos</span>
           </h2>
+          <p className="text-[#94a3b8] text-base sm:text-lg max-w-2xl mx-auto mb-6">
+            La comunidad donde cada historia cobra vida
+          </p>
           <div className="w-24 h-1 mx-auto rounded-full bg-gradient-to-r from-[#7c3aed] to-[#06b6d4] shadow-[0_0_15px_rgba(124,58,237,0.5)]" />
         </motion.div>
 

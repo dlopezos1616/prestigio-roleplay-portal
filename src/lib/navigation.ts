@@ -5,6 +5,7 @@ export type PageId =
   | 'normativa' 
   | 'galeria' 
   | 'facciones' 
+  | 'mapa' 
   | 'info' 
   | 'donaciones' 
   | 'whitelist' 
@@ -19,6 +20,7 @@ export const pageToHash: Record<PageId, string> = {
   normativa: 'normativa',
   galeria: 'galeria',
   facciones: 'facciones',
+  mapa: 'mapa',
   info: 'info',
   donaciones: 'donaciones',
   whitelist: 'whitelist',
@@ -35,6 +37,7 @@ export const hashToPage: Record<string, PageId> = {
   normativa: 'normativa',
   galeria: 'galeria',
   facciones: 'facciones',
+  mapa: 'mapa',
   info: 'info',
   donaciones: 'donaciones',
   whitelist: 'whitelist',

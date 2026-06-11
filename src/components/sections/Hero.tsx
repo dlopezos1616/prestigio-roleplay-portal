@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { ChevronRight, Shield } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
+import { ChevronRight, Shield, Star, Users, Zap } from 'lucide-react'
 import { useNavigation } from '@/lib/navigation'
+import ParticleCanvas from '@/components/layout/ParticleCanvas'
 
 const taglines = [
   'Vive la experiencia de roleplay definitiva',
@@ -63,32 +64,6 @@ const staggerContainer = {
   },
 }
 
-// Small particles (original style)
-const particles = [
-  { class: 'particleFloat1', size: 'w-1 h-1', pos: 'top-[20%] left-[15%]', delay: '0s', duration: '6s', color: 'bg-[#7c3aed]' },
-  { class: 'particleFloat2', size: 'w-1.5 h-1.5', pos: 'top-[40%] left-[80%]', delay: '1s', duration: '8s', color: 'bg-[#06b6d4]' },
-  { class: 'particleFloat3', size: 'w-1 h-1', pos: 'top-[60%] left-[25%]', delay: '2s', duration: '7s', color: 'bg-[#7c3aed]' },
-  { class: 'particleFloat1', size: 'w-2 h-2', pos: 'top-[30%] left-[65%]', delay: '0.5s', duration: '9s', color: 'bg-[#06b6d4]' },
-  { class: 'particleFloat2', size: 'w-1 h-1', pos: 'top-[70%] left-[50%]', delay: '1.5s', duration: '6s', color: 'bg-[#f59e0b]' },
-  { class: 'particleFloat3', size: 'w-1.5 h-1.5', pos: 'top-[50%] left-[10%]', delay: '3s', duration: '8s', color: 'bg-[#7c3aed]' },
-  { class: 'particleFloat1', size: 'w-1 h-1', pos: 'top-[80%] left-[70%]', delay: '2.5s', duration: '7s', color: 'bg-[#06b6d4]' },
-  { class: 'particleFloat2', size: 'w-2 h-2', pos: 'top-[15%] left-[45%]', delay: '0.8s', duration: '10s', color: 'bg-[#f59e0b]' },
-  { class: 'particleFloat3', size: 'w-1 h-1', pos: 'top-[45%] left-[90%]', delay: '1.8s', duration: '6s', color: 'bg-[#7c3aed]' },
-  { class: 'particleFloat1', size: 'w-1.5 h-1.5', pos: 'top-[75%] left-[35%]', delay: '3.5s', duration: '9s', color: 'bg-[#06b6d4]' },
-  { class: 'particleFloat2', size: 'w-1 h-1', pos: 'top-[10%] left-[75%]', delay: '0.3s', duration: '7s', color: 'bg-[#f59e0b]' },
-  { class: 'particleFloat3', size: 'w-1 h-1', pos: 'top-[55%] left-[55%]', delay: '2.2s', duration: '8s', color: 'bg-[#7c3aed]' },
-]
-
-// Nebula particles — larger, more blurred, slowly drifting
-const nebulaParticles = [
-  { size: 'w-16 h-16', pos: 'top-[15%] left-[8%]', delay: '0s', duration: '14s', color: 'bg-[#7c3aed]', anim: 'nebulaDrift1' },
-  { size: 'w-20 h-20', pos: 'top-[60%] left-[75%]', delay: '2s', duration: '18s', color: 'bg-[#06b6d4]', anim: 'nebulaDrift2' },
-  { size: 'w-12 h-12', pos: 'top-[35%] left-[50%]', delay: '4s', duration: '12s', color: 'bg-[#f59e0b]', anim: 'nebulaDrift3' },
-  { size: 'w-24 h-24', pos: 'top-[70%] left-[20%]', delay: '1s', duration: '20s', color: 'bg-[#7c3aed]', anim: 'nebulaDrift1' },
-  { size: 'w-14 h-14', pos: 'top-[25%] left-[85%]', delay: '3s', duration: '16s', color: 'bg-[#06b6d4]', anim: 'nebulaDrift2' },
-  { size: 'w-10 h-10', pos: 'top-[80%] left-[60%]', delay: '5s', duration: '15s', color: 'bg-[#f59e0b]', anim: 'nebulaDrift3' },
-]
-
 // Floating geometric shapes — hexagons, triangles, diamonds
 const geoShapes = [
   {
@@ -127,6 +102,13 @@ const geoShapes = [
     duration: '11s',
     delay: '2.5s',
   },
+]
+
+// Quick stats shown below the CTA buttons
+const quickStats = [
+  { icon: Users, value: '500+', label: 'Jugadores', color: '#7c3aed' },
+  { icon: Zap, value: '24/7', label: 'Online', color: '#22c55e' },
+  { icon: Star, value: '99.8%', label: 'Uptime', color: '#06b6d4' },
 ]
 
 function HeroSubtitle() {
@@ -168,6 +150,15 @@ function LogoOrbitRing() {
         }}
       />
 
+      {/* Third orbit ring — outermost, very faint */}
+      <div
+        className="absolute rounded-full border border-[#f59e0b]/8"
+        style={{
+          width: `calc(${orbitRadius} * 2 + 40px)`,
+          height: `calc(${orbitRadius} * 2 + 40px)`,
+        }}
+      />
+
       {/* Orbiting orbs - ring 1 (purple) */}
       <div
         className="absolute"
@@ -202,6 +193,21 @@ function LogoOrbitRing() {
         <div
           className="absolute w-2.5 h-2.5 rounded-full bg-[#06b6d4] shadow-[0_0_10px_rgba(6,182,212,0.8),0_0_20px_rgba(6,182,212,0.4)]"
           style={{ top: '-5px', right: '20%', transform: 'translateX(50%)' }}
+        />
+      </div>
+
+      {/* Orbiting orbs - ring 3 (amber, slowest) */}
+      <div
+        className="absolute"
+        style={{
+          width: `calc(${orbitRadius} * 2 + 40px)`,
+          height: `calc(${orbitRadius} * 2 + 40px)`,
+          animation: 'orbitSpin 20s linear infinite',
+        }}
+      >
+        <div
+          className="absolute w-1.5 h-1.5 rounded-full bg-[#f59e0b] shadow-[0_0_8px_rgba(245,158,11,0.8),0_0_16px_rgba(245,158,11,0.4)]"
+          style={{ top: '-3px', left: '30%' }}
         />
       </div>
 
@@ -289,26 +295,44 @@ function HeroBadge() {
 
 export default function Hero() {
   const navigate = useNavigation((s) => s.navigate)
+  const sectionRef = useRef<HTMLElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end start'],
+  })
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '30%'])
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
+  const contentY = useTransform(scrollYProgress, [0, 0.5], [0, 50])
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section ref={sectionRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Gradient background */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#030712] via-[#0f172a] to-[#030712]" />
 
-      {/* Background city image */}
-      <div className="absolute inset-0 opacity-20">
-        <img src="/gallery/city-night.png" alt="" className="w-full h-full object-cover" />
-      </div>
+      {/* Background city image with parallax */}
+      <motion.div
+        className="absolute inset-0 opacity-20"
+        style={{ y: backgroundY }}
+      >
+        <img src="/gallery/city-night.png" alt="" className="w-full h-full object-cover scale-110" />
+      </motion.div>
       <div className="absolute inset-0 bg-gradient-to-b from-[#030712] via-[#030712]/70 to-[#030712]" />
 
       {/* Grid pattern overlay */}
       <div className="absolute inset-0 grid-pattern" />
 
-      {/* Radial glow */}
+      {/* Radial glow — center */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(124,58,237,0.15)_0%,transparent_70%)]" />
+      {/* Radial glow — bottom left amber tint */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_20%_80%,rgba(245,158,11,0.06)_0%,transparent_50%)]" />
+      {/* Radial glow — top right cyan tint */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_80%_20%,rgba(6,182,212,0.08)_0%,transparent_50%)]" />
+
+      {/* Canvas-based particle system */}
+      <ParticleCanvas />
 
       {/* Floating geometric shapes */}
-      <div className="absolute inset-0 pointer-events-none">
+      <div className="absolute inset-0 pointer-events-none" style={{ zIndex: 2 }}>
         {geoShapes.map((shape, i) => (
           <div
             key={`geo-${i}`}
@@ -322,37 +346,10 @@ export default function Hero() {
         ))}
       </div>
 
-      {/* Nebula particles — large, blurred, slowly drifting */}
-      <div className="absolute inset-0 pointer-events-none">
-        {nebulaParticles.map((p, i) => (
-          <div
-            key={`nebula-${i}`}
-            className={`absolute ${p.size} ${p.pos} ${p.color} rounded-full`}
-            style={{
-              animation: `${p.anim} ${p.duration} ease-in-out ${p.delay} infinite`,
-              filter: 'blur(20px)',
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Small CSS Particles */}
-      <div className="absolute inset-0 pointer-events-none">
-        {particles.map((p, i) => (
-          <div
-            key={`particle-${i}`}
-            className={`absolute ${p.size} ${p.pos} ${p.color} rounded-full`}
-            style={{
-              animation: `${p.class} ${p.duration} ease-in-out ${p.delay} infinite`,
-              opacity: 0.6,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Main content */}
+      {/* Main content — with parallax fade */}
       <motion.div
-        className="relative z-10 flex flex-col items-center text-center px-4 sm:px-6"
+        className="relative flex flex-col items-center text-center px-4 sm:px-6"
+        style={{ zIndex: 10, opacity: contentOpacity, y: contentY }}
         variants={staggerContainer}
         initial="initial"
         animate="animate"
@@ -410,6 +407,26 @@ export default function Hero() {
             Solicitar Whitelist
             <ChevronRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
           </button>
+        </motion.div>
+
+        {/* Quick stats row */}
+        <motion.div
+          variants={fadeInUp}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="flex items-center gap-6 sm:gap-10 mt-10 sm:mt-12"
+        >
+          {quickStats.map((stat) => {
+            const Icon = stat.icon
+            return (
+              <div key={stat.label} className="flex items-center gap-2 text-[#94a3b8]">
+                <Icon className="w-4 h-4" style={{ color: stat.color }} />
+                <span className="font-bold text-white text-sm sm:text-base" style={{ textShadow: `0 0 8px ${stat.color}40` }}>
+                  {stat.value}
+                </span>
+                <span className="text-xs sm:text-sm">{stat.label}</span>
+              </div>
+            )
+          })}
         </motion.div>
 
         {/* Scroll indicator with text */}

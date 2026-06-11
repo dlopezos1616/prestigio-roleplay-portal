@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
-  Menu, X, Home, BookOpen, ImageIcon, Swords, Info, Heart, 
+  Menu, X, Home, BookOpen, ImageIcon, Swords, Map, Info, Heart, 
   Shield, Crown, LogIn, LogOut, User, ChevronDown, Bell, UserCircle,
   Search
 } from 'lucide-react'
@@ -31,6 +31,7 @@ const navItems: { id: PageId; label: string; icon: React.ReactNode; auth?: boole
   { id: 'normativa', label: 'Normativa', icon: <BookOpen className="w-4 h-4" /> },
   { id: 'galeria', label: 'Galería', icon: <ImageIcon className="w-4 h-4" /> },
   { id: 'facciones', label: 'Facciones', icon: <Swords className="w-4 h-4" /> },
+  { id: 'mapa', label: 'Mapa', icon: <Map className="w-4 h-4" /> },
   { id: 'info', label: 'Info', icon: <Info className="w-4 h-4" /> },
   { id: 'donaciones', label: 'Donaciones', icon: <Heart className="w-4 h-4" /> },
   { id: 'whitelist', label: 'Whitelist', icon: <Shield className="w-4 h-4" />, auth: true },
