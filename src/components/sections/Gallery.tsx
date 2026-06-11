@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Camera, X } from 'lucide-react'
+import { Camera, X, Maximize2 } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -17,6 +17,7 @@ interface GalleryItem {
   title: string
   description: string
   eventTag: Exclude<EventTag, 'Todos'>
+  image: string
   gradient: string
   rowSpan: number
 }
@@ -24,9 +25,10 @@ interface GalleryItem {
 const galleryItems: GalleryItem[] = [
   {
     id: 1,
-    title: 'Patrulla Policial',
+    title: 'Patrulla Nocturna',
     description: 'Las unidades de policía patrullan las calles de Los Santos manteniendo el orden y la seguridad ciudadana en cada rincón de la ciudad.',
     eventTag: 'Operaciones',
+    image: '/gallery/patrol.png',
     gradient: 'from-[#06b6d4] via-[#0e7490] to-[#164e63]',
     rowSpan: 2,
   },
@@ -35,54 +37,61 @@ const galleryItems: GalleryItem[] = [
     title: 'Carrera Callejera',
     description: 'Las carreras ilegales iluminan las noches de Los Santos. Adrenalina pura en cada curva y recta de la ciudad.',
     eventTag: 'Eventos',
+    image: '/gallery/race.png',
     gradient: 'from-[#ef4444] via-[#dc2626] to-[#991b1b]',
     rowSpan: 1,
   },
   {
     id: 3,
-    title: 'Operación Médica',
+    title: 'Rescate de Emergencia',
     description: 'El equipo de EMS responde ante emergencias críticas. Cada segundo cuenta cuando se trata de salvar vidas.',
     eventTag: 'Operaciones',
+    image: '/gallery/ems.png',
     gradient: 'from-[#22c55e] via-[#16a34a] to-[#166534]',
     rowSpan: 2,
   },
   {
     id: 4,
-    title: 'Negociación',
-    description: 'Las negociaciones tensas entre facciones pueden cambiar el destino de la ciudad. Diplomacia y estrategia.',
+    title: 'Ciudad de Noche',
+    description: 'Los Santos cobra vida bajo las luces de neón. Una ciudad que nunca duerme, llena de oportunidades y peligros.',
     eventTag: 'Eventos',
-    gradient: 'from-[#f59e0b] via-[#d97706] to-[#92400e]',
-    rowSpan: 1,
-  },
-  {
-    id: 5,
-    title: 'Evento Comunitario',
-    description: 'La comunidad se reúne para disfrutar de eventos especiales, competiciones y convivencias únicas.',
-    eventTag: 'Eventos',
+    image: '/gallery/city-night.png',
     gradient: 'from-[#7c3aed] via-[#6d28d9] to-[#4c1d95]',
     rowSpan: 2,
   },
   {
-    id: 6,
-    title: 'Entrenamiento FBI',
-    description: 'Los agentes del FBI se preparan en tácticas avanzadas de investigación y operaciones encubiertas.',
+    id: 5,
+    title: 'Operación Encubierta',
+    description: 'Desde las sombras, los agentes del FBI recopilan información vital para desarticular redes criminales.',
     eventTag: 'Entrenamientos',
+    image: '/gallery/fbi.png',
     gradient: 'from-[#f59e0b] via-[#b45309] to-[#78350f]',
     rowSpan: 1,
   },
   {
+    id: 6,
+    title: 'Negociaciones',
+    description: 'Las negociaciones tensas entre facciones pueden cambiar el destino de la ciudad. Diplomacia y estrategia.',
+    eventTag: 'Eventos',
+    image: '/gallery/patrol.png',
+    gradient: 'from-[#f59e0b] via-[#d97706] to-[#92400e]',
+    rowSpan: 1,
+  },
+  {
     id: 7,
-    title: 'Operación Encubierta',
-    description: 'Desde las sombras, los agentes infiltrados recopilan información vital para desarticular redes criminales.',
+    title: 'Persecución Policial',
+    description: 'Las fuerzas del orden practican protocolos de intervención y tácticas de persecución en escenarios de alta velocidad.',
     eventTag: 'Operaciones',
+    image: '/gallery/race.png',
     gradient: 'from-[#64748b] via-[#475569] to-[#1e293b]',
     rowSpan: 1,
   },
   {
     id: 8,
-    title: 'Entrenamiento Policial',
-    description: 'Las fuerzas del orden practican protocolos de intervención y tácticas de persecución en escenarios simulados.',
+    title: 'Entrenamiento Táctico',
+    description: 'Los agentes se preparan en tácticas avanzadas de investigación y operaciones encubiertas.',
     eventTag: 'Entrenamientos',
+    image: '/gallery/fbi.png',
     gradient: 'from-[#06b6d4] via-[#0891b2] to-[#155e75]',
     rowSpan: 2,
   },
@@ -100,7 +109,11 @@ export default function Gallery() {
 
   return (
     <section className="relative py-20 px-4 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-7xl">
+      {/* Background */}
+      <div className="absolute inset-0 bg-[#030712]" />
+      <div className="absolute inset-0 grid-pattern opacity-30" />
+
+      <div className="relative mx-auto max-w-7xl">
         {/* Section Header */}
         <div className="text-center mb-12">
           <motion.h2
@@ -108,9 +121,9 @@ export default function Gallery() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#7c3aed] neon-text-glow mb-4"
+            className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4"
           >
-            Galería
+            <span className="text-[#7c3aed] neon-text-glow">Galería</span>
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 10 }}
@@ -122,6 +135,14 @@ export default function Gallery() {
             <Camera className="w-5 h-5" />
             Momentos épicos del servidor
           </motion.p>
+          <motion.div
+            initial={{ scaleX: 0 }}
+            whileInView={{ scaleX: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="mt-4 h-0.5 mx-auto max-w-[120px] rounded-full bg-gradient-to-r from-transparent via-[#7c3aed] to-transparent"
+            style={{ boxShadow: '0 0 10px rgba(124,58,237,0.5)' }}
+          />
         </div>
 
         {/* Filter Buttons */}
@@ -158,18 +179,19 @@ export default function Gallery() {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8 }}
                 transition={{ duration: 0.4, delay: index * 0.05 }}
-                className={`relative group cursor-pointer rounded-xl overflow-hidden neon-border row-span-${item.rowSpan}`}
+                className="relative group cursor-pointer rounded-xl overflow-hidden neon-border"
                 style={{ gridRow: `span ${item.rowSpan}` }}
                 onClick={() => setSelectedItem(item)}
               >
-                {/* Gradient placeholder */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${item.gradient}`} />
+                {/* Real image */}
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                />
 
                 {/* Dark overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#030712] via-[#030712]/30 to-transparent" />
-
-                {/* Grid pattern */}
-                <div className="absolute inset-0 grid-pattern opacity-20" />
 
                 {/* Title overlay at bottom */}
                 <div className="absolute bottom-0 left-0 right-0 p-4 z-10">
@@ -185,13 +207,13 @@ export default function Gallery() {
                   <h3 className="text-white font-bold text-lg leading-tight">{item.title}</h3>
                 </div>
 
-                {/* Hover overlay */}
+                {/* Hover overlay with expand icon */}
                 <div className="absolute inset-0 bg-[#030712]/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                   <motion.div
                     whileHover={{ scale: 1.1 }}
                     className="w-12 h-12 rounded-full bg-[#7c3aed]/30 flex items-center justify-center backdrop-blur-sm border border-[#7c3aed]/40"
                   >
-                    <Camera className="w-5 h-5 text-white" />
+                    <Maximize2 className="w-5 h-5 text-white" />
                   </motion.div>
                 </div>
 
@@ -212,9 +234,13 @@ export default function Gallery() {
           <DialogContent className="bg-[#0f172a] border-[rgba(124,58,237,0.3)] max-w-3xl p-0 overflow-hidden">
             {selectedItem && (
               <>
-                {/* Full image placeholder */}
-                <div className={`relative aspect-video w-full bg-gradient-to-br ${selectedItem.gradient}`}>
-                  <div className="absolute inset-0 grid-pattern opacity-20" />
+                {/* Full image */}
+                <div className="relative aspect-video w-full overflow-hidden">
+                  <img
+                    src={selectedItem.image}
+                    alt={selectedItem.title}
+                    className="w-full h-full object-cover"
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-transparent to-transparent" />
                 </div>
                 <div className="p-6">

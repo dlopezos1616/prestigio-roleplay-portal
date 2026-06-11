@@ -1,10 +1,14 @@
 'use client'
 
 import { AnimatePresence, motion } from 'framer-motion'
+import { Shield, Crown, ClipboardCheck } from 'lucide-react'
 import { useNavigation } from '@/lib/navigation'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import AudioPlayer from '@/components/layout/AudioPlayer'
+import LoadingOverlay from '@/components/layout/LoadingOverlay'
+import DevLogin from '@/components/layout/DevLogin'
+import PageHeader from '@/components/layout/PageHeader'
 import Hero from '@/components/sections/Hero'
 import About from '@/components/sections/About'
 import Features from '@/components/sections/Features'
@@ -13,6 +17,7 @@ import Normativa from '@/components/sections/Normativa'
 import Gallery from '@/components/sections/Gallery'
 import Facciones from '@/components/sections/Facciones'
 import ServerInfo from '@/components/sections/ServerInfo'
+import ServerStatus from '@/components/layout/ServerStatus'
 import Donaciones from '@/components/sections/Donaciones'
 import { WhitelistForm } from '@/components/whitelist/WhitelistForm'
 import StaffPanel from '@/components/staff/StaffPanel'
@@ -30,7 +35,56 @@ function HomePage() {
       <Hero />
       <About />
       <Features />
+      <ServerStatus />
       <JoinDiscord />
+    </div>
+  )
+}
+
+function WhitelistPage() {
+  return (
+    <div>
+      <PageHeader
+        title="Solicitud de Whitelist"
+        subtitle="Demuestra que estás listo para el roleplay. Completa el formulario y nuestro staff revisará tu solicitud."
+        icon={ClipboardCheck}
+        accent="#7c3aed"
+      />
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 pb-20">
+        <WhitelistForm />
+      </div>
+    </div>
+  )
+}
+
+function StaffPage() {
+  return (
+    <div>
+      <PageHeader
+        title="Panel de Staff"
+        subtitle="Gestiona las solicitudes de whitelist, tareas diarias y actividad del equipo."
+        icon={Shield}
+        accent="#06b6d4"
+      />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-20">
+        <StaffPanel />
+      </div>
+    </div>
+  )
+}
+
+function AdminPage() {
+  return (
+    <div>
+      <PageHeader
+        title="Panel de Administración"
+        subtitle="Control total: métricas, usuarios, galería y auditoría del servidor."
+        icon={Crown}
+        accent="#f59e0b"
+      />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-20">
+        <AdminPanel />
+      </div>
     </div>
   )
 }
@@ -53,11 +107,11 @@ export default function MainRouter() {
       case 'donaciones':
         return <Donaciones />
       case 'whitelist':
-        return <WhitelistForm />
+        return <WhitelistPage />
       case 'staff':
-        return <StaffPanel />
+        return <StaffPage />
       case 'admin':
-        return <AdminPanel />
+        return <AdminPage />
       default:
         return <HomePage />
     }
@@ -65,6 +119,7 @@ export default function MainRouter() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#030712] text-foreground gradient-bg">
+      <LoadingOverlay />
       <Navbar />
       <main className="flex-1 pt-16">
         <AnimatePresence mode="wait">
@@ -82,6 +137,7 @@ export default function MainRouter() {
       </main>
       <Footer />
       <AudioPlayer />
+      <DevLogin />
     </div>
   )
 }

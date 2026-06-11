@@ -37,6 +37,12 @@ export default function Hero() {
       {/* Gradient background */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#030712] via-[#0f172a] to-[#030712]" />
 
+      {/* Background city image */}
+      <div className="absolute inset-0 opacity-20">
+        <img src="/gallery/city-night.png" alt="" className="w-full h-full object-cover" />
+      </div>
+      <div className="absolute inset-0 bg-gradient-to-b from-[#030712] via-[#030712]/70 to-[#030712]" />
+
       {/* Grid pattern overlay */}
       <div className="absolute inset-0 grid-pattern" />
 

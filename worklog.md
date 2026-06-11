@@ -1,9 +1,64 @@
 # Prestigio Roleplay Portal — Work Log
 
-## Project Status: Phase 1 Complete ✅
+## Project Status: Phase 2 Complete ✅ — Enhanced with DevLogin, AI Gallery, Server Status
 
 ### Current State
-The Prestigio Roleplay portal is a fully functional single-page application with neon-themed gaming UI. All core features are implemented and working.
+The Prestigio Roleplay portal now has a fully functional dev login system, AI-generated gallery images, server status indicator, loading overlay, and page headers for inner pages. All protected pages (Whitelist, Staff, Admin) can be tested without Discord OAuth.
+
+### Phase 2 Changes
+
+---
+Task ID: 7
+Agent: Main Agent + Subagent
+Task: DevLogin + Seed Data APIs + Layout Enhancements
+
+Work Log:
+- Created /api/dev/login route: Creates test users (USER/STAFF/ADMIN) without Discord OAuth
+- Created /api/dev/seed route: Seeds 5 users, 4 whitelist apps (2 pending, 1 rejected, 1 approved), 5 tasks, 4 gallery images, 4 audit logs, 4 notifications
+- Created /api/dev/cleanup route: Clears all database tables for clean testing
+- Updated useSession hook: Now checks localStorage for dev session before fetching NextAuth session
+- Created DevLogin.tsx: Floating dev toolbar (bottom-left) with role switching, seed/cleanup, quick nav
+- Created PageHeader.tsx: Reusable banner for inner pages with configurable icon, accent color, particles
+- Created LoadingOverlay.tsx: Splash screen with logo reveal, animated loading bar (1.8s)
+- Created ServerStatus.tsx: Live server status widget with player count bar, uptime, animated metrics
+- Generated 5 AI images for gallery using z-ai CLI: patrol, race, ems, fbi, city-night
+- Updated Gallery.tsx: Now uses real AI images instead of gradient placeholders
+- Updated Hero.tsx: Added city-night background image behind hero section
+- Updated page.tsx: Added PageHeader wrappers for Whitelist/Staff/Admin, LoadingOverlay, DevLogin, ServerStatus
+- Fixed lint errors: setState in effect (useSession), Image component naming
+
+Stage Summary:
+- Dev login system fully functional: click 🐛 bug icon → choose role → access all pages
+- Gallery uses real AI-generated GTA-style images
+- Server status widget shows live player count with animated bar
+- Loading overlay provides branded splash screen on first visit
+- All inner pages have consistent header banners with icons
+- Seed data creates realistic demo content for testing
+
+### Verification Results
+- ✅ Lint passes with 0 errors
+- ✅ Dev server running on port 3000, no errors
+- ✅ Home page renders with background image, particles, all sections
+- ✅ Gallery shows real AI-generated images with lightbox
+- ✅ Whitelist page has proper header and form
+- ✅ Staff panel shows 2 pending whitelist apps, 5 tasks
+- ✅ Admin panel shows metrics, users, gallery, audit tabs
+- ✅ Dev login creates users and persists in localStorage
+- ✅ Seed data creates comprehensive demo content
+- ✅ Server status widget with animated player bar
+- ✅ Loading overlay with branded animation
+
+### Unresolved Issues / Next Steps
+1. Discord OAuth still requires real credentials for production login
+2. Bot integration (Discord role assignment) requires running bot service
+3. SEO: sitemap.xml and robots.txt generation
+4. Rate limiting on whitelist submission
+5. Real-time updates (websocket) for staff notifications
+6. Mobile responsive testing for staff/admin panels
+7. Dark/light theme toggle (currently dark only)
+8. Performance optimization: image lazy loading, code splitting
+9. Gallery image upload from admin panel (currently URL-only)
+10. Sound effects for UI interactions
 
 ### Completed Work
 
@@ -120,6 +175,25 @@ Stage Summary:
 - ✅ No browser console errors
 - ✅ Auth session API responds correctly
 
+---
+Task ID: 7
+Agent: Subagent
+Task: Dev API Routes (Login, Seed, Cleanup)
+
+Work Log:
+- Created /api/dev/login/route.ts: POST endpoint that creates/returns a test user without Discord OAuth, supports USER/STAFF/ADMIN roles via upsert
+- Created /api/dev/seed/route.ts: POST endpoint that seeds demo data — 5 users, 4 whitelist applications (2 pending, 1 rejected, 1 approved), 5 tasks, 4 gallery images, 4 audit logs, 4 notifications
+- Created /api/dev/cleanup/route.ts: POST endpoint that clears all data from all tables in correct dependency order
+- All endpoints gated behind NODE_ENV !== 'production' check
+- Verified Prisma queries use correct foreign key fields matching the named relations in the schema (UserWhitelistApps, UserReviewedApps)
+- Lint passes with 0 errors
+
+Stage Summary:
+- 3 dev-only API routes created for testing without Discord OAuth
+- Dev login allows role-based user creation (dev-user, dev-staff, dev-admin)
+- Seed endpoint creates comprehensive demo data for all models
+- Cleanup endpoint wipes all tables for clean testing cycles
+
 ### Unresolved Issues / Next Steps
 1. Discord OAuth requires real credentials to test login flow
 2. Whitelist form only visible when logged in (needs real Discord auth)
@@ -130,3 +204,20 @@ Stage Summary:
 7. SEO: sitemap.xml and robots.txt generation
 8. Rate limiting on whitelist submission
 9. CSRF and security headers
+
+---
+Task ID: 8
+Agent: Subagent (full-stack-developer)
+Task: Layout Components - PageHeader, LoadingOverlay, DevLogin
+
+Work Log:
+- Created PageHeader.tsx: Reusable hero-like banner for inner pages (whitelist, staff, admin) with configurable accent color, icon, title, subtitle, background gradient, decorative particles, and animated neon divider line
+- Created LoadingOverlay.tsx: Splash/loading screen shown on initial page load with logo reveal animation, title with neon-text-glow, and animated loading bar; auto-dismisses after 1.8s with AnimatePresence fade-out
+- Created DevLogin.tsx: Dev toolbar component (hidden in production) with bug icon toggle at bottom-left; includes quick role login (User/Staff/Admin), seed demo data, clear all data, and quick navigation grid; uses useSession hook and useNavigation Zustand store
+
+Stage Summary:
+- 3 layout components created in /src/components/layout/
+- PageHeader supports dynamic accent colors for page-specific theming
+- LoadingOverlay uses Framer Motion for smooth entrance/exit animations
+- DevLogin provides development convenience tools (role switching, data seeding, navigation)
+- All files pass ESLint with 0 errors

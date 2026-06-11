@@ -1,0 +1,631 @@
+     1→'use client'
+     2→
+     3→import { useState, useEffect, useCallback } from 'react'
+     4→import {
+     5→  Tabs, TabsList, TabsTrigger, TabsContent,
+     6→} from '@/components/ui/tabs'
+     7→import {
+     8→  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
+     9→} from '@/components/ui/table'
+    10→import {
+    11→  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription,
+    12→} from '@/components/ui/dialog'
+    13→import { Button } from '@/components/ui/button'
+    14→import { Badge } from '@/components/ui/badge'
+    15→import { Textarea } from '@/components/ui/textarea'
+    16→import { Input } from '@/components/ui/input'
+    17→import {
+    18→  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+    19→} from '@/components/ui/select'
+    20→import {
+    21→  Inbox, ClipboardList, Activity, Bell,
+    22→  CheckCircle2, XCircle, Clock, Eye,
+    23→  Plus, Trash2, BellOff,
+    24→} from 'lucide-react'
+    25→
+    26→/* ------------------------------------------------------------------ */
+    27→/*  Types                                                              */
+    28→/* ------------------------------------------------------------------ */
+    29→interface WhitelistApp {
+    30→  id: string
+    31→  userId: string
+    32→  answer1: string
+    33→  answer2: string
+    34→  answer3: string
+    35→  answer4: string
+    36→  answer5: string
+    37→  status: 'PENDING' | 'APPROVED' | 'REJECTED'
+    38→  attemptNumber: number
+    39→  rejectReason?: string | null
+    40→  createdAt: string
+    41→  user: { username: string; avatar: string | null; discordId: string }
+    42→  reviewer?: { username: string } | null
+    43→}
+    44→
+    45→interface Task {
+    46→  id: string
+    47→  title: string
+    48→  assigneeId: string | null
+    49→  status: 'TODO' | 'IN_PROGRESS' | 'DONE' | 'BLOCKED'
+    50→  priority: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT'
+    51→  dueDate: string | null
+    52→  notes: string | null
+    53→  date: string
+    54→  createdAt: string
+    55→  assignee: { username: string; avatar: string | null } | null
+    56→}
+    57→
+    58→interface AuditLog {
+    59→  id: string
+    60→  actorId: string
+    61→  action: string
+    62→  entityType: string | null
+    63→  entityId: string | null
+    64→  metadata: string | null
+    65→  createdAt: string
+    66→  actor: { username: string; avatar: string | null }
+    67→}
+    68→
+    69→interface Notification {
+    70→  id: string
+    71→  userId: string
+    72→  type: string
+    73→  payload: string | null
+    74→  readAt: string | null
+    75→  createdAt: string
+    76→}
+    77→
+    78→/* ------------------------------------------------------------------ */
+    79→/*  Helpers                                                            */
+    80→/* ------------------------------------------------------------------ */
+    81→const statusColor: Record<string, string> = {
+    82→  PENDING: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/40',
+    83→  APPROVED: 'bg-green-500/20 text-green-400 border-green-500/40',
+    84→  REJECTED: 'bg-red-500/20 text-red-400 border-red-500/40',
+    85→}
+    86→
+    87→const taskStatusColor: Record<string, string> = {
+    88→  TODO: 'bg-gray-500/20 text-gray-400 border-gray-500/40',
+    89→  IN_PROGRESS: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/40',
+    90→  DONE: 'bg-green-500/20 text-green-400 border-green-500/40',
+    91→  BLOCKED: 'bg-red-500/20 text-red-400 border-red-500/40',
+    92→}
+    93→
+    94→const priorityColor: Record<string, string> = {
+    95→  LOW: 'bg-gray-500/20 text-gray-400 border-gray-500/40',
+    96→  MEDIUM: 'bg-blue-500/20 text-blue-400 border-blue-500/40',
+    97→  HIGH: 'bg-orange-500/20 text-orange-400 border-orange-500/40',
+    98→  URGENT: 'bg-red-500/20 text-red-400 border-red-500/40',
+    99→}
+   100→
+   101→function fmtDate(d: string) {
+   102→  return new Date(d).toLocaleDateString('es-ES', {
+   103→    day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit',
+   104→  })
+   105→}
+   106→
+   107→function todayStr() {
+   108→  return new Date().toISOString().split('T')[0]
+   109→}
+   110→
+   111→/* ------------------------------------------------------------------ */
+   112→/*  Component                                                          */
+   113→/* ------------------------------------------------------------------ */
+   114→export default function StaffPanel() {
+   115→  /* ---- Whitelist state ---- */
+   116→  const [apps, setApps] = useState<WhitelistApp[]>([])
+   117→  const [wlFilter, setWlFilter] = useState<string>('ALL')
+   118→  const [selectedApp, setSelectedApp] = useState<WhitelistApp | null>(null)
+   119→  const [rejectReason, setRejectReason] = useState('')
+   120→  const [actionLoading, setActionLoading] = useState(false)
+   121→
+   122→  /* ---- Tasks state ---- */
+   123→  const [tasks, setTasks] = useState<Task[]>([])
+   124→  const [taskDate, setTaskDate] = useState(todayStr())
+   125→  const [showTaskForm, setShowTaskForm] = useState(false)
+   126→  const [newTask, setNewTask] = useState({ title: '', priority: 'MEDIUM' as const, notes: '' })
+   127→
+   128→  /* ---- Audit state ---- */
+   129→  const [auditLogs, setAuditLogs] = useState<AuditLog[]>([])
+   130→  const [auditDate, setAuditDate] = useState(todayStr())
+   131→
+   132→  /* ---- Notifications state ---- */
+   133→  const [notifications, setNotifications] = useState<Notification[]>([])
+   134→  const [notifUserId] = useState('demo-user')
+   135→
+   136→  /* ---- Fetchers ---- */
+   137→  const fetchApps = useCallback(async () => {
+   138→    const q = wlFilter !== 'ALL' ? `?status=${wlFilter}` : ''
+   139→    const res = await fetch(`/api/whitelist${q}`)
+   140→    if (res.ok) setApps(await res.json())
+   141→  }, [wlFilter])
+   142→
+   143→  const fetchTasks = useCallback(async () => {
+   144→    const res = await fetch(`/api/tasks?date=${taskDate}`)
+   145→    if (res.ok) setTasks(await res.json())
+   146→  }, [taskDate])
+   147→
+   148→  const fetchAudit = useCallback(async () => {
+   149→    const res = await fetch(`/api/audit?date=${auditDate}`)
+   150→    if (res.ok) setAuditLogs(await res.json())
+   151→  }, [auditDate])
+   152→
+   153→  const fetchNotifications = useCallback(async () => {
+   154→    const res = await fetch(`/api/notifications?userId=${notifUserId}`)
+   155→    if (res.ok) setNotifications(await res.json())
+   156→  }, [notifUserId])
+   157→
+   158→  useEffect(() => { fetchApps() }, [fetchApps])
+   159→  useEffect(() => { fetchTasks() }, [fetchTasks])
+   160→  useEffect(() => { fetchAudit() }, [fetchAudit])
+   161→  useEffect(() => { fetchNotifications() }, [fetchNotifications])
+   162→
+   163→  /* ---- Whitelist actions ---- */
+   164→  async function handleReview(appId: string, status: 'APPROVED' | 'REJECTED') {
+   165→    setActionLoading(true)
+   166→    try {
+   167→      const body: Record<string, unknown> = { status, reviewerId: 'staff-user' }
+   168→      if (status === 'REJECTED' && rejectReason) body.rejectReason = rejectReason
+   169→      await fetch(`/api/whitelist/${appId}`, {
+   170→        method: 'PATCH',
+   171→        headers: { 'Content-Type': 'application/json' },
+   172→        body: JSON.stringify(body),
+   173→      })
+   174→      setSelectedApp(null)
+   175→      setRejectReason('')
+   176→      fetchApps()
+   177→    } finally {
+   178→      setActionLoading(false)
+   179→    }
+   180→  }
+   181→
+   182→  /* ---- Task actions ---- */
+   183→  async function addTask() {
+   184→    if (!newTask.title.trim()) return
+   185→    await fetch('/api/tasks', {
+   186→      method: 'POST',
+   187→      headers: { 'Content-Type': 'application/json' },
+   188→      body: JSON.stringify({ ...newTask, date: taskDate }),
+   189→    })
+   190→    setNewTask({ title: '', priority: 'MEDIUM', notes: '' })
+   191→    setShowTaskForm(false)
+   192→    fetchTasks()
+   193→  }
+   194→
+   195→  async function updateTask(id: string, data: Partial<Task>) {
+   196→    await fetch(`/api/tasks/${id}`, {
+   197→      method: 'PATCH',
+   198→      headers: { 'Content-Type': 'application/json' },
+   199→      body: JSON.stringify(data),
+   200→    })
+   201→    fetchTasks()
+   202→  }
+   203→
+   204→  async function deleteTask(id: string) {
+   205→    await fetch(`/api/tasks/${id}`, { method: 'DELETE' })
+   206→    fetchTasks()
+   207→  }
+   208→
+   209→  /* ---- Notification actions ---- */
+   210→  async function markRead(notificationId?: string) {
+   211→    await fetch('/api/notifications', {
+   212→      method: 'PATCH',
+   213→      headers: { 'Content-Type': 'application/json' },
+   214→      body: JSON.stringify(notificationId ? { notificationId } : { userId: notifUserId }),
+   215→    })
+   216→    fetchNotifications()
+   217→  }
+   218→
+   219→  const unreadCount = notifications.filter((n) => !n.readAt).length
+   220→
+   221→  /* ---------------------------------------------------------------- */
+   222→  /*  Render                                                           */
+   223→  /* ---------------------------------------------------------------- */
+   224→  return (
+   225→    <div className="rounded-xl neon-border bg-bg-card p-4 md:p-6">
+   226→      <h2 className="mb-4 text-xl font-bold text-white neon-text-glow">
+   227→        Panel de Staff
+   228→      </h2>
+   229→
+   230→      <Tabs defaultValue="whitelist" className="w-full">
+   231→        {/* ---- Tab navigation ---- */}
+   232→        <TabsList className="mb-4 flex w-full flex-wrap gap-1 bg-[#0f172a] p-1 rounded-lg border border-[rgba(124,58,237,0.3)]">
+   233→          <TabsTrigger
+   234→            value="whitelist"
+   235→            className="data-[state=active]:neon-glow data-[state=active]:bg-[rgba(124,58,237,0.2)] data-[state=active]:text-[#a78bfa] flex items-center gap-1.5 text-sm text-gray-400 transition-all"
+   236→          >
+   237→            <Inbox className="size-4" /> Whitelist Inbox
+   238→            {apps.filter((a) => a.status === 'PENDING').length > 0 && (
+   239→              <span className="ml-1 rounded-full bg-yellow-500/30 px-1.5 py-0.5 text-[10px] font-bold text-yellow-400">
+   240→                {apps.filter((a) => a.status === 'PENDING').length}
+   241→              </span>
+   242→            )}
+   243→          </TabsTrigger>
+   244→          <TabsTrigger
+   245→            value="tasks"
+   246→            className="data-[state=active]:neon-glow data-[state=active]:bg-[rgba(124,58,237,0.2)] data-[state=active]:text-[#a78bfa] flex items-center gap-1.5 text-sm text-gray-400 transition-all"
+   247→          >
+   248→            <ClipboardList className="size-4" /> Tareas Diarias
+   249→          </TabsTrigger>
+   250→          <TabsTrigger
+   251→            value="audit"
+   252→            className="data-[state=active]:neon-glow data-[state=active]:bg-[rgba(124,58,237,0.2)] data-[state=active]:text-[#a78bfa] flex items-center gap-1.5 text-sm text-gray-400 transition-all"
+   253→          >
+   254→            <Activity className="size-4" /> Actividad del Staff
+   255→          </TabsTrigger>
+   256→          <TabsTrigger
+   257→            value="notifications"
+   258→            className="data-[state=active]:neon-glow data-[state=active]:bg-[rgba(124,58,237,0.2)] data-[state=active]:text-[#a78bfa] flex items-center gap-1.5 text-sm text-gray-400 transition-all"
+   259→          >
+   260→            <Bell className="size-4" /> Notificaciones
+   261→            {unreadCount > 0 && (
+   262→              <span className="ml-1 rounded-full bg-red-500/30 px-1.5 py-0.5 text-[10px] font-bold text-red-400">
+   263→                {unreadCount}
+   264→              </span>
+   265→            )}
+   266→          </TabsTrigger>
+   267→        </TabsList>
+   268→
+   269→        {/* ============================================================ */}
+   270→        {/* TAB 1 – Whitelist Inbox                                      */}
+   271→        {/* ============================================================ */}
+   272→        <TabsContent value="whitelist">
+   273→          <div className="mb-4 flex flex-wrap items-center gap-3">
+   274→            <span className="text-sm text-gray-400">Filtrar:</span>
+   275→            {['ALL', 'PENDING', 'APPROVED', 'REJECTED'].map((s) => (
+   276→              <Button
+   277→                key={s}
+   278→                size="sm"
+   279→                variant={wlFilter === s ? 'default' : 'outline'}
+   280→                className={wlFilter === s ? 'neon-glow' : ''}
+   281→                onClick={() => setWlFilter(s)}
+   282→              >
+   283→                {s === 'ALL' ? 'Todos' : s === 'PENDING' ? 'Pendientes' : s === 'APPROVED' ? 'Aprobados' : 'Rechazados'}
+   284→              </Button>
+   285→            ))}
+   286→          </div>
+   287→
+   288→          <div className="overflow-x-auto rounded-lg border border-[rgba(124,58,237,0.2)]">
+   289→            <Table>
+   290→              <TableHeader>
+   291→                <TableRow className="border-[rgba(124,58,237,0.2)] hover:bg-transparent">
+   292→                  <TableHead className="text-gray-400">Usuario</TableHead>
+   293→                  <TableHead className="text-gray-400">Intento</TableHead>
+   294→                  <TableHead className="text-gray-400">Estado</TableHead>
+   295→                  <TableHead className="text-gray-400">Fecha</TableHead>
+   296→                  <TableHead className="text-gray-400">Acciones</TableHead>
+   297→                </TableRow>
+   298→              </TableHeader>
+   299→              <TableBody>
+   300→                {apps.length === 0 && (
+   301→                  <TableRow>
+   302→                    <TableCell colSpan={5} className="text-center text-gray-500 py-8">
+   303→                      No hay solicitudes de whitelist
+   304→                    </TableCell>
+   305→                  </TableRow>
+   306→                )}
+   307→                {apps.map((app) => (
+   308→                  <TableRow key={app.id} className="border-[rgba(124,58,237,0.15)] hover:bg-[rgba(124,58,237,0.05)]">
+   309→                    <TableCell className="font-medium text-white">{app.user.username}</TableCell>
+   310→                    <TableCell className="text-gray-400">#{app.attemptNumber}</TableCell>
+   311→                    <TableCell>
+   312→                      <Badge className={`${statusColor[app.status]} border text-xs`}>
+   313→                        {app.status}
+   314→                      </Badge>
+   315→                    </TableCell>
+   316→                    <TableCell className="text-gray-400 text-xs">{fmtDate(app.createdAt)}</TableCell>
+   317→                    <TableCell>
+   318→                      <Button size="sm" variant="ghost" onClick={() => { setSelectedApp(app); setRejectReason('') }}>
+   319→                        <Eye className="size-4 mr-1" /> Ver
+   320→                      </Button>
+   321→                    </TableCell>
+   322→                  </TableRow>
+   323→                ))}
+   324→              </TableBody>
+   325→            </Table>
+   326→          </div>
+   327→
+   328→          {/* Application detail dialog */}
+   329→          <Dialog open={!!selectedApp} onOpenChange={(o) => { if (!o) setSelectedApp(null) }}>
+   330→            <DialogContent className="bg-bg-card neon-border max-h-[85vh] overflow-y-auto sm:max-w-2xl">
+   331→              {selectedApp && (
+   332→                <>
+   333→                  <DialogHeader>
+   334→                    <DialogTitle className="text-white neon-text-glow">
+   335→                      Solicitud de {selectedApp.user.username}
+   336→                    </DialogTitle>
+   337→                    <DialogDescription className="text-gray-400">
+   338→                      Intento #{selectedApp.attemptNumber} &middot; Discord: {selectedApp.user.discordId}
+   339→                    </DialogDescription>
+   340→                  </DialogHeader>
+   341→
+   342→                  <div className="space-y-4 py-2">
+   343→                    {[
+   344→                      { q: '¿Qué es el Power Gaming?', a: selectedApp.answer1 },
+   345→                      { q: '¿Qué es el Meta Gaming?', a: selectedApp.answer2 },
+   346→                      { q: 'Diferencia entre OOC e IC', a: selectedApp.answer3 },
+   347→                      { q: '¿Qué son NVL y VDM?', a: selectedApp.answer4 },
+   348→                      { q: 'Escenario de decisión difícil', a: selectedApp.answer5 },
+   349→                    ].map((item, i) => (
+   350→                      <div key={i} className="rounded-lg border border-[rgba(124,58,237,0.2)] p-3">
+   351→                        <p className="text-sm font-semibold text-[#a78bfa]">{item.q}</p>
+   352→                        <p className="mt-1 text-sm text-gray-300">{item.a}</p>
+   353→                      </div>
+   354→                    ))}
+   355→                  </div>
+   356→
+   357→                  {selectedApp.status === 'PENDING' && (
+   358→                    <div className="space-y-3 pt-2">
+   359→                      <Textarea
+   360→                        placeholder="Razón de rechazo (obligatorio si rechazas)..."
+   361→                        value={rejectReason}
+   362→                        onChange={(e) => setRejectReason(e.target.value)}
+   363→                        className="bg-[#0f172a] border-[rgba(124,58,237,0.3)] text-white placeholder:text-gray-600 min-h-[80px]"
+   364→                      />
+   365→                      <DialogFooter className="gap-2">
+   366→                        <Button
+   367→                          variant="destructive"
+   368→                          disabled={actionLoading || !rejectReason.trim()}
+   369→                          onClick={() => handleReview(selectedApp.id, 'REJECTED')}
+   370→                        >
+   371→                          <XCircle className="size-4 mr-1" /> Rechazar
+   372→                        </Button>
+   373→                        <Button
+   374→                          disabled={actionLoading}
+   375→                          onClick={() => handleReview(selectedApp.id, 'APPROVED')}
+   376→                          className="bg-green-600 hover:bg-green-700 text-white"
+   377→                        >
+   378→                          <CheckCircle2 className="size-4 mr-1" /> Aprobar
+   379→                        </Button>
+   380→                      </DialogFooter>
+   381→                    </div>
+   382→                  )}
+   383→
+   384→                  {selectedApp.status !== 'PENDING' && (
+   385→                    <div className="flex items-center gap-2 pt-2">
+   386→                      <Badge className={`${statusColor[selectedApp.status]} border`}>
+   387→                        {selectedApp.status}
+   388→                      </Badge>
+   389→                      {selectedApp.rejectReason && (
+   390→                        <span className="text-sm text-red-400">Razón: {selectedApp.rejectReason}</span>
+   391→                      )}
+   392→                    </div>
+   393→                  )}
+   394→                </>
+   395→              )}
+   396→            </DialogContent>
+   397→          </Dialog>
+   398→        </TabsContent>
+   399→
+   400→        {/* ============================================================ */}
+   401→        {/* TAB 2 – Tareas Diarias                                       */}
+   402→        {/* ============================================================ */}
+   403→        <TabsContent value="tasks">
+   404→          <div className="mb-4 flex flex-wrap items-center gap-3">
+   405→            <Input
+   406→              type="date"
+   407→              value={taskDate}
+   408→              onChange={(e) => setTaskDate(e.target.value)}
+   409→              className="w-44 bg-[#0f172a] border-[rgba(124,58,237,0.3)] text-white"
+   410→            />
+   411→            <Button size="sm" className="neon-glow" onClick={() => setShowTaskForm(true)}>
+   412→              <Plus className="size-4 mr-1" /> Nueva Tarea
+   413→            </Button>
+   414→          </div>
+   415→
+   416→          {showTaskForm && (
+   417→            <div className="mb-4 rounded-lg neon-border p-4 space-y-3 bg-[#0f172a]">
+   418→              <Input
+   419→                placeholder="Título de la tarea"
+   420→                value={newTask.title}
+   421→                onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
+   422→                className="bg-[#0f172a] border-[rgba(124,58,237,0.3)] text-white"
+   423→              />
+   424→              <div className="flex flex-wrap gap-3">
+   425→                <Select value={newTask.priority} onValueChange={(v) => setNewTask({ ...newTask, priority: v as Task['priority'] })}>
+   426→                  <SelectTrigger className="w-36 bg-[#0f172a] border-[rgba(124,58,237,0.3)] text-white">
+   427→                    <SelectValue />
+   428→                  </SelectTrigger>
+   429→                  <SelectContent className="bg-[#0f172a] border-[rgba(124,58,237,0.3)]">
+   430→                    {['LOW', 'MEDIUM', 'HIGH', 'URGENT'].map((p) => (
+   431→                      <SelectItem key={p} value={p} className="text-white focus:bg-[rgba(124,58,237,0.2)]">
+   432→                        {p}
+   433→                      </SelectItem>
+   434→                    ))}
+   435→                  </SelectContent>
+   436→                </Select>
+   437→                <Input
+   438→                  placeholder="Notas (opcional)"
+   439→                  value={newTask.notes}
+   440→                  onChange={(e) => setNewTask({ ...newTask, notes: e.target.value })}
+   441→                  className="flex-1 bg-[#0f172a] border-[rgba(124,58,237,0.3)] text-white min-w-[180px]"
+   442→                />
+   443→              </div>
+   444→              <div className="flex gap-2">
+   445→                <Button size="sm" className="neon-glow" onClick={addTask}>Crear</Button>
+   446→                <Button size="sm" variant="outline" onClick={() => setShowTaskForm(false)}>Cancelar</Button>
+   447→              </div>
+   448→            </div>
+   449→          )}
+   450→
+   451→          <div className="overflow-x-auto rounded-lg border border-[rgba(124,58,237,0.2)]">
+   452→            <Table>
+   453→              <TableHeader>
+   454→                <TableRow className="border-[rgba(124,58,237,0.2)] hover:bg-transparent">
+   455→                  <TableHead className="text-gray-400">Tarea</TableHead>
+   456→                  <TableHead className="text-gray-400">Responsable</TableHead>
+   457→                  <TableHead className="text-gray-400">Prioridad</TableHead>
+   458→                  <TableHead className="text-gray-400">Estado</TableHead>
+   459→                  <TableHead className="text-gray-400">Notas</TableHead>
+   460→                  <TableHead className="text-gray-400">Acciones</TableHead>
+   461→                </TableRow>
+   462→              </TableHeader>
+   463→              <TableBody>
+   464→                {tasks.length === 0 && (
+   465→                  <TableRow>
+   466→                    <TableCell colSpan={6} className="text-center text-gray-500 py-8">
+   467→                      No hay tareas para esta fecha
+   468→                    </TableCell>
+   469→                  </TableRow>
+   470→                )}
+   471→                {tasks.map((task) => (
+   472→                  <TableRow key={task.id} className="border-[rgba(124,58,237,0.15)] hover:bg-[rgba(124,58,237,0.05)]">
+   473→                    <TableCell className="font-medium text-white">{task.title}</TableCell>
+   474→                    <TableCell className="text-gray-400 text-sm">
+   475→                      {task.assignee?.username || '—'}
+   476→                    </TableCell>
+   477→                    <TableCell>
+   478→                      <Select
+   479→                        value={task.priority}
+   480→                        onValueChange={(v) => updateTask(task.id, { priority: v as Task['priority'] })}
+   481→                      >
+   482→                        <SelectTrigger className="h-7 w-24 text-xs bg-transparent border-0 p-0">
+   483→                          <Badge className={`${priorityColor[task.priority]} border text-[10px]`}>
+   484→                            {task.priority}
+   485→                          </Badge>
+   486→                        </SelectTrigger>
+   487→                        <SelectContent className="bg-[#0f172a] border-[rgba(124,58,237,0.3)]">
+   488→                          {['LOW', 'MEDIUM', 'HIGH', 'URGENT'].map((p) => (
+   489→                            <SelectItem key={p} value={p} className="text-white focus:bg-[rgba(124,58,237,0.2)]">{p}</SelectItem>
+   490→                          ))}
+   491→                        </SelectContent>
+   492→                      </Select>
+   493→                    </TableCell>
+   494→                    <TableCell>
+   495→                      <Select
+   496→                        value={task.status}
+   497→                        onValueChange={(v) => updateTask(task.id, { status: v as Task['status'] })}
+   498→                      >
+   499→                        <SelectTrigger className="h-7 w-28 text-xs bg-transparent border-0 p-0">
+   500→                          <Badge className={`${taskStatusColor[task.status]} border text-[10px]`}>
+   501→                            {task.status}
+   502→                          </Badge>
+   503→                        </SelectTrigger>
+   504→                        <SelectContent className="bg-[#0f172a] border-[rgba(124,58,237,0.3)]">
+   505→                          {['TODO', 'IN_PROGRESS', 'DONE', 'BLOCKED'].map((s) => (
+   506→                            <SelectItem key={s} value={s} className="text-white focus:bg-[rgba(124,58,237,0.2)]">{s}</SelectItem>
+   507→                          ))}
+   508→                        </SelectContent>
+   509→                      </Select>
+   510→                    </TableCell>
+   511→                    <TableCell className="text-gray-500 text-xs max-w-[140px] truncate">
+   512→                      {task.notes || '—'}
+   513→                    </TableCell>
+   514→                    <TableCell>
+   515→                      <Button size="icon" variant="ghost" className="text-red-400 hover:text-red-300" onClick={() => deleteTask(task.id)}>
+   516→                        <Trash2 className="size-4" />
+   517→                      </Button>
+   518→                    </TableCell>
+   519→                  </TableRow>
+   520→                ))}
+   521→              </TableBody>
+   522→            </Table>
+   523→          </div>
+   524→        </TabsContent>
+   525→
+   526→        {/* ============================================================ */}
+   527→        {/* TAB 3 – Actividad del Staff                                  */}
+   528→        {/* ============================================================ */}
+   529→        <TabsContent value="audit">
+   530→          <div className="mb-4 flex items-center gap-3">
+   531→            <Input
+   532→              type="date"
+   533→              value={auditDate}
+   534→              onChange={(e) => setAuditDate(e.target.value)}
+   535→              className="w-44 bg-[#0f172a] border-[rgba(124,58,237,0.3)] text-white"
+   536→            />
+   537→          </div>
+   538→
+   539→          <div className="overflow-x-auto rounded-lg border border-[rgba(124,58,237,0.2)]">
+   540→            <Table>
+   541→              <TableHeader>
+   542→                <TableRow className="border-[rgba(124,58,237,0.2)] hover:bg-transparent">
+   543→                  <TableHead className="text-gray-400">Staff</TableHead>
+   544→                  <TableHead className="text-gray-400">Acción</TableHead>
+   545→                  <TableHead className="text-gray-400">Entidad</TableHead>
+   546→                  <TableHead className="text-gray-400">Fecha/Hora</TableHead>
+   547→                </TableRow>
+   548→              </TableHeader>
+   549→              <TableBody>
+   550→                {auditLogs.length === 0 && (
+   551→                  <TableRow>
+   552→                    <TableCell colSpan={4} className="text-center text-gray-500 py-8">
+   553→                      No hay registros de actividad para esta fecha
+   554→                    </TableCell>
+   555→                  </TableRow>
+   556→                )}
+   557→                {auditLogs.map((log) => (
+   558→                  <TableRow key={log.id} className="border-[rgba(124,58,237,0.15)] hover:bg-[rgba(124,58,237,0.05)]">
+   559→                    <TableCell className="font-medium text-white">{log.actor.username}</TableCell>
+   560→                    <TableCell className="text-cyan-400 text-sm">{log.action}</TableCell>
+   561→                    <TableCell className="text-gray-400 text-sm">
+   562→                      {log.entityType ? `${log.entityType}${log.entityId ? ` #${log.entityId.slice(0, 8)}` : ''}` : '—'}
+   563→                    </TableCell>
+   564→                    <TableCell className="text-gray-500 text-xs">{fmtDate(log.createdAt)}</TableCell>
+   565→                  </TableRow>
+   566→                ))}
+   567→              </TableBody>
+   568→            </Table>
+   569→          </div>
+   570→        </TabsContent>
+   571→
+   572→        {/* ============================================================ */}
+   573→        {/* TAB 4 – Notificaciones                                       */}
+   574→        {/* ============================================================ */}
+   575→        <TabsContent value="notifications">
+   576→          <div className="mb-4 flex items-center justify-between">
+   577→            <span className="text-sm text-gray-400">
+   578→              {unreadCount > 0 ? `${unreadCount} sin leer` : 'Todo leído'}
+   579→            </span>
+   580→            {unreadCount > 0 && (
+   581→              <Button size="sm" variant="outline" onClick={() => markRead()}>
+   582→                <BellOff className="size-4 mr-1" /> Marcar todo leído
+   583→              </Button>
+   584→            )}
+   585→          </div>
+   586→
+   587→          <div className="max-h-96 space-y-2 overflow-y-auto pr-1">
+   588→            {notifications.length === 0 && (
+   589→              <div className="py-12 text-center text-gray-500">
+   590→                <Bell className="mx-auto size-8 mb-2 opacity-40" />
+   591→                No hay notificaciones
+   592→              </div>
+   593→            )}
+   594→            {notifications.map((n) => {
+   595→              const isUnread = !n.readAt
+   596→              return (
+   597→                <div
+   598→                  key={n.id}
+   599→                  className={`flex items-start gap-3 rounded-lg border p-3 transition-colors ${
+   600→                    isUnread
+   601→                      ? 'border-[rgba(124,58,237,0.4)] bg-[rgba(124,58,237,0.08)]'
+   602→                      : 'border-[rgba(124,58,237,0.15)] bg-transparent'
+   603→                  }`}
+   604→                >
+   605→                  <div className={`mt-0.5 size-2 shrink-0 rounded-full ${isUnread ? 'bg-[#7c3aed]' : 'bg-gray-600'}`} />
+   606→                  <div className="flex-1 min-w-0">
+   607→                    <div className="flex items-center gap-2">
+   608→                      <span className={`text-sm font-medium ${isUnread ? 'text-white' : 'text-gray-400'}`}>
+   609→                        {n.type.replace(/_/g, ' ')}
+   610→                      </span>
+   611→                      <span className="text-[10px] text-gray-600">{fmtDate(n.createdAt)}</span>
+   612→                    </div>
+   613→                    {n.payload && (
+   614→                      <p className="mt-0.5 text-xs text-gray-500 truncate">{n.payload}</p>
+   615→                    )}
+   616→                  </div>
+   617→                  {isUnread && (
+   618→                    <Button size="sm" variant="ghost" className="text-xs text-[#7c3aed] shrink-0" onClick={() => markRead(n.id)}>
+   619→                      <CheckCircle2 className="size-3.5 mr-1" /> Leído
+   620→                    </Button>
+   621→                  )}
+   622→                </div>
+   623→              )
+   624→            })}
+   625→          </div>
+   626→        </TabsContent>
+   627→      </Tabs>
+   628→    </div>
+   629→  )
+   630→}
+   631→
