@@ -1,9 +1,9 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { 
-  Menu, X, Home, BookOpen, ImageIcon, Swords, Map, Info, Heart, 
+  Menu, Home, BookOpen, ImageIcon, Swords, Map, Info, Heart, 
   Shield, Crown, LogIn, LogOut, User, ChevronDown, Bell, UserCircle,
   Search
 } from 'lucide-react'
@@ -24,7 +24,7 @@ import {
   SheetTrigger,
   SheetTitle,
 } from '@/components/ui/sheet'
-import { toast } from 'sonner'
+import NotificationPanel from '@/components/layout/NotificationPanel'
 
 const navItems: { id: PageId; label: string; icon: React.ReactNode; auth?: boolean; role?: string }[] = [
   { id: 'home', label: 'Inicio', icon: <Home className="w-4 h-4" /> },
@@ -39,9 +39,8 @@ const navItems: { id: PageId; label: string; icon: React.ReactNode; auth?: boole
   { id: 'admin', label: 'Admin', icon: <Crown className="w-4 h-4" />, auth: true, role: 'ADMIN' },
 ]
 
-function NotificationBell() {
+function NotificationBell({ onClick }: { onClick: () => void }) {
   const user = useSession((s) => s.user)
-  const { navigate } = useNavigation()
   const [unreadCount, setUnreadCount] = useState(0)
   const [isAnimating, setIsAnimating] = useState(false)
   const prevCountRef = useRef(0)
@@ -81,19 +80,11 @@ function NotificationBell() {
     }
   }, [user?.dbId])
 
-  const handleClick = () => {
-    if (user?.role === 'STAFF' || user?.role === 'ADMIN') {
-      navigate('staff')
-    } else {
-      toast.info('No tienes notificaciones')
-    }
-  }
-
   if (!user) return null
 
   return (
     <button
-      onClick={handleClick}
+      onClick={onClick}
       className="relative p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
       aria-label="Notificaciones"
     >
@@ -118,7 +109,11 @@ function NotificationBell() {
   )
 }
 
-export default function Navbar() {
+interface NavbarProps {
+  bannerVisible?: boolean
+}
+
+export default function Navbar({ bannerVisible = false }: NavbarProps) {
   const { currentPage, navigate } = useNavigation()
   const user = useSession((s) => s.user)
   const loading = useSession((s) => s.loading)
@@ -126,6 +121,7 @@ export default function Navbar() {
   const initSession = useSession((s) => s.initSession)
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [notifOpen, setNotifOpen] = useState(false)
 
   // Initialize session on mount
   useEffect(() => {
@@ -169,7 +165,7 @@ export default function Navbar() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed left-0 right-0 z-50 transition-all duration-300 ${bannerVisible ? 'top-[40px]' : 'top-0'} ${
         scrolled
           ? 'glass-strong shadow-lg shadow-[#7c3aed]/10'
           : 'bg-transparent'
@@ -226,7 +222,7 @@ export default function Navbar() {
             <CommandPaletteTrigger />
 
             {/* Notification Bell - between nav items and user dropdown */}
-            <NotificationBell />
+            <NotificationBell onClick={() => setNotifOpen(true)} />
 
             {loading ? (
               <div className="w-8 h-8 rounded-full bg-[#1e293b] animate-pulse" />
@@ -334,6 +330,9 @@ export default function Navbar() {
           </div>
         </div>
       </div>
+
+      {/* Notification Panel */}
+      <NotificationPanel open={notifOpen} onOpenChange={setNotifOpen} />
 
       {/* Mobile search FAB */}
       <button

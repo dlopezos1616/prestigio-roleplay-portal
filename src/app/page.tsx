@@ -1,9 +1,11 @@
 'use client'
 
+import { useState, useCallback } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Shield, Crown, ClipboardCheck, UserCircle } from 'lucide-react'
 import { useNavigation } from '@/lib/navigation'
 import Navbar from '@/components/layout/Navbar'
+import AnnouncementBanner from '@/components/layout/AnnouncementBanner'
 import Footer from '@/components/layout/Footer'
 import AudioPlayer from '@/components/layout/AudioPlayer'
 import BackToTop from '@/components/layout/BackToTop'
@@ -24,6 +26,7 @@ import Facciones from '@/components/sections/Facciones'
 import ServerInfo from '@/components/sections/ServerInfo'
 import ServerStatusWidget from '@/components/sections/ServerStatusWidget'
 import Changelog from '@/components/sections/Changelog'
+import CommunityStats from '@/components/sections/CommunityStats'
 import StatsCounter from '@/components/sections/StatsCounter'
 import NextEvent from '@/components/sections/NextEvent'
 import Donaciones from '@/components/sections/Donaciones'
@@ -66,6 +69,8 @@ function HomePage() {
       <NextEvent />
       <SectionDivider />
       <Changelog />
+      <SectionDivider variant="cyan" />
+      <CommunityStats />
       <JoinDiscord />
     </div>
   )
@@ -137,6 +142,11 @@ function ProfilePage() {
 
 export default function MainRouter() {
   const { currentPage } = useNavigation()
+  const [bannerVisible, setBannerVisible] = useState(false)
+
+  const handleBannerVisibilityChange = useCallback((visible: boolean) => {
+    setBannerVisible(visible)
+  }, [])
 
   const renderPage = () => {
     switch (currentPage) {
@@ -170,8 +180,9 @@ export default function MainRouter() {
   return (
     <div className="min-h-screen flex flex-col bg-[#030712] text-foreground gradient-bg">
       <LoadingOverlay />
-      <Navbar />
-      <main className="flex-1 pt-16">
+      <AnnouncementBanner onVisibilityChange={handleBannerVisibilityChange} />
+      <Navbar bannerVisible={bannerVisible} />
+      <main className={`flex-1 transition-all duration-300 ${bannerVisible ? 'pt-[104px]' : 'pt-16'}`}>
         <AnimatePresence mode="wait">
           <motion.div
             key={currentPage}
