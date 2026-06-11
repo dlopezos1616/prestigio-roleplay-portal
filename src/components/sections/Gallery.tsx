@@ -107,6 +107,7 @@ export default function Gallery() {
     ? galleryItems
     : galleryItems.filter((item) => item.eventTag === activeFilter)
 
+
   return (
     <section className="relative py-20 px-4 sm:px-6 lg:px-8">
       {/* Background */}
@@ -168,18 +169,34 @@ export default function Gallery() {
           ))}
         </motion.div>
 
+        {/* Results count */}
+        <div className="flex items-center justify-between mb-4">
+          <p className="text-sm text-gray-500">
+            {filteredItems.length} {filteredItems.length === 1 ? 'imagen' : 'imágenes'}
+            {activeFilter !== 'Todos' && <span className="text-[#7c3aed]"> en {activeFilter}</span>}
+          </p>
+          {activeFilter !== 'Todos' && (
+            <button
+              onClick={() => setActiveFilter('Todos')}
+              className="text-xs text-[#7c3aed] hover:text-[#a78bfa] transition-colors flex items-center gap-1"
+            >
+              <X className="w-3 h-3" /> Limpiar filtro
+            </button>
+          )}
+        </div>
+
         {/* Masonry Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 auto-rows-[200px] gap-4">
           <AnimatePresence mode="popLayout">
-            {filteredItems.map((item, index) => (
+            {filteredItems.map((item) => (
               <motion.div
                 key={item.id}
                 layout
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ duration: 0.4, delay: index * 0.05 }}
-                className="relative group cursor-pointer rounded-xl overflow-hidden neon-border"
+                transition={{ duration: 0.3 }}
+                className="relative group cursor-pointer rounded-xl overflow-hidden neon-border card-lift"
                 style={{ gridRow: `span ${item.rowSpan}` }}
                 onClick={() => setSelectedItem(item)}
               >

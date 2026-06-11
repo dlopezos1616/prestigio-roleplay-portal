@@ -10,6 +10,9 @@ import Footer from '@/components/layout/Footer'
 import AudioPlayer from '@/components/layout/AudioPlayer'
 import BackToTop from '@/components/layout/BackToTop'
 import CookieConsent from '@/components/layout/CookieConsent'
+import ChatWidget from '@/components/layout/ChatWidget'
+import ThemeCustomizer from '@/components/layout/ThemeCustomizer'
+import ScrollProgress from '@/components/layout/ScrollProgress'
 import LoadingOverlay from '@/components/layout/LoadingOverlay'
 import DevLogin from '@/components/layout/DevLogin'
 import CommandPalette from '@/components/layout/CommandPalette'
@@ -27,12 +30,14 @@ import ServerInfo from '@/components/sections/ServerInfo'
 import ServerStatusWidget from '@/components/sections/ServerStatusWidget'
 import Changelog from '@/components/sections/Changelog'
 import CommunityStats from '@/components/sections/CommunityStats'
+import EventCalendar from '@/components/sections/EventCalendar'
 import StatsCounter from '@/components/sections/StatsCounter'
 import NextEvent from '@/components/sections/NextEvent'
 import Donaciones from '@/components/sections/Donaciones'
 import CityMap from '@/components/sections/CityMap'
 import Streamers from '@/components/sections/Streamers'
 import Leaderboard from '@/components/sections/Leaderboard'
+import Achievements from '@/components/sections/Achievements'
 import SectionDivider from '@/components/layout/SectionDivider'
 import { WhitelistForm } from '@/components/whitelist/WhitelistForm'
 import StaffPanel from '@/components/staff/StaffPanel'
@@ -64,6 +69,8 @@ function HomePage() {
       <SectionDivider />
       <Leaderboard />
       <SectionDivider variant="cyan" />
+      <Achievements />
+      <SectionDivider variant="amber" />
       <ServerStatusWidget />
       <SectionDivider variant="amber" />
       <NextEvent />
@@ -71,6 +78,8 @@ function HomePage() {
       <Changelog />
       <SectionDivider variant="cyan" />
       <CommunityStats />
+      <SectionDivider variant="amber" />
+      <EventCalendar />
       <JoinDiscord />
     </div>
   )
@@ -178,7 +187,8 @@ export default function MainRouter() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#030712] text-foreground gradient-bg">
+    <div className="min-h-screen flex flex-col bg-[#030712] text-foreground gradient-bg relative">
+      <ScrollProgress />
       <LoadingOverlay />
       <AnnouncementBanner onVisibilityChange={handleBannerVisibilityChange} />
       <Navbar bannerVisible={bannerVisible} />
@@ -200,6 +210,8 @@ export default function MainRouter() {
       <AudioPlayer />
       <BackToTop />
       <CookieConsent />
+      <ChatWidget />
+      <ThemeCustomizer />
       <DevLogin />
       <CommandPalette />
     </div>

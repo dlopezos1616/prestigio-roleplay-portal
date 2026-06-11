@@ -1,0 +1,812 @@
+- generic
+  - button "Open Next.js Dev Tools" [expanded=false, ref=e39]
+    - image
+  - button "Open issues overlay" [ref=e40]
+    - StaticText "1"
+    - StaticText "Issue"
+  - button "Collapse issues badge" [ref=e41]
+    - image
+  - generic
+    - generic
+      - generic
+        - StaticText "🌙 Carreras Nocturnas este viernes a las 21:00 CET — ¡No te lo pierdas!"
+        - button "Cerrar anuncio" [ref=e22]
+    - navigation
+      - button "Prestigio RP PRESTIGIO RP" [ref=e4]
+        - image "Prestigio RP"
+        - StaticText "PRESTIGIO RP"
+      - button "Inicio" [ref=e5]
+        - StaticText "Inicio"
+      - button "Normativa" [ref=e6]
+      - button "Galería" [ref=e7]
+      - button "Facciones" [ref=e8]
+      - button "Mapa" [ref=e9]
+      - button "Info" [ref=e10]
+      - button "Donaciones" [ref=e11]
+      - button "Abrir búsqueda (⌘K)" [ref=e12]
+        - StaticText "Buscar..."
+        - StaticText "⌘K"
+      - button "Discord" [ref=e13]
+    - main
+      - generic
+        - generic
+          - image
+          - image
+          - image
+          - image
+        - generic
+          - generic
+            - StaticText "🌙 SERVIDOR ACTIVO"
+          - generic
+            - generic
+            - image "Prestigio Roleplay Logo"
+          - heading "PRESTIGIO ROLEPLAY" [level=1, ref=e42]
+            - StaticText "PRESTIGIO ROLEPLAY"
+          - paragraph
+            - StaticText "Vive la experiencia de roleplay definitiva"
+          - link "Unirse a Discord" [ref=e43]
+            - image
+            - StaticText "Unirse a Discord"
+          - button "Solicitar Whitelist" [ref=e44]
+          - StaticText "500+"
+          - StaticText "Jugadores"
+          - StaticText "24/7"
+          - StaticText "Online"
+          - StaticText "99.8%"
+          - StaticText "Uptime"
+          - generic
+            - StaticText "DESCUBRE MÁS"
+      - generic
+      - generic
+        - generic
+          - heading "Quiénes Somos" [level=2, ref=e45]
+            - StaticText "Quiénes Somos"
+          - paragraph
+            - StaticText "La comunidad donde cada historia cobra vida"
+          - paragraph
+            - StaticText "Somos una comunidad apasionada por el roleplay en FiveM, dedicada a crear experiencias únicas e inmersivas. En Prestigio RP, cada jugador tiene la oportunidad de vivir aventuras irrepetibles en un entorno profesional y acogedor."
+          - generic
+            - heading "Comunidad Activa" [level=3, ref=e67]
+            - paragraph
+              - StaticText "Más de 0 jugadores activos"
+            - paragraph
+              - StaticText "Discord, eventos y actividades diarias"
+          - generic
+            - heading "Staff Profesional" [level=3, ref=e68]
+            - paragraph
+              - StaticText "Equipo dedicado y comprometido"
+            - paragraph
+              - StaticText "Soporte 24/7 y mediación justa"
+          - generic
+            - heading "Experiencia Única" [level=3, ref=e69]
+            - paragraph
+              - StaticText "Roleplay inmersivo de calidad"
+            - paragraph
+              - StaticText "Scripts custom y mapas exclusivos"
+          - generic
+            - heading "Comunicación Constante" [level=3, ref=e70]
+            - paragraph
+              - StaticText "Siempre conectados"
+            - paragraph
+              - StaticText "Canales de voz y texto activos"
+      - generic
+      - generic
+        - generic
+          - heading "A Qué Nos Dedicamos" [level=2, ref=e46]
+            - StaticText "A Qué Nos Dedicamos"
+          - paragraph
+            - StaticText "Todo lo que necesitas para vivir la mejor experiencia de roleplay"
+          - generic
+            - StaticText "01"
+            - heading "FiveM Roleplay" [level=3, ref=e71]
+            - paragraph
+              - StaticText "Servidor personalizado con scripts únicos y una experiencia de juego sin igual"
+            - generic
+              - StaticText "128 Slots"
+          - generic
+            - StaticText "02"
+            - heading "Comunidad" [level=3, ref=e72]
+            - paragraph
+              - StaticText "Una comunidad unida por la pasión del roleplay, con eventos y actividades constantes"
+            - generic
+              - StaticText "500+ Jugadores"
+          - generic
+            - StaticText "03"
+            - heading "Eventos" [level=3, ref=e73]
+            - paragraph
+              - StaticText "Eventos semanales, torneos y actividades especiales para toda la comunidad"
+            - generic
+              - StaticText "150+ Realizados"
+          - generic
+            - StaticText "04"
+            - heading "Staff Profesional" [level=3, ref=e74]
+            - paragraph
+              - StaticText "Equipo dedicado y comprometido que asegura la calidad del roleplay en cada momento"
+            - generic
+              - StaticText "24/7 Disponible"
+      - generic
+      - generic
+        - generic
+          - heading "Preguntas Frecuentes" [level=2, ref=e47]
+            - StaticText "Preguntas Frecuentes"
+          - paragraph
+            - StaticText "Todo lo que necesitas saber antes de unirte a Prestigio RP"
+          - generic
+            - button "¿Cómo me uno al servidor?" [expanded=true, ref=e75]
+              - StaticText "¿Cómo me uno al servidor?"
+            - paragraph
+              - StaticText "El proceso es sencillo: primero únete a nuestro Discord oficial, luego solicita la whitelist completando el formulario correspondiente. Una vez aceptado, podrás conectarte a través de FiveM buscando \"Prestigio RP\" en la lista de servidores o usando la IP de conexión directa."
+          - generic
+            - button "¿Qué es la whitelist?" [expanded=false, ref=e76]
+              - StaticText "¿Qué es la whitelist?"
+          - generic
+            - button "¿Necesito experiencia previa?" [expanded=false, ref=e77]
+              - StaticText "¿Necesito experiencia previa?"
+          - generic
+            - button "¿Cuántas veces puedo solicitar la whitelist?" [expanded=false, ref=e78]
+              - StaticText "¿Cuántas veces puedo solicitar la whitelist?"
+          - generic
+            - button "¿Qué facciones hay disponibles?" [expanded=false, ref=e79]
+              - StaticText "¿Qué facciones hay disponibles?"
+          - generic
+            - button "¿Es obligatorio el voice chat?" [expanded=false, ref=e80]
+              - StaticText "¿Es obligatorio el voice chat?"
+          - generic
+            - button "¿Cómo puedo ser staff?" [expanded=false, ref=e81]
+              - StaticText "¿Cómo puedo ser staff?"
+          - generic
+            - button "¿Hay eventos especiales?" [expanded=false, ref=e82]
+              - StaticText "¿Hay eventos especiales?"
+      - generic
+      - generic
+        - generic
+          - heading "Lo Que Dicen Nuestros Jugadores" [level=2, ref=e48]
+            - StaticText "Lo Que Dicen Nuestros Jugadores"
+          - paragraph
+            - StaticText "Historias reales de nuestra comunidad"
+          - generic
+            - generic
+              - paragraph
+                - StaticText "“El mejor servidor de RP en español. La comunidad es increíble y siempre hay algo interesante que hacer en la ciudad.”"
+              - StaticText "C"
+              - StaticText "Carlos M."
+              - StaticText "Civil"
+            - button "Ir al testimonio 1" [ref=e83]
+            - button "Ir al testimonio 2" [ref=e84]
+            - button "Ir al testimonio 3" [ref=e85]
+            - button "Ir al testimonio 4" [ref=e86]
+            - button "Ir al testimonio 5" [ref=e87]
+            - button "Ir al testimonio 6" [ref=e88]
+            - StaticText "⟳ Auto-reproduciendo"
+      - generic
+      - generic
+        - generic
+          - heading "Creadores de Contenido" [level=2, ref=e49]
+            - StaticText "Creadores de Contenido"
+          - paragraph
+            - StaticText "Nuestros streamers y creadores que hacen la comunidad más grande"
+          - generic
+            - generic
+              - generic
+                - generic
+                  - StaticText "R"
+                  - image
+              - image
+              - StaticText "Twitch"
+              - StaticText "EN VIVO"
+              - StaticText "347"
+              - heading "RPKing_" [level=3, ref=e157]
+              - StaticText "0"
+              - StaticText "seguidores"
+              - paragraph
+                - StaticText "Especialista en persecuciones y acción"
+              - link "Ver Stream" [ref=e158]
+          - generic
+            - generic
+              - StaticText "L"
+              - image
+            - heading "LaJoséRP" [level=4, ref=e93]
+            - generic
+              - image
+              - StaticText "Twitch"
+            - StaticText "0"
+            - StaticText "seguidores"
+            - generic
+              - StaticText "Offline"
+            - paragraph
+              - StaticText "Roleplay policial de alto nivel"
+          - generic
+            - generic
+              - StaticText "N"
+            - heading "NightCityVibes" [level=4, ref=e94]
+            - StaticText "YouTube"
+            - StaticText "0"
+            - StaticText "subs"
+            - generic
+              - StaticText "Offline"
+            - paragraph
+              - StaticText "Documentales del mundo criminal de LS"
+          - generic
+            - generic
+              - StaticText "D"
+              - image
+            - heading "DocMartinez" [level=4, ref=e95]
+            - generic
+              - image
+              - StaticText "Twitch"
+            - StaticText "0"
+            - StaticText "seguidores"
+            - generic
+              - StaticText "EN VIVO"
+              - StaticText "128"
+            - paragraph
+              - StaticText "EMS roleplay y rescates épicos"
+          - generic
+            - generic
+              - StaticText "M"
+            - heading "MecánicoMax" [level=4, ref=e96]
+            - StaticText "YouTube"
+            - StaticText "0"
+            - StaticText "subs"
+            - generic
+              - StaticText "Offline"
+            - paragraph
+              - StaticText "Tuning, carreras y mecánica avanzada"
+          - generic
+            - generic
+              - StaticText "S"
+              - image
+            - heading "ShadowOps" [level=4, ref=e97]
+            - generic
+              - image
+              - StaticText "Twitch"
+            - StaticText "0"
+            - StaticText "seguidores"
+            - generic
+              - StaticText "Offline"
+            - paragraph
+              - StaticText "Operaciones encubiertas y espionaje"
+          - paragraph
+            - StaticText "¿Quieres unirte como creador de contenido? "
+            - link "Contáctanos" [ref=e89]
+              - StaticText "Contáctanos"
+      - generic
+      - generic
+        - generic
+          - heading "Números que Hablan" [level=2, ref=e50]
+            - StaticText "Números que Hablan"
+          - generic
+            - generic
+              - image
+              - generic
+                - StaticText "0+"
+            - paragraph
+              - StaticText "Jugadores Activos"
+          - generic
+            - generic
+              - image
+              - generic
+                - StaticText "0/7"
+            - paragraph
+              - StaticText "Servidor Online"
+          - generic
+            - generic
+              - image
+              - generic
+                - StaticText "0+"
+            - paragraph
+              - StaticText "Eventos Realizados"
+          - generic
+            - generic
+              - image
+              - generic
+                - StaticText "0.8%"
+            - paragraph
+              - StaticText "Uptime"
+      - generic
+      - generic
+        - generic
+          - heading "Ranking de Jugadores" [level=2, ref=e90]
+            - StaticText "Ranking de Jugadores"
+          - paragraph
+            - StaticText "Los mejores roleadores de la ciudad — clasificados por dedicación y actividad"
+          - button "Semana" [ref=e51]
+            - StaticText "Semana"
+          - button "Mes" [ref=e52]
+          - button "Temporada" [ref=e53]
+          - generic
+            - generic
+              - StaticText "S"
+              - StaticText "1"
+            - heading "ShadowRider" [level=3, ref=e98]
+            - StaticText "Crimen Organizado"
+            - StaticText "0"
+            - StaticText "h"
+            - StaticText "28"
+            - StaticText "+"
+          - generic
+            - generic
+              - StaticText "N"
+              - StaticText "2"
+            - heading "NightOwl" [level=3, ref=e99]
+            - StaticText "Policía"
+            - StaticText "0"
+            - StaticText "h"
+            - StaticText "25"
+            - StaticText "+"
+          - generic
+            - generic
+              - StaticText "G"
+              - StaticText "3"
+            - heading "GhostMedic" [level=3, ref=e100]
+            - StaticText "EMS"
+            - StaticText "0"
+            - StaticText "h"
+            - StaticText "22"
+          - StaticText "4"
+          - StaticText "U"
+          - paragraph
+            - StaticText "UrbanLegend"
+          - paragraph
+            - StaticText "Civil"
+          - StaticText "Civil"
+          - StaticText "0"
+          - StaticText "h"
+          - StaticText "20"
+          - StaticText "-"
+          - StaticText "5"
+          - StaticText "S"
+          - paragraph
+            - StaticText "SteelNerve"
+          - paragraph
+            - StaticText "FBI"
+          - StaticText "FBI"
+          - StaticText "0"
+          - StaticText "h"
+          - StaticText "19"
+          - StaticText "+"
+          - StaticText "6"
+          - StaticText "T"
+          - paragraph
+            - StaticText "TurboMax"
+          - paragraph
+            - StaticText "Mecánico"
+          - StaticText "Mecánico"
+          - StaticText "0"
+          - StaticText "h"
+          - StaticText "18"
+          - StaticText "7"
+          - StaticText "D"
+          - paragraph
+            - StaticText "DarkPhoenix"
+          - paragraph
+            - StaticText "Crimen Organizado"
+          - StaticText "Crimen Organizado"
+          - StaticText "0"
+          - StaticText "h"
+          - StaticText "17"
+          - StaticText "+"
+          - StaticText "8"
+          - StaticText "B"
+          - paragraph
+            - StaticText "BlueSiren"
+          - paragraph
+            - StaticText "Policía"
+          - StaticText "Policía"
+          - StaticText "0"
+          - StaticText "h"
+          - StaticText "15"
+          - StaticText "-"
+          - StaticText "9"
+          - StaticText "Q"
+          - paragraph
+            - StaticText "QuickFix"
+          - paragraph
+            - StaticText "Mecánico"
+          - StaticText "Mecánico"
+          - StaticText "0"
+          - StaticText "h"
+          - StaticText "14"
+          - StaticText "+"
+          - StaticText "10"
+          - StaticText "S"
+          - paragraph
+            - StaticText "SilentWolf"
+          - paragraph
+            - StaticText "Civil"
+          - StaticText "Civil"
+          - StaticText "0"
+          - StaticText "h"
+          - StaticText "12"
+          - paragraph
+            - StaticText "Los rankings se actualizan cada lunes a las 00:00 UTC"
+      - generic
+      - generic
+        - generic
+          - heading "Logros y Conquistas" [level=2, ref=e91]
+            - StaticText "Logros y Conquistas"
+          - paragraph
+            - StaticText "Demuestra tu dedicación — desbloquea logros y sube de tier"
+          - paragraph
+            - StaticText "7/12 logros desbloqueados"
+          - StaticText "1"
+          - StaticText " Diamante"
+          - StaticText "1"
+          - StaticText " Oro"
+          - StaticText "2"
+          - StaticText " Plata"
+          - paragraph
+            - StaticText "80% progreso total"
+          - button "Todos" [ref=e54]
+            - StaticText "Todos"
+          - button "Bronce" [ref=e55]
+          - button "Plata" [ref=e56]
+          - button "Oro" [ref=e57]
+          - button "Diamante" [ref=e58]
+          - generic
+            - generic
+              - image
+            - heading "Primer Paso" [level=3, ref=e101]
+            - paragraph
+              - StaticText "Has completado tu primera sesión de roleplay en el servidor."
+            - StaticText "Bronce"
+            - StaticText "100"
+            - StaticText "%"
+          - generic
+            - generic
+              - image
+            - heading "Sobreviviente" [level=3, ref=e102]
+            - paragraph
+              - StaticText "Has sobrevivido tus primeras 24 horas en la ciudad sin ser arrestado."
+            - StaticText "Bronce"
+            - StaticText "100"
+            - StaticText "%"
+          - generic
+            - generic
+              - image
+            - heading "Habitante" [level=3, ref=e103]
+            - paragraph
+              - StaticText "Has conseguido tu primera casa y un trabajo estable en la ciudad."
+            - StaticText "Bronce"
+            - StaticText "100"
+            - StaticText "%"
+          - generic
+            - generic
+              - image
+            - heading "Veterano" [level=3, ref=e104]
+            - paragraph
+              - StaticText "Has acumulado más de 100 horas de juego en el servidor."
+            - StaticText "Plata"
+            - StaticText "100"
+            - StaticText "%"
+          - generic
+            - generic
+              - image
+            - heading "???" [level=3, ref=e105]
+            - paragraph
+              - StaticText "Sigue jugando para desbloquear este logro"
+            - StaticText "Plata"
+            - StaticText "70"
+            - StaticText "%"
+          - generic
+            - generic
+              - image
+            - heading "Comunicador" [level=3, ref=e106]
+            - paragraph
+              - StaticText "Has participado activamente en 50 situaciones de roleplay dialogado."
+            - StaticText "Plata"
+            - StaticText "100"
+            - StaticText "%"
+          - generic
+            - generic
+              - image
+            - heading "???" [level=3, ref=e107]
+            - paragraph
+              - StaticText "Sigue jugando para desbloquear este logro"
+            - StaticText "Oro"
+            - StaticText "65"
+            - StaticText "%"
+          - generic
+            - generic
+              - image
+            - heading "Líder" [level=3, ref=e108]
+            - paragraph
+              - StaticText "Has liderado una facción con al menos 10 miembros activos."
+            - StaticText "Oro"
+            - StaticText "100"
+            - StaticText "%"
+          - generic
+            - generic
+              - image
+            - heading "???" [level=3, ref=e109]
+            - paragraph
+              - StaticText "Sigue jugando para desbloquear este logro"
+            - StaticText "Oro"
+            - StaticText "40"
+            - StaticText "%"
+          - generic
+            - generic
+              - image
+            - heading "Fundador" [level=3, ref=e110]
+            - paragraph
+              - StaticText "Fuiste parte de los primeros 50 jugadores que dieron vida a la ciudad."
+            - StaticText "Diamante"
+            - StaticText "100"
+            - StaticText "%"
+          - generic
+            - generic
+              - image
+            - heading "???" [level=3, ref=e111]
+            - paragraph
+              - StaticText "Sigue jugando para desbloquear este logro"
+            - StaticText "Diamante"
+            - StaticText "83"
+            - StaticText "%"
+          - generic
+            - generic
+              - image
+            - heading "???" [level=3, ref=e112]
+            - paragraph
+              - StaticText "Sigue jugando para desbloquear este logro"
+            - StaticText "Diamante"
+            - StaticText "0"
+            - StaticText "%"
+          - paragraph
+            - StaticText "Los logros se actualizan automáticamente según tu actividad en el servidor"
+      - generic
+      - generic
+        - generic
+          - generic
+            - heading "Estado del Servidor" [level=2, ref=e113]
+              - StaticText "Estado del Servidor"
+            - button "Actualizar datos del servidor" [ref=e114]
+              - StaticText "20:13:22"
+            - generic
+              - generic
+                - StaticText "JUGADORES ONLINE"
+                - paragraph
+                  - StaticText "38/128"
+            - generic
+              - generic
+                - StaticText "UPTIME"
+                - paragraph
+                  - StaticText "99.6%"
+                - generic
+                  - image
+                  - StaticText "99.6"
+                  - StaticText "%"
+            - generic
+              - generic
+                - StaticText "PING"
+                - paragraph
+                  - StaticText "27ms"
+            - generic
+              - generic
+                - StaticText "ÚLTIMO REINICIO"
+                - paragraph
+                  - StaticText "Hace 6h"
+            - generic
+              - generic
+                - StaticText "VERSIÓN"
+                - paragraph
+                  - StaticText "v3.2.1"
+            - generic
+              - generic
+                - StaticText "CANALES DE VOZ"
+                - paragraph
+                  - StaticText "10 activos"
+            - StaticText "Jugadores — Últimas 24h"
+            - StaticText "38"
+            - StaticText " ahora"
+            - image
+            - StaticText "-24h"
+            - StaticText "-18h"
+            - StaticText "-12h"
+            - StaticText "-6h"
+            - StaticText "Ahora"
+      - generic
+      - generic
+        - generic
+          - heading "Próximo Evento" [level=3, ref=e92]
+          - StaticText "Viernes, 12 De Junio"
+          - StaticText "•"
+          - StaticText "21:00 CET"
+          - StaticText "Carreras Nocturnas"
+          - generic
+            - StaticText "01"
+          - StaticText "DÍAS"
+          - StaticText ":"
+          - generic
+            - StaticText "00"
+          - StaticText "HORAS"
+          - StaticText ":"
+          - generic
+            - StaticText "46"
+          - StaticText "MIN"
+          - StaticText ":"
+          - generic
+            - StaticText "37"
+          - StaticText "SEG"
+          - paragraph
+            - StaticText "Grandes premios, carreras emocionantes y mucha diversión. ¡No te lo pierdas!"
+      - generic
+      - generic
+        - generic
+          - heading "Novedades del Servidor" [level=2, ref=e59]
+            - StaticText "Novedades del Servidor"
+          - paragraph
+            - StaticText "Mantente al día con las últimas actualizaciones, mejoras y eventos del servidor"
+          - generic
+            - generic
+              - generic
+                - generic
+                  - StaticText "CONTENIDO"
+                  - StaticText "15 Ene 2025"
+                  - heading "🆕 Nuevo sistema de vehículos custom" [level=3, ref=e159]
+                  - paragraph
+            - generic
+              - generic
+                - generic
+                  - StaticText "RENDIMIENTO"
+                  - StaticText "10 Ene 2025"
+                  - heading "⚡ Optimización del servidor" [level=3, ref=e160]
+                  - paragraph
+                    - StaticText "Mejora significativa en el rendimiento general: reducción del lag en un 40%, tiempos de carga más rápidos y mayor estabilidad."
+            - generic
+              - generic
+                - generic
+                  - StaticText "GAMEPLAY"
+                  - StaticText "5 Ene 2025"
+                  - heading "🎭 Nuevas animaciones RP" [level=3, ref=e161]
+                  - paragraph
+                    - StaticText "Implementación de +200 animaciones para roleplay: expresiones, gestos, interacciones con objetos y escenas de emergencia."
+            - generic
+              - generic
+                - generic
+                  - StaticText "SISTEMAS"
+                  - StaticText "28 Dic 2024"
+                  - heading "🔧 Sistema de economía v2" [level=3, ref=e162]
+                  - paragraph
+                    - StaticText "Rebalanceo completo de la economía: nuevos trabajos, salarios ajustados, sistema de impuestos y mercado de bienes raíces."
+            - generic
+              - generic
+                - generic
+                  - StaticText "EVENTO"
+                  - StaticText "20 Dic 2024"
+                  - heading "🏆 Evento Navideño" [level=3, ref=e163]
+                  - paragraph
+                    - StaticText "Evento especial con premios exclusivos: carreras de trineos, misiones festivas y recompensas únicas de temporada limitada."
+            - generic
+              - generic
+                - generic
+                  - heading "🛡️ Anti-cheat actualizado" [level=3, ref=e164]
+          - link "Ver Roadmap Completo" [ref=e60]
+          - paragraph
+            - StaticText "Consulta las próximas características y planes en nuestro Discord"
+      - generic
+      - region "Estadísticas de la Comunidad" [ref=e14]
+        - generic
+          - heading "Estadísticas de la Comunidad" [level=2, ref=e61]
+            - StaticText "Estadísticas de la Comunidad"
+          - paragraph
+            - StaticText "Actividad en tiempo real, métricas de crecimiento y distribución de facciones del servidor"
+          - generic
+            - generic
+              - StaticText "Pico: Sábado (112)"
+          - generic
+            - generic
+          - generic
+            - generic
+          - generic
+            - generic
+          - generic
+            - generic
+          - generic
+            - generic
+      - generic
+      - region "Calendario de Eventos" [ref=e15]
+        - generic
+          - heading "Calendario de Eventos" [level=2, ref=e62]
+            - StaticText "Calendario de Eventos"
+          - paragraph
+            - StaticText "Planifica tu semana — operaciones, eventos sociales, entrenamientos y reuniones"
+          - generic
+            - generic
+              - button [ref=e115]
+              - heading "Junio 2026" [level=3, ref=e116]
+              - button [ref=e117]
+              - button "1" [ref=e118]
+              - button "2" [ref=e119]
+              - button "3" [ref=e120]
+              - button "4" [ref=e121]
+              - button "5" [ref=e122]
+              - button "6" [ref=e123]
+              - button "7" [ref=e124]
+              - button "8" [ref=e125]
+              - button "9" [ref=e126]
+              - button "10" [ref=e127]
+              - button "11" [ref=e128]
+              - button "12" [ref=e129]
+              - button "13" [ref=e130]
+              - button "14" [ref=e131]
+              - button "15" [ref=e132]
+              - button "16" [ref=e133]
+              - button "17" [ref=e134]
+              - button "18" [ref=e135]
+              - button "19" [ref=e136]
+              - button "20" [ref=e137]
+              - button "21" [ref=e138]
+              - button "22" [ref=e139]
+              - button "23" [ref=e140]
+              - button "24" [ref=e141]
+              - button "25" [ref=e142]
+              - button "26" [ref=e143]
+              - button "27" [ref=e144]
+              - button "28" [ref=e145]
+              - button "29" [ref=e146]
+              - button "30" [ref=e147]
+          - generic
+            - generic
+              - heading "Eventos del 11 de Junio" [level=3, ref=e148]
+          - generic
+            - generic
+              - heading "Próximos Eventos" [level=3, ref=e149]
+              - button "12 JUN Operación Heist al Banco Central 21:00h 12 jun" [ref=e150]
+              - button "13 JUN Reunión de Facciones Semanal 20:00h 13 jun" [ref=e151]
+              - button "14 JUN Noche de Carreras Callejeras 22:00h 14 jun" [ref=e152]
+              - button "16 JUN Entrenamiento Táctico LSPD 19:00h 16 jun" [ref=e153]
+              - button "17 JUN Entrenamiento Médico de Emergencia 17:00h 17 jun" [ref=e154]
+      - generic
+        - generic
+          - generic
+            - image
+            - StaticText "Servidor Oficial"
+          - heading "Únete a la Comunidad" [level=2, ref=e63]
+            - StaticText "Únete a la Comunidad"
+          - paragraph
+            - StaticText "Conecta con más de 500 jugadores, participa en eventos exclusivos y sé parte de la familia Prestigio RP. Tu historia comienza aquí."
+          - StaticText "Voz"
+          - StaticText "Eventos"
+          - StaticText "Comunidad"
+          - link "Unirse al Discord" [ref=e64]
+            - image
+            - StaticText "Unirse al Discord"
+          - link "Conectar por FiveM" [ref=e65]
+          - StaticText "500+"
+          - StaticText "Miembros"
+          - StaticText "•"
+          - StaticText "24/7 Activo"
+          - StaticText "•"
+          - StaticText "6 Facciones"
+          - link "PR Prestigio Roleplay Servidor de FiveM Roleplay 500+ miembros A M R 128 general 42 en línea anuncios 5 nuevos whitelist 8 esperando Nivel 1 de Boost Unirse" [ref=e66]
+            - generic
+              - heading "Prestigio Roleplay" [level=3, ref=e155]
+              - button "Unirse" [ref=e156]
+    - contentinfo
+      - generic
+      - generic
+        - link "Discord" [ref=e23]
+        - link "Normativa" [ref=e24]
+        - link "FiveM" [ref=e25]
+        - heading "NAVEGACIÓN" [level=4, ref=e26]
+        - button "Inicio" [ref=e27]
+        - button "Normativa" [ref=e28]
+        - button "Galería" [ref=e29]
+        - button "Facciones" [ref=e30]
+        - button "Mapa" [ref=e31]
+        - button "Donaciones" [ref=e32]
+        - heading "COMUNIDAD" [level=4, ref=e33]
+        - link "Discord" [ref=e34]
+        - link "Normativa" [ref=e35]
+        - link "FiveM" [ref=e36]
+        - heading "SERVIDOR" [level=4, ref=e37]
+        - link "Abrir Discord" [ref=e38]
+    - button "Activar música" [ref=e16]
+    - heading "Configuración de Cookies" [level=3, ref=e17]
+    - button "Rechazar Todo" [ref=e18]
+    - button "Configurar" [ref=e19]
+    - button "Aceptar Todo" [ref=e20]
+    - button "Abrir chat de soporte" [ref=e21]
+    - button "Personalizar tema" [ref=e2]
+    - button "Dev Tools" [ref=e3]
+  - region "Notifications alt+T" [ref=e1]

@@ -1,0 +1,933 @@
+     1→# Prestigio Roleplay Portal — Work Log
+     2→
+     3→## Project Status: Phase 5 Complete ✅ — Major Styling Enhancements, Command Palette, FAQ, Testimonials, Server Status, Changelog
+     4→
+     5→### Current State
+     6→The Prestigio Roleplay portal is a visually stunning, feature-rich gaming hub with animated hero section (orbital ring, geometric shapes, nebula particles), command palette (⌘K), FAQ accordion, testimonials carousel, live server status widget with sparkline graph, changelog timeline, enhanced card styling (3D tilt, shimmer, glitch effects, progress rings), and comprehensive staff/admin panels. All QA tests pass with zero errors.
+     7→
+     8→---
+     9→
+    10→## Phase 4 Changes (This Session)
+    11→
+    12→---
+    13→Task ID: 1
+    14→Agent: Main Agent
+    15→Task: Fix Hydration Error in useSession.ts (Critical Bug)
+    16→
+    17→Work Log:
+    18→- Identified root cause: `useState(() => getDevSession())` reads localStorage during initial render, causing SSR/client mismatch
+    19→- Fixed by initializing `user` as `null` and `loading` as `true` unconditionally
+    20→- Moved dev session check into `useEffect` (client-only) with async `initSession()` function
+    21→- This ensures SSR and initial client render are identical, preventing hydration errors
+    22→- Also fixed lint error: `react-hooks/set-state-in-effect` by wrapping setState in async function
+    23→
+    24→Stage Summary:
+    25→- Hydration mismatch error completely eliminated
+    26→- Lint passes with 0 errors
+    27→- Session initialization now properly client-side only
+    28→
+    29→---
+    30→Task ID: 2
+    31→Agent: Subagent (full-stack-developer)
+    32→Task: Redesign Donaciones Page with Premium Tier Cards + Hero Typing Effect
+    33→
+    34→Work Log:
+    35→- Replaced single donation card with 3-tier premium donation system
+    36→- Bronce (€5/mes): 3 perks, #cd7f32 accent
+    37→- Plata (€10/mes): 5 perks, #c0c0c0 accent, elevated shadow
+    38→- Oro (€20/mes): 7 perks, #ffd700 accent, POPULAR badge, gold glow, scale-105
+    39→- Each card has: icon, name, price, gradient divider, perks list with Check icons, "Donar" button linking to Discord
+    40→- Added floating glow orbs matching tier colors
+    41→- Added bottom note about contacting staff via Discord
+    42→- Created `useTypingEffect` custom hook in Hero.tsx
+    43→- Cycles 4 taglines: "Vive la experiencia...", "Tu historia comienza...", "Comunidad, acción...", "Únete a cientos..."
+    44→- Types at 40ms/char, pauses 2s, deletes at 25ms/char, pauses 300ms
+    45→- Blinking cyan cursor with animate-pulse
+    46→
+    47→Stage Summary:
+    48→- Donaciones page now has professional tier-based donation system
+    49→- Hero has engaging typing effect with cycling taglines
+    50→- All links point to Discord server (no dead # links)
+    51→
+    52→---
+    53→Task ID: 3
+    54→Agent: Subagent (full-stack-developer)
+    55→Task: Fix Duplicate Headings + Empty Notification State + Back-to-Top Button
+    56→
+    57→Work Log:
+    58→- Removed duplicate <h2> headings from StaffPanel.tsx and AdminPanel.tsx
+    59→- Added enhanced empty state to Staff Notifications tab (BellOff icon, "Sin notificaciones" text, centered layout)
+    60→- Created BackToTop.tsx: floating button at bottom-20 right-6, appears on scroll > 400px
+    61→- Uses Framer Motion AnimatePresence for smooth fade-in/out
+    62→- Neon-themed styling with ArrowUp icon, aria-label for accessibility
+    63→- Added BackToTop import to page.tsx
+    64→
+    65→Stage Summary:
+    66→- No more duplicate headings on staff/admin pages
+    67→- Notifications tab has proper empty state
+    68→- Back-to-top button provides smooth scroll experience
+    69→
+    70→---
+    71→Task ID: 5
+    72→Agent: Subagent (full-stack-developer)
+    73→Task: Hash-Based URL Routing + Notification Bell
+    74→
+    75→Work Log:
+    76→- Added pageToHash and hashToPage mappings to navigation.ts
+    77→- Modified navigate() to update window.location.hash
+    78→- Added hashchange event listener for browser back/forward support
+    79→- getInitialPage() reads URL hash on page load with SSR guard
+    80→- Created /api/notifications/unread-count route (GET with userId query)
+    81→- Created NotificationBell inline component in Navbar
+    82→- Polls unread count every 30 seconds
+    83→- Red dot badge when unread > 0, shake animation on new notifications
+    84→- Click navigates staff/admin to staff page, shows toast for regular users
+    85→- Positioned between nav items and user dropdown
+    86→
+    87→Stage Summary:
+    88→- URL now reflects current page (e.g., #staff, #galeria)
+    89→- Browser back/forward buttons work correctly
+    90→- Deep linking works (refreshing preserves current page)
+    91→- Notification bell with live polling functional
+    92→
+    93→---
+    94→Task ID: 7
+    95→Agent: Main Agent
+    96→Task: User Profile / Whitelist Status Tracker Page
+    97→
+    98→Work Log:
+    99→- Added 'profile' PageId to navigation.ts with hash mapping
+   100→- Created UserProfile.tsx with 3 sections:
+   101→  1. Profile Card: avatar, name, role badge, Discord ID, online indicator, "Solicitar Whitelist" CTA
+   102→  2. Whitelist Status Timeline: 4-step visual progress (Registro → Solicitud → En Revisión → Whitelist) with animated progress line
+   103→  3. Application History: list of applications with status badges, rejection reasons, reviewer info, attempts remaining
+   104→- Added ProfilePage to page.tsx with PageHeader (UserCircle icon)
+   105→- Added "Mi Perfil" dropdown item to Navbar (before "Mi Whitelist")
+   106→- Profile page shows proper empty states and CTA buttons
+   107→
+   108→Stage Summary:
+   109→- Users can view their profile and whitelist status with visual timeline
+   110→- Application history shows detailed status information
+   111→- "Solicitar Whitelist" CTA navigates to whitelist form
+   112→
+   113→---
+   114→Task ID: 11
+   115→Agent: Main Agent
+   116→Task: Enhanced CSS Animations + Improved Footer
+   117→
+   118→Work Log:
+   119→- Added 10+ new CSS utilities to globals.css:
+   120→  - neonShimmer: pulsing text glow animation
+   121→  - borderGlowPulse: animated border glow
+   122→  - cyber-corner: decorative corner accents
+   123→  - glow-line: gradient separator with shadow
+   124→  - breathe: subtle scale/opacity pulse
+   125→  - slideInLeft/slideInRight: directional entrance animations
+   126→  - rotateBorder: cycling border colors (violet→cyan→amber)
+   127→  - neon-text-glow-amber, neon-border-amber: amber glow variants
+   128→  - noise-overlay: subtle SVG noise texture
+   129→  - Custom selection colors, focus-visible styles, smooth scroll
+   130→- Rewrote Footer.tsx with 4-column layout:
+   131→  - Brand: logo, tagline, description, 3 social icon buttons
+   132→  - Navegación: 6 internal page links (SPA navigation)
+   133→  - Comunidad: 3 external links with icons
+   134→  - Servidor: 4 info items with green pulse dot for "Online 24/7"
+   135→  - Bottom: copyright, "Powered by FiveM", version badge v2.0
+   136→  - Top glow-line separator
+   137→  - Color-coded column headers (violet/cyan/amber accents)
+   138→
+   139→Stage Summary:
+   140→- Rich CSS animation library for consistent neon effects
+   141→- Footer significantly enhanced with more content and better layout
+   142→- Version badge and breathing indicators add polish
+   143→
+   144→---
+   145→Task ID: 12
+   146→Agent: Main Agent
+   147→Task: Fix Session Reactivity — Convert useSession to Zustand Store
+   148→
+   149→Work Log:
+   150→- QA testing revealed dev login session was not reactive across components
+   151→- Root cause: useSession used local useState per component instance
+   152→- Converted useSession from React hooks pattern to Zustand store
+   153→- Created shared Zustand store with: user, loading, initialized, setUser, initSession, refetch
+   154→- setUser writes to both localStorage and Zustand store atomically
+   155→- initSession() called once from Navbar on mount (prevents duplicate fetches)
+   156→- Updated all consumers to use Zustand selectors: useSession((s) => s.user)
+   157→- Updated: Navbar.tsx, DevLogin.tsx, WhitelistForm.tsx, UserProfile.tsx, NotificationBell
+   158→- Verified: Navbar now updates IMMEDIATELY after dev login without page reload
+   159→
+   160→Stage Summary:
+   161→- Session state is now globally reactive via Zustand
+   162→- Dev login causes instant Navbar update (no reload needed)
+   163→- All components share the same session state
+   164→- Lint passes with 0 errors
+   165→
+   166→### Verification Results (Phase 4)
+   167→- ✅ Lint passes with 0 errors
+   168→- ✅ Dev server running cleanly on port 3000
+   169→- ✅ No hydration mismatch errors
+   170→- ✅ Hash-based URL routing works (deep linking, back/forward)
+   171→- ✅ Hero typing effect cycles through taglines
+   172→- ✅ Donaciones tier cards render correctly with 3 tiers
+   173→- ✅ Profile page with whitelist status timeline functional
+   174→- ✅ Session reactivity: Navbar updates immediately on login
+   175→- ✅ Notification bell with live polling
+   176→- ✅ Back-to-top button appears/disappears correctly
+   177→- ✅ Footer has 4 columns with proper content
+   178→- ✅ All 12 pages navigate without errors
+   179→- ✅ Zero console errors
+   180→
+   181→### Unresolved Issues / Next Steps
+   182→1. Discord OAuth still requires real credentials for production login
+   183→2. Discord Bot service for role assignment (not yet built)
+   184→3. Real image upload for gallery (currently URL-based)
+   185→4. Rate limiting on whitelist submission (1 per user per 24h)
+   186→5. SEO: sitemap.xml, robots.txt generation
+   187→6. Security headers: CSP, X-Frame-Options in next.config
+   188→7. PostgreSQL migration guide for production deployment
+   189→8. Sound effects for UI interactions
+   190→9. Performance optimization: code splitting, lazy loading
+   191→10. Mobile responsive testing for staff/admin panels
+   192→
+   193→---
+   194→Task ID: 4-c
+   195→Agent: full-stack-developer
+   196→Task: Create FAQ and Testimonials sections for the home page
+   197→
+   198→Work Log:
+   199→- Created `/home/z/my-project/src/components/sections/FAQ.tsx`:
+   200→  - Accordion-style FAQ with 8 questions in Spanish
+   201→  - Framer Motion AnimatePresence for smooth expand/collapse height animation
+   202→  - Purple left border accent when expanded (#7c3aed)
+   203→  - Chevron icon rotates 180° on open/close with smooth animation
+   204→  - Glass card background with `bg-[#0f172a]` and neon border styling
+   205→  - Question text turns purple when expanded, light purple on hover
+   206→  - Only one question can be open at a time (single-expand accordion)
+   207→  - Gradient separator line between question and answer
+   208→  - HelpCircle icon in section header with purple glow
+   209→  - Title: "Preguntas Frecuentes" with "Frecuentes" in purple accent
+   210→  - Decorative glow orbs and grid pattern background
+   211→  - Staggered entrance animations for each FAQ item
+   212→
+   213→- Created `/home/z/my-project/src/components/sections/Testimonials.tsx`:
+   214→  - Auto-rotating carousel with 6 testimonial cards in Spanish
+   215→  - 5-second auto-rotation interval with pause on hover
+   216→  - Framer Motion AnimatePresence with directional slide animations (left/right)
+   217→  - Purple/cyan gradient border using background-clip technique on active card
+   218→  - Quote icon at top left-aligned
+   219→  - Testimonial text in italics with proper typographic quotes
+   220→  - Author avatar initial with faction-colored gradient background
+   221→  - Faction badge pill with color-matched styling for: Civil, LSPD, EMS, FBI, Mecánico
+   222→  - Navigation dots at bottom with animated width (active dot expands to 28px)
+   223→  - Active dot has cyan glow shadow effect
+   224→  - Auto-play/paused status indicator text
+   225→  - MessageSquare icon in section header with cyan glow
+   226→  - Title: "Lo Que Dicen Nuestros Jugadores" with "Jugadores" in cyan accent
+   227→
+   228→- Modified `/home/z/my-project/src/app/page.tsx`:
+   229→  - Added FAQ and Testimonials imports
+   230→  - Inserted both sections between Features and StatsCounter in HomePage component
+   231→  - New order: Hero → About → Features → FAQ → Testimonials → StatsCounter → ...
+   232→
+   233→- Fixed pre-existing Navbar.tsx error (Search not defined → was already partially fixed)
+   234→
+   235→Stage Summary:
+   236→- FAQ section fully functional with smooth accordion animations
+   237→- Testimonials section with auto-rotating carousel and pause-on-hover
+   238→- Both sections follow the existing neon dark theme consistently
+   239→- Lint passes for all new/modified files (0 new errors)
+   240→- Site renders successfully (HTTP 200)
+   241→
+   242→---
+   243→Task ID: 4-d
+   244→Agent: full-stack-developer
+   245→Task: Live Server Status Widget + Changelog/Roadmap Section
+   246→
+   247→Work Log:
+   248→- Created `/src/components/sections/ServerStatusWidget.tsx` — Enhanced live server status dashboard
+   249→  - Title "Estado del Servidor" with pulsing green dot animation
+   250→  - 2x3 stats grid: Players Online (with animated progress bar), Uptime (circular progress ring), Ping (signal strength indicator), Last Restart (clock icon), Server Version (tag icon), Voice Channels (mic icon)
+   251→  - Mock data fluctuates every 4 seconds via useState + useEffect (players, ping, history)
+   252→  - Live Player Graph: SVG sparkline chart with cyan/purple gradient fill showing "player count over last 24h"
+   253→  - Smooth bezier-curved path with gradient area fill and current-point indicator
+   254→  - Refresh button with spinning animation that re-randomizes all mock values
+   255→  - Glass card with cyber-corner accents, neon borders, gradient top line, subtle glow effects
+   256→  - AnimatePresence for smooth value transitions
+   257→  - Responsive design: 2-col on mobile, 3-col on desktop for stats grid
+   258→
+   259→- Created `/src/components/sections/Changelog.tsx` — Server updates and roadmap timeline
+   260→  - Title "Novedades del Servidor" with amber accent color
+   261→  - Vertical timeline with alternating left/right items on desktop
+   262→  - Left-aligned timeline on mobile with simpler layout
+   263→  - 6 Spanish entries with category badges, dates, emojis, titles, descriptions:
+   264→    🆕 Vehículos custom, ⚡ Optimización, 🎭 Animaciones RP, 🔧 Economía v2, 🏆 Evento Navideño, 🛡️ Anti-cheat
+   265→  - Each entry: colored dot on timeline connector, glass card with hover effects (glow, scale, accent line)
+   266→  - Timeline line has purple-to-amber gradient with glow effect
+   267→  - "Ver Roadmap Completo" CTA button linking to Discord with Map icon
+   268→  - Staggered entrance animations with Framer Motion
+   269→
+   270→- Modified `/src/app/page.tsx`:
+   271→  - Replaced old `ServerStatus` import with `ServerStatusWidget`
+   272→  - Added `Changelog` import
+   273→  - Updated HomePage: ServerStatusWidget between StatsCounter and NextEvent, Changelog between NextEvent and JoinDiscord
+   274→
+   275→- Fixed lint error in StatsCounter.tsx: missing `useEffect` import (added back)
+   276→
+   277→Stage Summary:
+   278→- Server Status Widget provides immersive real-time dashboard feel with live-updating stats
+   279→- Changelog section showcases server updates with polished timeline design
+   280→- Both components follow the neon dark theme consistently with glass cards, neon borders, glow effects
+   281→- Lint passes with 0 errors
+   282→- Site renders successfully (HTTP 200)
+   283→
+   284→---
+   285→Task ID: 4-a
+   286→Agent: full-stack-developer
+   287→Task: Dramatically Enhance Hero Section Styling
+   288→
+   289→Work Log:
+   290→- **Animated Logo Ring**: Replaced simple `animate-pulse-glow` wrapper with `LogoOrbitRing` component
+   291→  - Outer orbit ring (purple border, 8px from orbit edge) with 2 purple/violet orbs spinning clockwise (8s)
+   292→  - Inner orbit ring (cyan border, 30px smaller) with 1 cyan orb spinning counter-clockwise (12s)
+   293→  - Orbit radius uses `clamp(70px, 10vw, 110px)` for responsive sizing
+   294→  - Orbs have multi-layered box-shadow glow effects
+   295→  - Original pulse-glow still wraps the logo image inside the orbit
+   296→
+   297→- **Floating Geometric Shapes**: Added 4 SVG-based geometric shapes in the background
+   298→  - Hexagon at top-left with purple border, geoFloat1 animation (8s)
+   299→  - Diamond at bottom-right with cyan border, geoFloat2 animation (10s)
+   300→  - Triangle at top-right with amber border, geoFloat3 animation (9s)
+   301→  - Small hexagon at bottom-left with cyan border, geoFloat4 animation (11s)
+   302→  - All shapes semi-transparent (opacity 0.1-0.28), different float speeds/delays
+   303→  - Responsive sizing with sm: breakpoint (w-8→w-12, w-12→w-16, etc.)
+   304→
+   305→- **Improved Particle System**: Enhanced with dual-layer particles
+   306→  - 6 nebula particles: large (w-10 to w-24), heavily blurred (20px), slowly drifting (12-20s)
+   307→  - Colors: purple, cyan, amber mix using 3 different drift animations (nebulaDrift1/2/3)
+   308→  - 12 original small particles: now use varied colors (purple, cyan, amber) instead of all purple
+   309→  - Two separate DOM layers: nebula behind small particles
+   310→
+   311→- **Dual CTA Buttons**: Added second CTA button "Solicitar Whitelist"
+   312→  - Discord CTA: primary filled purple button (unchanged)
+   313→  - Whitelist CTA: outlined/ghost variant with cyan border and text
+   314→  - Uses `useNavigation().navigate('whitelist')` for SPA navigation
+   315→  - Shield icon from lucide-react
+   316→  - Hover: border brightens, bg fills with cyan/10 opacity, neon glow shadow
+   317→  - Responsive flex layout: stacked on mobile, side-by-side on sm+
+   318→
+   319→- **Scroll Indicator Enhancement**: Added "Descubre más" text below mouse animation
+   320→  - Text styled: `text-xs sm:text-sm`, purple/60 opacity, tracking-widest, uppercase
+   321→  - Bounces with scrollBounce keyframe (2s ease-in-out infinite)
+   322→  - Overall indicator container uses `flex flex-col items-center gap-2`
+   323→
+   324→- **Hero Badge**: Added "🌙 SERVIDOR ACTIVO" badge above the title
+   325→  - Pulsing green dot indicator (greenDotPulse animation, 1.5s)
+   326→  - Green border with subtle green bg tint (#22c55e)
+   327→  - Badge pulse glow animation (badgePulse, 3s)
+   328→  - Rounded-full pill shape, responsive text size
+   329→
+   330→- **New CSS Keyframes** added to globals.css:
+   331→  - `orbitSpin` / `orbitSpinReverse`: smooth 360° rotation
+   332→  - `geoFloat1`-`geoFloat4`: floating with rotation and opacity changes
+   333→  - `nebulaDrift1`-`nebulaDrift3`: large blurred particle drift patterns
+   334→  - `badgePulse`: green glow pulse for server status badge
+   335→  - `greenDotPulse`: indicator dot scale/opacity pulse
+   336→  - `scrollBounce`: subtle vertical bounce for scroll hint text
+   337→
+   338→- **Pre-existing bug fixes**:
+   339→  - Fixed StatsCounter.tsx lint error: replaced direct setState in useEffect with requestAnimationFrame pattern
+   340→  - Lint now passes with 0 errors
+   341→
+   342→Stage Summary:
+   343→- Hero section is now visually stunning with orbit ring, floating geometry, nebula particles
+   344→- Dual CTA buttons provide clear user pathways (Discord + Whitelist)
+   345→- Server status badge adds credibility and live feel
+   346→- Enhanced scroll indicator improves discoverability
+   347→- All animations are subtle yet mesmerizing, consistent with neon dark theme
+   348→- Lint passes with 0 errors
+   349→- Dev server running cleanly
+   350→
+   351→---
+   352→Task ID: 4-b
+   353→Agent: full-stack-developer
+   354→Task: Create Command Palette (Cmd+K) overlay for the Prestigio Roleplay Portal
+   355→
+   356→Work Log:
+   357→- Created `/home/z/my-project/src/components/layout/CommandPalette.tsx`:
+   358→  - Full-screen overlay with backdrop blur (bg-black/60 backdrop-blur-sm)
+   359→  - Centered dialog styled like Spotlight/Raycast: dark glass background (`bg-[#0f172a]/95 backdrop-blur-xl`), neon purple border (`border-[#7c3aed]/30`)
+   360→  - Search input at top with magnifying glass icon and ESC keyboard hint
+   361→  - Results list grouped by category: "Páginas" and "Acciones"
+   362→  - 10 page items: Inicio (Home), Normativa (BookOpen), Galería (ImageIcon), Facciones (Swords), Info (Info), Donaciones (Heart), Whitelist (Shield), Staff (Shield), Admin (Crown), Perfil (UserCircle)
+   363→  - 2 action items: "Unirse a Discord" (opens discord link), "Copiar IP del servidor" (copies server IP to clipboard with toast notification)
+   364→  - Each item shows: icon + label + description + optional keyboard shortcut hint
+   365→  - Keyboard navigation: ArrowUp/ArrowDown to move selection, Enter to select, Esc to close
+   366→  - Mouse hover also updates selection; selected item has purple background (`bg-[#7c3aed]/20`)
+   367→  - Filter by label/description/keywords as user types; empty state with "Sin resultados" message
+   368→  - Footer with keyboard shortcut hints (↑↓ Navegar, ↵ Seleccionar, esc Cerrar)
+   369→  - Framer Motion AnimatePresence for smooth open/close transitions (scale + opacity + y-offset)
+   370→  - Custom event system (`open-command-palette`) for opening palette from external components
+   371→  - `CommandPaletteTrigger` button component for Navbar integration
+   372→  - `openCommandPalette()` utility function dispatches custom event
+   373→
+   374→- Modified `/home/z/my-project/src/components/layout/Navbar.tsx`:
+   375→  - Added `CommandPaletteTrigger` between nav items and notification bell on desktop
+   376→  - Trigger button styled: `bg-[#0f172a] border border-white/10 rounded-lg px-3 py-1.5` with Search icon, "Buscar..." text, and ⌘K badge
+   377→  - Added mobile search FAB (floating action button) at bottom-20 right-4 for md:hidden
+   378→  - Both buttons call `openCommandPalette()` to open the palette via custom event
+   379→  - Added Search icon import from lucide-react
+   380→
+   381→- Modified `/home/z/my-project/src/app/page.tsx`:
+   382→  - Added CommandPalette import and component at root level (after DevLogin)
+   383→  - CommandPalette renders as a portal-like overlay at z-[100], outside of page transitions
+   384→
+   385→Stage Summary:
+   386→- Command Palette fully functional with Cmd+K/Ctrl+K keyboard shortcut
+   387→- Navbar search button with ⌘K badge opens palette on click
+   388→- Mobile search FAB available on small screens
+   389→- All 12 searchable items (10 pages + 2 actions) with keyword filtering
+   390→- Keyboard navigation (arrows + Enter + Esc) works correctly
+   391→- Framer Motion animations for smooth open/close transitions
+   392→- Lint passes with 0 new errors
+   393→- Dev server running cleanly
+   394→
+   395→---
+   396→Task ID: 4-e
+   397→Agent: full-stack-developer
+   398→Task: Enhance CSS Animation Utilities + Improve Component Styling
+   399→
+   400→Work Log:
+   401→
+   402→**globals.css — Added 15+ new animation utilities:**
+   403→- `.card-3d`: 3D card tilt effect with preserve-3d and translateY(-5px) on hover
+   404→- `@keyframes gradientBorder` + `.animate-gradient-border`: Animated border color cycling (purple → cyan → amber → purple)
+   405→- `@keyframes revealUp` + `.animate-reveal-up`: Scroll-triggered reveal with translateY + blur
+   406→- `@keyframes pulseRing` + `.animate-pulse-ring`: Expanding ring pulse for status indicators
+   407→- `@keyframes shimmer` + `.shimmer`: Shimmer/loading effect with gradient sweep
+   408→- `@keyframes shimmerSweep` + `.shimmer-sweep`: Hover-triggered shimmer sweep across cards
+   409→- `.hex-pattern`: Radial gradient dot pattern background alternative to grid-pattern
+   410→- `@keyframes glitch` + `.animate-glitch`: Brief glitch effect for numbers (text-shadow offset + translate jitter)
+   411→- `@keyframes iconPulseGlow` + `.animate-icon-pulse-glow`: Pulsing glow on icon containers
+   412→- `@keyframes sparkle` + `.animate-sparkle`: Opacity + scale sparkle animation for premium elements
+   413→- `@keyframes popularGlow` + `.animate-popular-glow`: Gold glow pulse for POPULAR badges
+   414→- `.gradient-text`: Background-clip text gradient utility
+   415→- `@keyframes heartbeat` + `.animate-heartbeat`: Double-beat heartbeat animation
+   416→- `.hover-underline`: Animated underline slide-in on hover (purple→cyan gradient)
+   417→- `@keyframes gradientLineShift` + `.animate-gradient-line`: Continuously shifting gradient line (purple→cyan→amber)
+   418→- `@keyframes cardBreathe` + `.animate-card-breathe`: Subtle box-shadow breathing for cards
+   419→- `@keyframes accentShimmer` + `.accent-shimmer-line`: Continuous left-to-right shimmer on accent lines
+   420→
+   421→**About.tsx — Enhanced card styling:**
+   422→- Added `useCountUp` hook for animated number counting in "Comunidad Activa" card (counts up to 500)
+   423→- Added subtle gradient background overlay to each card on hover (different direction per card: 135°, 225°, 45°, 315°)
+   424→- Added `.cyber-corner` decorative corner accents to each card
+   425→- Added `.card-3d` tilt effect on hover
+   426→- Added `.shimmer-sweep` hover effect
+   427→- Icon container rotates 5° on hover (`group-hover:rotate-[5deg]`)
+   428→- Replaced `grid-pattern` with `hex-pattern` for variety
+   429→- Added neon-text-glow to section title accent
+   430→
+   431→**Features.tsx — Enhanced card styling:**
+   432→- Added continuous shimmer effect on top accent line (`.accent-shimmer-line`)
+   433→- Added pulse glow animation to icon containers (`.animate-icon-pulse-glow`)
+   434→- Added glow-line separator between icon area and text area
+   435→- Added numbered badges (01, 02, 03) in top-right corner of each card with opacity transition
+   436→- Added `.card-3d` tilt effect and `.shimmer-sweep` hover effect
+   437→- Replaced `grid-pattern` with `hex-pattern` for variety
+   438→- Added neon-text-glow to section title accent
+   439→
+   440→**StatsCounter.tsx — Enhanced stat cards:**
+   441→- Added circular SVG progress ring around each stat number with animated stroke-dashoffset
+   442→- Each stat has a unique progress percentage (83%, 100%, 60%, 99%)
+   443→- Added `.shimmer-sweep` hover effect across cards
+   444→- Added `.animate-card-breathe` subtle breathing box-shadow animation
+   445→- Added `.animate-glitch` effect on numbers when counting finishes (brief text-shadow jitter)
+   446→- Progress ring uses `drop-shadow` filter for neon glow
+   447→- Replaced `grid-pattern` with `hex-pattern`
+   448→- Added neon-text-glow to section title accent
+   449→
+   450→**Donaciones.tsx — Enhanced donation cards:**
+   451→- POPULAR badge now has `.animate-popular-glow` gold glow pulse animation
+   452→- Oro tier has `.animate-rotate-border` cycling border colors (purple → cyan → amber)
+   453→- Added 8 sparkle dots (`.animate-sparkle`) to Oro tier at various positions with staggered delays
+   454→- Price text now uses `.gradient-text` with tier-specific gradient (e.g., gold→amber→gold for Oro)
+   455→- Each tier has a unique gradient defined for price text
+   456→- Added `.shimmer-sweep` hover effect to all cards
+   457→
+   458→**Footer.tsx — Enhanced footer styling:**
+   459→- Replaced static glow-line with `.animate-gradient-line` at top (continuously shifting purple→cyan→amber gradient)
+   460→- Added `.hover-underline` animation to navigation links (gradient underline slides in on hover)
+   461→- Added `.hover-underline` to Comunidad external links too
+   462→- Social icon buttons now have scale + glow effect on hover (scale-110, colored border + box-shadow matching icon color)
+   463→- Heart icon in copyright now has `.animate-heartbeat` double-beat animation
+   464→- "Online 24/7" indicator now has `.animate-pulse-ring` expanding ring effect on the green dot
+   465→
+   466→Stage Summary:
+   467→- 15+ new CSS animation utilities added for consistent neon effects across all components
+   468→- About cards: gradient overlays, animated counters, cyber corners, icon rotation
+   469→- Features cards: shimmer accent lines, pulse glow icons, glow-line separators, numbered badges
+   470→- Stats cards: SVG progress rings, shimmer sweep, breathe animation, glitch effect on numbers
+   471→- Donaciones cards: POPULAR badge glow, rotating border, sparkle effects, gradient price text
+   472→- Footer: animated gradient top line, hover underlines, scale+glow social icons, heartbeat on heart icon
+   473→- Lint passes with 0 errors
+   474→- Dev server running cleanly
+   475→
+   476→---
+   477→
+   478→## Phase 5 Summary — QA Results + Major Enhancements
+   479→
+   480→### Verification Results (Phase 5)
+   481→- ✅ Lint passes with 0 errors
+   482→- ✅ Dev server running cleanly on port 3000 (HTTP 200)
+   483→- ✅ No runtime errors (earlier hot-reload errors were transient during development)
+   484→- ✅ All pages navigate without errors
+   485→- ✅ Home page sections render in correct order: Hero → About → Features → FAQ → Testimonials → StatsCounter → ServerStatusWidget → NextEvent → Changelog → JoinDiscord
+   486→- ✅ Command Palette opens via ⌘K/Ctrl+K and custom event dispatch
+   487→- ✅ Command Palette Navbar search button with ⌘K badge visible
+   488→- ✅ FAQ accordion expand/collapse animations work
+   489→- ✅ Testimonials carousel with auto-rotate and navigation dots
+   490→- ✅ Server Status Widget with live-updating stats and sparkline graph
+   491→- ✅ Changelog timeline with alternating layout
+   492→- ✅ Hero section: animated orbital ring, floating geometric shapes, nebula particles, dual CTA buttons, server active badge, enhanced scroll indicator
+   493→- ✅ All card enhancements: 3D tilt, shimmer, glitch, progress rings, gradient overlays
+   494→- ✅ Footer: animated gradient line, hover underlines, heartbeat icon
+   495→- ✅ Zero console errors during normal operation
+   496→
+   497→### New Files Created in Phase 5
+   498→| File | Purpose |
+   499→|------|---------|
+   500→| `src/components/layout/CommandPalette.tsx` | ⌘K command palette overlay with search, keyboard nav, page/action items |
+   501→| `src/components/sections/FAQ.tsx` | 8-question accordion FAQ section |
+   502→| `src/components/sections/Testimonials.tsx` | Auto-rotating testimonials carousel |
+   503→| `src/components/sections/ServerStatusWidget.tsx` | Live server status dashboard with sparkline graph |
+   504→| `src/components/sections/Changelog.tsx` | Server updates timeline with alternating layout |
+   505→
+   506→### Key Files Modified in Phase 5
+   507→| File | Changes |
+   508→|------|---------|
+   509→| `src/app/page.tsx` | Added FAQ, Testimonials, ServerStatusWidget, Changelog, CommandPalette |
+   510→| `src/components/sections/Hero.tsx` | Orbital ring, geometric shapes, nebula particles, dual CTAs, badge, scroll text |
+   511→| `src/components/sections/About.tsx` | Gradient overlays, animated counter, cyber corners, icon rotation |
+   512→| `src/components/sections/Features.tsx` | Shimmer accents, pulse glow, glow separators, numbered badges |
+   513→| `src/components/sections/StatsCounter.tsx` | SVG progress rings, shimmer sweep, breathe, glitch effect |
+   514→| `src/components/sections/Donaciones.tsx` | POPULAR badge glow, rotating border, sparkles, gradient prices |
+   515→| `src/components/layout/Navbar.tsx` | Search button with ⌘K badge, CommandPaletteTrigger |
+   516→| `src/components/layout/Footer.tsx` | Animated gradient line, hover underlines, scale+glow, heartbeat |
+   517→| `src/app/globals.css` | 15+ new animation utilities (card-3d, shimmer, glitch, sparkle, etc.) |
+   518→
+   519→### Unresolved Issues / Next Steps
+   520→1. Discord OAuth still requires real credentials for production login
+   521→2. Discord Bot service for role assignment (not yet built)
+   522→3. Real image upload for gallery (currently URL-based)
+   523→4. Rate limiting on whitelist submission (1 per user per 24h)
+   524→5. SEO: sitemap.xml, robots.txt generation
+   525→6. Security headers: CSP, X-Frame-Options in next.config
+   526→7. PostgreSQL migration guide for production deployment
+   527→8. Sound effects for UI interactions
+   528→9. Performance optimization: code splitting, lazy loading heavy sections
+   529→10. Mobile responsive testing for staff/admin panels
+   530→11. Accessibility audit for new components (Command Palette ARIA, FAQ keyboard nav)
+   531→12. Add more interactive features: map viewer, vehicle showcase, RP scenarios
+   532→13. Add a "How to Connect" step-by-step guide section
+   533→14. Implement real-time player count via WebSocket or polling from FiveM server
+   534→
+   535→---
+   536→Task ID: 5
+   537→Agent: full-stack-developer
+   538→Task: Create Cookie Consent banner component
+   539→
+   540→Work Log:
+   541→- Created `/home/z/my-project/src/components/layout/CookieConsent.tsx` with full GDPR-compliant cookie consent banner
+   542→- Implemented glass morphism styling: `bg-[#0f172a]/90 backdrop-blur-xl border border-[#7c3aed]/20` with neon glow shadow
+   543→- Added framer-motion AnimatePresence for slide-up/slide-down animation (spring transition, damping 25, stiffness 300)
+   544→- Implemented lazy initialization for useState to avoid SSR mismatch: `useState(() => typeof window !== 'undefined' ? ... : null)`
+   545→- localStorage key `prestigio-cookie-consent` stores consent state; `prestigio-cookie-consent-prefs` stores toggle preferences
+   546→- Banner does NOT show if user already made a choice (checks localStorage on mount)
+   547→- Three action buttons: "Rechazar Todo" (red outline), "Configurar" (cyan outline with Settings icon), "Aceptar Todo" (purple filled with neon glow)
+   548→- Expandable preferences panel with AnimatePresence height animation
+   549→- Three toggle switches: Essential (always on, disabled), Analytics (toggleable), Marketing (toggleable)
+   550→- Custom toggle buttons with purple glow when active, smooth thumb transition
+   551→- "Guardar Preferencias" button in preferences panel
+   552→- Responsive: buttons stack vertically on mobile, horizontal on sm+
+   553→- Cookie icon in header, Shield icon next to title
+   554→- Added CookieConsent import and placement to `src/app/page.tsx` between BackToTop and DevLogin
+   555→- Lint passes with zero errors
+   556→
+   557→Stage Summary:
+   558→- CookieConsent.tsx component created with neon dark theme, glass morphism, GDPR compliance
+   559→- Integrated into main layout in page.tsx
+   560→- Persistent consent via localStorage, no SSR hydration issues
+   561→- Responsive design with mobile-first button stacking
+   562→
+   563→---
+   564→Task ID: 2
+   565→Agent: full-stack-developer
+   566→Task: Create Streamers/Content Creators section component
+   567→
+   568→Work Log:
+   569→- Read existing project structure, worklog.md, Hero.tsx, Testimonials.tsx, Facciones.tsx, and globals.css to understand design patterns and CSS utility classes
+   570→- Created `/home/z/my-project/src/components/sections/Streamers.tsx` with full implementation:
+   571→  - Streamer interface with name, platform, followers, isLive, viewerCount, description, gradient fields
+   572→  - 6 hardcoded mock streamers matching spec (RPKing_, LaJoséRP, NightCityVibes, DocMartinez, MecánicoMax, ShadowOps)
+   573→  - Custom `useCounter` hook with eased cubic animation for follower count
+   574→  - `TwitchIcon` inline SVG component (matching Discord icon pattern from Hero.tsx)
+   575→  - `PlatformBadge` component with Twitch purple / YouTube red styling
+   576→  - `LiveIndicator` with ping animation (animate-ping) + viewer count + Eye icon
+   577→  - `OfflineIndicator` with gray dot
+   578→  - `StreamerAvatar` with gradient fallback, platform mini-badge overlay
+   579→  - `FeaturedStreamerCard` — large hero card with animated rotating gradient border (animate-rotate-border), radial glow, accent shimmer line, pulsing live ring, neon-text-glow name, counter animation, "Ver Stream" CTA button
+   580→  - `StreamerCard` — compact cards with shimmer-sweep, hover scale/rotateY, border glow intensification on hover
+   581→  - Main `Streamers` section with staggered framer-motion animations, responsive grid (1 col mobile, 2 col sm, 3 col lg), decorative glow orbs, grid pattern overlay
+   582→  - Section header: "Creadores de Contenido" with Tv icon, subtitle, gradient divider
+   583→  - Bottom CTA "Contáctanos" link with hover-underline
+   584→- Added Streamers import and placed `<Streamers />` after Testimonials in page.tsx HomePage
+   585→- Lint passes with 0 errors
+   586→- Dev server compiles successfully
+   587→
+   588→Stage Summary:
+   589→- Produced `/home/z/my-project/src/components/sections/Streamers.tsx` — complete Streamers/Content Creators section
+   590→- Integrated into HomePage between Testimonials and StatsCounter
+   591→- All animations (framer-motion stagger, hover scale/rotate, counter, ping, shimmer) working
+   592→- Responsive layout: mobile single column → sm 2-col → lg 3-col grid
+   593→- Uses existing CSS utility classes: neon-text-glow, animate-rotate-border, shimmer-sweep, accent-shimmer-line, grid-pattern, hover-underline, animate-pulse-ring
+   594→
+   595→---
+   596→Task ID: 1
+   597→Agent: full-stack-developer
+   598→Task: Create Leaderboard/Rankings section
+   599→
+   600→Work Log:
+   601→- Created `/home/z/my-project/src/components/sections/Leaderboard.tsx` with full neon dark theme
+   602→- Implemented PlayerRank interface and hardcoded mock data for 10 players
+   603→- Built FilterTabs component (Semana/Mes/Temporada) with pill-style tabs and active neon glow using framer-motion layoutId animation
+   604→- Built PodiumCard component for Top 3 with Gold/Silver/Bronze styling:
+   605→  - Gold (#ffd700): center position, Crown icon with float animation, sparkle particles, animate-popular-glow
+   606→  - Silver (#c0c0c0): left position, Medal icon
+   607→  - Bronze (#cd7f32): right position, Medal icon
+   608→- Built RankRow component for ranks 4-10 with alternating backgrounds, hover neon glow intensification, responsive layout
+   609→- Implemented useCountUp hook using requestAnimationFrame for counter animations on hours played
+   610→- Used existing CSS classes: shimmer-sweep, glow-line, hex-pattern, neon-text-glow-amber, animate-popular-glow, sparkle
+   611→- Used lucide-react icons: Trophy, Medal, Crown, TrendingUp, TrendingDown, Minus, Clock, Flame, Zap
+   612→- Added AvatarCircle component with gradient fallback based on faction color
+   613→- Added FactionBadge component with faction-colored styling
+   614→- Responsive design: mobile single column, desktop full layout with flex ordering for podium
+   615→- Added AnimatePresence for filter tab transitions
+   616→- Added Leaderboard import and placement in HomePage between StatsCounter and ServerStatusWidget
+   617→- Lint passes with 0 errors, dev server compiles successfully
+   618→
+   619→Stage Summary:
+   620→- New file: `/home/z/my-project/src/components/sections/Leaderboard.tsx` (~330 lines)
+   621→- Updated: `/home/z/my-project/src/app/page.tsx` (added import + placed in HomePage)
+   622→- Leaderboard section now live on the home page with animated podium, filter tabs, counter animations, and rank list
+   623→
+   624→---
+   625→Task ID: 3
+   626→Agent: full-stack-developer
+   627→Task: Create Interactive City Map page component
+   628→
+   629→Work Log:
+   630→- Created `/home/z/my-project/src/components/sections/CityMap.tsx` — full interactive SVG-based city map component (~470 lines)
+   631→- Implemented cyberpunk-style SVG map with grid lines, major roads (glowing), water areas (cyan tint), building blocks, scanline overlay, and vignette
+   632→- Created 10 interactive location markers with category-based colors, pulse animations, hover tooltips, and icon overlays
+   633→- Built category filter system (Policía, EMS, Negocios, Crimen, Talleres) with neon-glow toggle buttons
+   634→- Implemented slide-in Details Panel showing location name, category, description, coordinates, and live status indicator
+   635→- Added LocationMarker sub-component with framer-motion animate/exit transitions, pulse rings, and glow effects
+   636→- Added BuildingBlocks SVG sub-component with colored outlines matching faction territories
+   637→- Added quick-list category cards below the map showing location counts per category
+   638→- Registered 'mapa' page ID in navigation.ts (pageToHash, hashToPage)
+   639→- Added Map icon + 'Mapa' nav item in Navbar.tsx (between Facciones and Info)
+   640→- Added CityMap import + route case in page.tsx
+   641→- Lint passes with 0 errors, dev server compiles successfully
+   642→
+   643→Stage Summary:
+   644→- New file: `/home/z/my-project/src/components/sections/CityMap.tsx` (~470 lines)
+   645→- Updated: `/home/z/my-project/src/lib/navigation.ts` (added 'mapa' PageId + hash mappings)
+   646→- Updated: `/home/z/my-project/src/components/layout/Navbar.tsx` (added Map icon import + nav item)
+   647→- Updated: `/home/z/my-project/src/app/page.tsx` (added CityMap import + 'mapa' route)
+   648→- Interactive city map accessible via navbar "Mapa" link or #mapa hash
+   649→
+   650→---
+   651→Task ID: 4
+   652→Agent: Main Agent
+   653→Task: Enhance Hero with canvas particle system, styling improvements, and section dividers
+   654→
+   655→Work Log:
+   656→- Created `/home/z/my-project/src/components/layout/ParticleCanvas.tsx` — canvas-based particle system with:
+   657→  - 80 particles with 3 types: dot, ring, cross
+   658→  - Mouse interaction — particles gently push away from cursor
+   659→  - Particle connections — faint lines between nearby particles
+   660→  - Mouse glow effect — radial gradient follows cursor
+   661→  - Lifecycle animation — fade in/out, pulsing opacity
+   662→- Rewrote `/home/z/my-project/src/components/sections/Hero.tsx` with major enhancements:
+   663→  - Replaced CSS particles with canvas particle system
+   664→  - Added parallax scrolling on background image and content (useScroll + useTransform)
+   665→  - Added third orbit ring with amber orb for more visual depth
+   666→  - Added quick stats row below CTA buttons (500+ Jugadores, 24/7 Online, 99.8% Uptime)
+   667→  - Added additional radial glows (amber bottom-left, cyan top-right)
+   668→  - Content fades out with parallax on scroll
+   669→- Created `/home/z/my-project/src/components/layout/SectionDivider.tsx` — animated neon line divider with center dot
+   670→  - 3 variants: default (purple), cyan, amber
+   671→  - Animated with framer-motion whileInView
+   672→- Added 12 section dividers between all home page sections for visual rhythm
+   673→- Enhanced `/home/z/my-project/src/app/globals.css` with 150+ lines of new CSS utilities:
+   674→  - `.section-divider` — neon line with pulsing center dot
+   675→  - `.card-lift` — 3D hover lift with shadow
+   676→  - `.neon-underline` — animated gradient underline on hover
+   677→  - `.animate-status-glow` — pulsing glow for badges
+   678→  - `.prestige-stripes` — diagonal stripe overlay
+   679→  - `.grain-texture` — subtle film grain effect
+   680→  - `.animate-morph-blob` — morphing blob animation
+   681→  - `.animate-gradient-text` — animated gradient text
+   682→  - `.neon-focus` — form input focus ring
+   683→  - `.dot-pattern` — alternative grid pattern
+   684→  - `.neon-border-double` — double neon border
+   685→- Enhanced `/home/z/my-project/src/components/sections/Features.tsx`:
+   686→  - Added 4th feature card: "Staff Profesional" (green accent)
+   687→  - Changed grid to 4-column layout
+   688→  - Added stat badges at bottom of each card
+   689→  - Added hover gradient overlay
+   690→  - Added corner accent glow
+   691→  - Added morphing blob background accents
+   692→  - Added subtitle text below section title
+   693→- Enhanced `/home/z/my-project/src/components/sections/About.tsx`:
+   694→  - Added detail lines that appear on card hover
+   695→  - Added ambient glow orbs to background
+   696→  - Added subtitle below section title
+   697→  - Changed last card color to green for variety
+   698→
+   699→Stage Summary:
+   700→- Hero section now has interactive canvas particles + parallax scrolling
+   701→- All home page sections connected by animated neon dividers
+   702→- Features section expanded to 4 cards with stat badges
+   703→- About section has more detail and ambient effects
+   704→- 10+ new CSS utility classes for site-wide styling improvements
+   705→- Lint passes with 0 errors, all pages render correctly
+   706→- QA verified: 13 sections on homepage, 12 nav buttons, all sub-pages functional
+   707→
+   708→---
+   709→Task ID: 5
+   710→Agent: Subagent (full-stack-developer)
+   711→Task: Create Cookie Consent banner
+   712→
+   713→Work Log:
+   714→- Created CookieConsent component with glass morphism styling
+   715→- Three buttons: Rechazar Todo, Configurar, Aceptar Todo
+   716→- Expandable preferences panel with essential/analytics/marketing toggles
+   717→- localStorage persistence for consent state
+   718→- Lazy initialization to prevent SSR mismatch
+   719→- Integrated into page.tsx
+   720→
+   721→Stage Summary:
+   722→- New file: `/home/z/my-project/src/components/layout/CookieConsent.tsx`
+   723→- GDPR-compliant cookie consent with preferences panel
+   724→- Persistent via localStorage
+   725→
+   726→---
+   727→## Phase 6 Summary — Major Feature Expansion & Styling Enhancements
+   728→
+   729→### New Features Added:
+   730→1. **Leaderboard/Rankings** — Top 10 player rankings with gold/silver/bronze podium, filter tabs, animated counters
+   731→2. **Streamers/Content Creators** — Featured streamer hero card + grid of community streamers with live indicators
+   732→3. **Interactive City Map** — SVG-based Los Santos map with 10 clickable locations, category filters, details panel
+   733→4. **Cookie Consent** — GDPR-compliant banner with preferences panel
+   734→5. **Canvas Particle System** — Interactive particles with mouse interaction, connections, and glow effects
+   735→6. **Section Dividers** — Animated neon dividers between all homepage sections
+   736→
+   737→### Styling Enhancements:
+   738→- Hero parallax scrolling with fade-out effect
+   739→- Quick stats row below hero CTA
+   740→- 4th Features card (Staff Profesional)
+   741→- Feature card stat badges and hover effects
+   742→- About card hover detail lines
+   743→- Ambient glow orbs on sections
+   744→- 10+ new CSS utility classes
+   745→- Morphing blob background accents
+   746→
+   747→### QA Status:
+   748→- Lint: ✅ 0 errors
+   749→- All pages render: ✅
+   750→- Console errors: ✅ None
+   751→- Navigation: ✅ All 8+ pages accessible
+   752→- Responsive: ✅ Mobile and desktop tested
+   753→
+   754→### Unresolved / Future Tasks:
+   755→- Discord Bot service (bot/ directory) — role assignment, DM notifications
+   756→- Image upload for gallery (currently gradient placeholders)
+   757→- Whitelist submission rate limiting (1 per 24h)
+   758→- SEO: sitemap.xml, robots.txt
+   759→- Security headers: CSP, X-Frame-Options
+   760→- Discord developer configuration guide + PostgreSQL migration guide
+   761→- Background audio with local files instead of external URLs
+   762→
+   763→---
+   764→Task ID: 1
+   765→Agent: full-stack-developer
+   766→Task: Create Announcement Banner component
+   767→
+   768→Work Log:
+   769→- Created `/home/z/my-project/src/components/layout/AnnouncementBanner.tsx` with rotating announcement banner
+   770→- Implemented gradient background (#7c3aed → #06b6d4) with shimmer animation
+   771→- Added framer-motion AnimatePresence for smooth slide text rotation every 5 seconds
+   772→- Added Megaphone icon (left), rotating text (center), X dismiss button (right)
+   773→- Implemented localStorage persistence via 'prestigio-banner-dismissed' key with lazy init
+   774→- Added `onVisibilityChange` callback prop so parent can react to banner visibility
+   775→- Exported `BANNER_HEIGHT` constant (40px) for external use
+   776→- Modified `Navbar.tsx` to accept `bannerVisible` prop, adjusting `top` position (top-0 vs top-[40px])
+   777→- Modified `page.tsx` to import AnnouncementBanner, track bannerVisible state via useState/useCallback
+   778→- Adjusted main content padding dynamically (pt-16 vs pt-[104px]) based on banner visibility
+   779→- Used async wrapper in useEffect to satisfy react-hooks/set-state-in-effect lint rule
+   780→- All lint checks pass with zero errors
+   781→
+   782→Stage Summary:
+   783→- AnnouncementBanner component fully functional with auto-rotating messages, dismiss persistence, and smooth animations
+   784→- Navbar and main content dynamically adjust positioning when banner is visible/dismissed
+   785→- No hydration issues — dismissed state lazy-initialized from localStorage in useEffect
+   786→- Lint passes clean (0 errors)
+   787→
+   788→---
+   789→Task ID: 4
+   790→Agent: full-stack-developer
+   791→Task: Enhanced JoinDiscord section with server preview widget
+   792→
+   793→Work Log:
+   794→- Completely rewrote /home/z/my-project/src/components/sections/JoinDiscord.tsx
+   795→- Implemented two-column layout (CTA left, Discord preview card right) on desktop, stacked on mobile
+   796→- Created Discord server preview card with: gradient PR icon, server name with verified badge, member count with online avatars row, 3 channel previews (#general, #anuncios, #whitelist), boost level with gem icon, "Unirse" button
+   797→- Added left column enhancements: gradient text animation on heading, animated underline, feature pills (Voz, Eventos, Comunidad), two CTA buttons (Discord purple filled + FiveM cyan outlined), stats row with pulse indicators
+   798→- Added background enhancements: 3 morphing blob animations, dot-pattern overlay, dual radial gradient glows (purple + cyan)
+   799→- Used framer-motion staggered entry animations with containerVariants/itemVariants
+   800→- Used lucide-react icons (Users, Volume2, Hash, Gem, CheckCircle, ChevronRight, Zap)
+   801→- Discord preview card has animate-float, glass morphism, animated gradient border
+   802→- All existing CSS utilities leveraged (animate-morph-blob, animate-gradient-text, animate-gradient-border, animate-gradient-line, dot-pattern, neon-glow, glow-line, gradient-text)
+   803→
+   804→Stage Summary:
+   805→- JoinDiscord section now has a visually rich Discord server preview widget alongside enhanced CTA
+   806→- Two-column responsive layout with staggered animations
+   807→- Zero new lint errors introduced (pre-existing AnnouncementBanner error is unrelated)
+   808→- Dev server compiles and serves successfully
+   809→
+   810→---
+   811→Task ID: 2
+   812→Agent: full-stack-developer
+   813→Task: Create Notification Inbox Panel
+   814→
+   815→Work Log:
+   816→- Read worklog.md and existing Navbar.tsx to understand current project state and NotificationBell component
+   817→- Created `/home/z/my-project/src/components/layout/NotificationPanel.tsx` with full feature set:
+   818→  - Slide-in Sheet drawer (380px desktop, responsive mobile) with neon dark glass morphism theme
+   819→  - Header with "Notificaciones" title, purple count badge, "Marcar leídas" button
+   820→  - Filter tabs ("Todas" | "No leídas") with animated active indicator using framer-motion layoutId
+   821→  - Scrollable notification list with 6 mock notifications (whitelist, event, system, mention types)
+   822→  - Each notification card: colored icon, bold title, 2-line truncated description, relative timestamp ("hace 5 min"), unread blue dot, type badge
+   823→  - Empty state with Inbox icon and contextual message
+   824→  - Footer "Ver todas" button that navigates to staff panel
+   825→  - Relative time formatting function for Spanish locale
+   826→  - Type-based color system (emerald for whitelist, purple for event, amber for system, sky for mention)
+   827→- Updated `/home/z/my-project/src/components/layout/Navbar.tsx`:
+   828→  - Imported NotificationPanel component
+   829→  - Added `notifOpen` state to Navbar
+   830→  - Modified NotificationBell to accept `onClick` prop instead of handling navigation/toast internally
+   831→  - Changed bell click to open notification panel (`setNotifOpen(true)`)
+   832→  - Rendered `<NotificationPanel open={notifOpen} onOpenChange={setNotifOpen} />` inside Navbar
+   833→  - Cleaned up unused imports (removed `toast`, `AnimatePresence`, `X`)
+   834→- Lint passes with 0 errors
+   835→- Dev server compiles successfully
+   836→
+   837→Stage Summary:
+   838→- New file: `/home/z/my-project/src/components/layout/NotificationPanel.tsx` — full notification inbox panel
+   839→- Updated file: `/home/z/my-project/src/components/layout/Navbar.tsx` — integrated notification panel with bell icon
+   840→- Notification bell now opens a slide-in panel with 6 mock notifications, filter tabs, mark-all-read, and relative timestamps
+   841→- Neon dark theme with purple accents, glass morphism styling consistent with the rest of the project
+   842→- Zero lint errors
+   843→
+   844→---
+   845→Task ID: 3
+   846→Agent: full-stack-developer
+   847→Task: Create Community Stats Dashboard section
+   848→
+   849→Work Log:
+   850→- Read worklog.md and existing section components (StatsCounter, ServerStatusWidget) for patterns and styling conventions
+   851→- Created `/home/z/my-project/src/components/sections/CommunityStats.tsx` — a full interactive community stats dashboard
+   852→- Implemented custom `useCountUp` hook using `requestAnimationFrame` with ease-out cubic easing
+   853→- Built SVG-based 7-day activity line chart with smooth bezier curves, gradient fill, stroke-dasharray draw-in animation, and hover tooltips
+   854→- Created 4 metric cards (Nuevos Jugadores, Horas de Juego, Eventos Completados, Solicitudes WL) with animated counters, trend indicators (TrendingUp/TrendingDown icons), and color-coded accents
+   855→- Built faction distribution section with 6 animated horizontal progress bars (Policía, EMS, FBI, Mecánico, Crimen, Civil) with glow effects on hover
+   856→- Integrated CommunityStats into `src/app/page.tsx` HomePage after Changelog with cyan SectionDivider
+   857→- Used existing CSS classes: `neon-border`, `shimmer-sweep`, `card-lift`, `glass`, `cyber-corner`, `animate-breathe`, `animate-gradient-text`
+   858→- Responsive grid: 1 col mobile, 2 col tablet, 4 col desktop for metric cards
+   859→- Ran lint on changed files — zero errors (pre-existing Normativa.tsx error is unrelated)
+   860→
+   861→Stage Summary:
+   862→- New file: `/home/z/my-project/src/components/sections/CommunityStats.tsx` — complete interactive community stats dashboard
+   863→- Updated file: `/home/z/my-project/src/app/page.tsx` — added CommunityStats import and placement in HomePage
+   864→- Component includes: animated SVG chart with hover tooltips, 4 metric cards with count-up animations and trend indicators, 6 faction distribution bars with animated progress
+   865→- Fully responsive with neon dark theme consistent with the project
+   866→- Zero lint errors on changed files
+   867→
+   868→---
+   869→Task ID: 5
+   870→Agent: full-stack-developer
+   871→Task: Enhance Normativa section with visual timeline
+   872→
+   873→Work Log:
+   874→- Read existing Normativa.tsx component and worklog context
+   875→- Rewrote the entire Normativa.tsx with all 7 requested enhancements
+   876→- Added SeverityBadge component with Leve (green), Moderada (yellow), Grave (red) severity levels
+   877→- Added PenaltyIndicator component showing example penalties for each category
+   878→- Added visual TimelineNode component with glowing vertical line, numbered circles, and pulse animation on expanded cards
+   879→- Added glass morphism summary bar ("6 Categorías • 30 Reglas • Última actualización: Ene 2025")
+   880→- Added Quick Search input with neon focus glow that filters rule cards by title/description/details/severity/penalty text
+   881→- Enhanced expand animation with spring physics, staggered list items with blur-in effect, left border glow intensification, and background gradient shift
+   882→- Added 2 new rule categories: "Reglas de Vehículos" (Car icon, #f97316, Moderada) and "Reglas de Propiedades" (Building icon, #8b5cf6, Leve)
+   883→- Added search highlight markup that highlights matching text in yellow
+   884→- Added empty state for search with icon and messaging
+   885→- Fixed duplicate props lint error (removed redundant `animate` and `transition` props that conflicted with `style`)
+   886→- Lint passes with 0 errors, dev server compiles successfully
+   887→
+   888→Stage Summary:
+   889→- Produced: /home/z/my-project/src/components/sections/Normativa.tsx (fully rewritten)
+   890→- 6 rule categories (was 4), each with severity badge + penalty indicator
+   891→- Visual timeline on left side connecting cards with numbered circles
+   892→- Quick search with real-time filtering and text highlighting
+   893→- Glass morphism summary bar at top
+   894→- Spring-physics expand animations with staggered items and glow effects
+   895→- All lint checks pass, page renders successfully
+   896→
+   897→---
+   898→## Phase 7 — Feature Expansion & Deep Styling Polish
+   899→
+   900→### New Features Added:
+   901→1. **Announcement Banner** (`AnnouncementBanner.tsx`) — Rotating top banner with 4 announcements, auto-rotate every 5s, dismissible with localStorage persistence, gradient purple→cyan background, shimmer animation overlay
+   902→2. **Notification Inbox Panel** (`NotificationPanel.tsx`) — Slide-in drawer (Sheet component) with 6 mock notifications, filter tabs (Todas/No leídas), severity-coded icons, relative Spanish timestamps, "Marcar leídas" button, staggered card animations. Integrated with Navbar NotificationBell
+   903→3. **Community Stats Dashboard** (`CommunityStats.tsx`) — SVG 7-day activity line chart with bezier curves + gradient fill + hover tooltips, 4 metric cards with animated counters + trend indicators, faction distribution horizontal bars with glow effects
+   904→4. **Enhanced JoinDiscord** — Two-column layout with Discord server preview card (server icon, member count, channel preview, boost level), animated gradient text, dual CTA buttons (Discord + FiveM), feature pills, morphing blob background
+   905→5. **Enhanced Normativa** — Visual timeline with numbered circles, severity badges (Leve/Moderada/Grave), penalty indicators, search filter with text highlighting, 2 new rule categories (Vehículos + Propiedades), rule count summary bar, spring animations
+   906→
+   907→### Styling Enhancements:
+   908→- **Footer**: Complete redesign with icon-based server stats, newsletter CTA section, neon glow on section indicators, enhanced social icons, version bumped to v3.0
+   909→- **Navbar**: Dynamic top offset based on announcement banner visibility, notification bell opens panel instead of toast
+   910→- **Page Layout**: Dynamic padding-top adjusts when announcement banner is visible/dismissed
+   911→
+   912→### Integration Changes:
+   913→- `page.tsx`: Added AnnouncementBanner with visibility state, CommunityStats section after Changelog
+   914→- `Navbar.tsx`: Added notifOpen state, NotificationPanel rendering, bannerVisible prop for dynamic positioning
+   915→
+   916→### QA Status:
+   917→- Lint: ✅ 0 errors
+   918→- All pages render: ✅ (14 sections on homepage)
+   919→- Runtime errors: ✅ None
+   920→- Console errors: ✅ None
+   921→- All sub-pages functional: ✅
+   922→
+   923→### Unresolved / Future Tasks:
+   924→- Discord Bot service (bot/ directory) — role assignment, DM notifications
+   925→- Image upload for gallery (currently gradient placeholders)
+   926→- Whitelist submission rate limiting (1 per 24h)
+   927→- SEO: sitemap.xml, robots.txt
+   928→- Security headers: CSP, X-Frame-Options
+   929→- Discord developer configuration guide + PostgreSQL migration guide
+   930→- Background audio with local files instead of external URLs
+   931→- Real API integration for notifications (currently mock data)
+   932→- Real Discord bot integration for server stats
+   933→

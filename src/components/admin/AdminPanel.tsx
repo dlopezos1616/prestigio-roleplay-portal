@@ -234,49 +234,173 @@ export default function AdminPanel() {
         {/* ============================================================ */}
         <TabsContent value="metrics">
           {!stats ? (
-            <div className="py-12 text-center text-gray-500">Cargando métricas...</div>
-          ) : (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-              {statCards.map((card) => (
-                <div
-                  key={card.label}
-                  className="rounded-lg neon-border bg-[#0f172a] p-4 flex flex-col items-center gap-2 text-center"
-                >
-                  <card.icon className={`size-8 ${card.color}`} />
-                  <span className="text-3xl font-bold text-white">{card.value}</span>
-                  <span className="text-xs text-gray-400">{card.label}</span>
-                </div>
-              ))}
+            <div className="py-12 text-center text-gray-500">
+              <BarChart3 className="mx-auto size-10 mb-3 opacity-30" />
+              Cargando métricas...
             </div>
-          )}
-
-          {/* Simple bar visualization */}
-          {stats && stats.totalApps > 0 && (
-            <div className="mt-6 rounded-lg neon-border bg-[#0f172a] p-4">
-              <h3 className="mb-3 text-sm font-semibold text-gray-400">Distribución de Whitelist</h3>
-              <div className="flex items-end gap-4 h-40">
-                {[
-                  { label: 'Aprobadas', value: stats.approvedApps, color: 'bg-green-500' },
-                  { label: 'Pendientes', value: stats.pendingApps, color: 'bg-yellow-500' },
-                  { label: 'Rechazadas', value: stats.rejectedApps, color: 'bg-red-500' },
-                ].map((bar) => {
-                  const maxVal = Math.max(stats.approvedApps, stats.pendingApps, stats.rejectedApps, 1)
-                  const heightPct = (bar.value / maxVal) * 100
+          ) : (
+            <>
+              {/* Stat Cards with trend indicators */}
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+                {statCards.map((card, i) => {
+                  const trend = [12, -3, 8, -5, 15][i] // mock trends
                   return (
-                    <div key={bar.label} className="flex flex-1 flex-col items-center gap-1">
-                      <span className="text-xs text-white font-medium">{bar.value}</span>
-                      <div className="w-full flex justify-center" style={{ height: `${heightPct}%` }}>
-                        <div
-                          className={`w-12 ${bar.color} rounded-t-md transition-all`}
-                          style={{ height: '100%', boxShadow: `0 0 10px ${bar.color === 'bg-green-500' ? 'rgba(34,197,94,0.3)' : bar.color === 'bg-yellow-500' ? 'rgba(234,179,8,0.3)' : 'rgba(239,68,68,0.3)'}` }}
-                        />
+                    <div
+                      key={card.label}
+                      className="rounded-lg neon-border bg-[#0f172a] p-4 flex flex-col items-center gap-2 text-center card-lift shimmer-sweep relative overflow-hidden"
+                    >
+                      <div className="absolute top-2 right-2 flex items-center gap-0.5 text-[10px] font-medium">
+                        {trend > 0 ? (
+                          <span className="text-green-400 flex items-center gap-0.5">
+                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" /></svg>
+                            +{trend}%
+                          </span>
+                        ) : (
+                          <span className="text-red-400 flex items-center gap-0.5">
+                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
+                            {trend}%
+                          </span>
+                        )}
                       </div>
-                      <span className="text-[10px] text-gray-500">{bar.label}</span>
+                      <card.icon className={`size-8 ${card.color}`} />
+                      <span className="text-3xl font-bold text-white">{card.value}</span>
+                      <span className="text-xs text-gray-400">{card.label}</span>
+                      {/* Mini sparkline */}
+                      <svg className="w-full h-6 mt-1" viewBox="0 0 80 24" preserveAspectRatio="none">
+                        <path
+                          d={[0,10,15,8,25,18,35,12,45,6,55,15,65,10,80,14][i] ? `M0,${24 - [0,10,15,8,25,18,35,12,45,6,55,15,65,10,80,14][i]} L10,${24 - [8,14,10,18,12,6,14,20,10,16,8,12,18,14,6,10][i]} L20,${24 - [12,6,18,10,8,14,6,12,18,8,14,6,10,8,12,16][i]} L30,${24 - [8,12,8,14,18,10,12,6,14,12,10,18,6,12,14,8][i]} L40,${24 - [14,18,12,6,10,16,8,14,6,18,12,10,14,6,8,12][i]} L50,${24 - [6,10,16,12,14,8,18,10,12,14,6,12,10,14,6,10][i]} L60,${24 - [10,14,6,18,8,12,10,16,14,8,16,14,12,10,10,14][i]} L70,${24 - [16,8,14,10,12,6,8,12,10,14,8,6,16,12,14,8][i]} L80,${24 - [12,12,10,14,6,10,14,8,12,6,14,10,8,14,12,10][i]}`
+                          : 'M0,12 L80,12'}
+                          stroke={card.color.replace('text-', '').replace('400', '500')}
+                          fill="none"
+                          strokeWidth="1.5"
+                          vectorEffect="non-scaling-stroke"
+                          className="opacity-50"
+                        />
+                      </svg>
                     </div>
                   )
                 })}
               </div>
-            </div>
+
+              {/* Two-column charts row */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-6">
+                {/* Whitelist Distribution - Enhanced bar chart */}
+                <div className="rounded-lg neon-border bg-[#0f172a] p-5">
+                  <h3 className="mb-4 text-sm font-semibold text-gray-300 flex items-center gap-2">
+                    <div className="w-1 h-4 rounded-full bg-[#7c3aed]" />
+                    Distribución de Whitelist
+                  </h3>
+                  {stats.totalApps > 0 ? (
+                    <div className="space-y-3">
+                      {[
+                        { label: 'Aprobadas', value: stats.approvedApps, total: stats.totalApps, color: '#22c55e', bg: 'bg-green-500/10' },
+                        { label: 'Pendientes', value: stats.pendingApps, total: stats.totalApps, color: '#eab308', bg: 'bg-yellow-500/10' },
+                        { label: 'Rechazadas', value: stats.rejectedApps, total: stats.totalApps, color: '#ef4444', bg: 'bg-red-500/10' },
+                      ].map((bar) => {
+                        const pct = stats.totalApps > 0 ? Math.round((bar.value / stats.totalApps) * 100) : 0
+                        return (
+                          <div key={bar.label} className="space-y-1.5">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs text-gray-400">{bar.label}</span>
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm font-bold text-white">{bar.value}</span>
+                                <span className="text-[10px] text-gray-500">({pct}%)</span>
+                              </div>
+                            </div>
+                            <div className="h-3 rounded-full bg-[#1e293b] overflow-hidden">
+                              <div
+                                className="h-full rounded-full transition-all duration-700"
+                                style={{
+                                  width: `${Math.max(pct, 2)}%`,
+                                  backgroundColor: bar.color,
+                                  boxShadow: `0 0 10px ${bar.color}40`,
+                                }}
+                              />
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  ) : (
+                    <div className="py-8 text-center text-gray-500 text-sm">
+                      <Shield className="mx-auto size-6 mb-2 opacity-30" />
+                      No hay solicitudes aún
+                    </div>
+                  )}
+                </div>
+
+                {/* Activity Heatmap - Last 7 days */}
+                <div className="rounded-lg neon-border bg-[#0f172a] p-5">
+                  <h3 className="mb-4 text-sm font-semibold text-gray-300 flex items-center gap-2">
+                    <div className="w-1 h-4 rounded-full bg-[#06b6d4]" />
+                    Actividad Semanal
+                  </h3>
+                  <div className="space-y-2">
+                    {['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'].map((day, i) => {
+                      const activity = [45, 62, 38, 78, 92, 85, 55][i]
+                      const hours = [4.2, 5.8, 3.5, 7.3, 8.6, 7.9, 5.1][i]
+                      return (
+                        <div key={day} className="flex items-center gap-3">
+                          <span className="text-xs text-gray-500 w-8">{day}</span>
+                          <div className="flex-1 h-7 rounded bg-[#1e293b] overflow-hidden relative">
+                            <div
+                              className="h-full rounded transition-all duration-500"
+                              style={{
+                                width: `${activity}%`,
+                                background: `linear-gradient(90deg, rgba(124,58,237,0.4), rgba(6,182,212,0.6))`,
+                                boxShadow: activity > 70 ? '0 0 15px rgba(6,182,212,0.3)' : 'none',
+                              }}
+                            />
+                            <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-gray-400">
+                              {hours}h
+                            </span>
+                          </div>
+                          <div className="flex gap-0.5">
+                            {Array.from({ length: 5 }).map((_, j) => (
+                              <div
+                                key={j}
+                                className="w-2 h-4 rounded-[1px]"
+                                style={{
+                                  backgroundColor: j < Math.ceil(activity / 20)
+                                    ? `rgba(6,182,212,${0.3 + j * 0.15})`
+                                    : 'rgba(30,41,59,0.5)',
+                                }}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                  <div className="mt-3 pt-3 border-t border-[rgba(124,58,237,0.1)] flex items-center justify-between">
+                    <span className="text-[10px] text-gray-600">Menos</span>
+                    <div className="flex gap-1">
+                      {['rgba(30,41,59,0.5)', 'rgba(6,182,212,0.2)', 'rgba(6,182,212,0.4)', 'rgba(6,182,212,0.6)', 'rgba(6,182,212,0.8)'].map((c, i) => (
+                        <div key={i} className="w-3 h-3 rounded-[1px]" style={{ backgroundColor: c }} />
+                      ))}
+                    </div>
+                    <span className="text-[10px] text-gray-600">Más</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Server Health Row */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4">
+                {[
+                  { label: 'Uptime', value: '99.7%', status: 'good', icon: '⚡' },
+                  { label: 'Latencia', value: '42ms', status: 'good', icon: '📶' },
+                  { label: 'TPS', value: '58.3', status: 'good', icon: '🔄' },
+                  { label: 'Memoria', value: '67%', status: 'warn', icon: '💾' },
+                ].map((metric) => (
+                  <div key={metric.label} className="rounded-lg bg-[#0f172a] border border-[rgba(124,58,237,0.15)] p-3 text-center">
+                    <div className="text-lg mb-1">{metric.icon}</div>
+                    <div className="text-lg font-bold text-white">{metric.value}</div>
+                    <div className="text-[10px] text-gray-500">{metric.label}</div>
+                    <div className={`mt-1.5 h-1 rounded-full ${metric.status === 'good' ? 'bg-green-500' : 'bg-yellow-500'}`} style={{ boxShadow: `0 0 6px ${metric.status === 'good' ? 'rgba(34,197,94,0.4)' : 'rgba(234,179,8,0.4)'}` }} />
+                  </div>
+                ))}
+              </div>
+            </>
           )}
         </TabsContent>
 

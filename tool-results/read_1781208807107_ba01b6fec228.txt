@@ -1,0 +1,763 @@
+    50→    50→          - button "Solicitar Whitelist" [ref=e44]
+    51→    51→          - StaticText "500+"
+    52→    52→          - StaticText "Jugadores"
+    53→    53→          - StaticText "24/7"
+    54→    54→          - StaticText "Online"
+    55→    55→          - StaticText "99.8%"
+    56→    56→          - StaticText "Uptime"
+    57→    57→          - generic
+    58→    58→            - StaticText "DESCUBRE MÁS"
+    59→    59→      - generic
+    60→    60→      - generic
+    61→    61→        - generic
+    62→    62→          - heading "Quiénes Somos" [level=2, ref=e45]
+    63→    63→            - StaticText "Quiénes Somos"
+    64→    64→          - paragraph
+    65→    65→            - StaticText "La comunidad donde cada historia cobra vida"
+    66→    66→          - paragraph
+    67→    67→            - StaticText "Somos una comunidad apasionada por el roleplay en FiveM, dedicada a crear experiencias únicas e inmersivas. En Prestigio RP, cada jugador tiene la oportunidad de vivir aventuras irrepetibles en un entorno profesional y acogedor."
+    68→    68→          - generic
+    69→    69→            - heading "Comunidad Activa" [level=3, ref=e67]
+    70→    70→            - paragraph
+    71→    71→              - StaticText "Más de 0 jugadores activos"
+    72→    72→            - paragraph
+    73→    73→              - StaticText "Discord, eventos y actividades diarias"
+    74→    74→          - generic
+    75→    75→            - heading "Staff Profesional" [level=3, ref=e68]
+    76→    76→            - paragraph
+    77→    77→              - StaticText "Equipo dedicado y comprometido"
+    78→    78→            - paragraph
+    79→    79→              - StaticText "Soporte 24/7 y mediación justa"
+    80→    80→          - generic
+    81→    81→            - heading "Experiencia Única" [level=3, ref=e69]
+    82→    82→            - paragraph
+    83→    83→              - StaticText "Roleplay inmersivo de calidad"
+    84→    84→            - paragraph
+    85→    85→              - StaticText "Scripts custom y mapas exclusivos"
+    86→    86→          - generic
+    87→    87→            - heading "Comunicación Constante" [level=3, ref=e70]
+    88→    88→            - paragraph
+    89→    89→              - StaticText "Siempre conectados"
+    90→    90→            - paragraph
+    91→    91→              - StaticText "Canales de voz y texto activos"
+    92→    92→      - generic
+    93→    93→      - generic
+    94→    94→        - generic
+    95→    95→          - heading "A Qué Nos Dedicamos" [level=2, ref=e46]
+    96→    96→            - StaticText "A Qué Nos Dedicamos"
+    97→    97→          - paragraph
+    98→    98→            - StaticText "Todo lo que necesitas para vivir la mejor experiencia de roleplay"
+    99→    99→          - generic
+   100→   100→            - StaticText "01"
+   101→   101→            - heading "FiveM Roleplay" [level=3, ref=e71]
+   102→   102→            - paragraph
+   103→   103→              - StaticText "Servidor personalizado con scripts únicos y una experiencia de juego sin igual"
+   104→   104→            - generic
+   105→   105→              - StaticText "128 Slots"
+   106→   106→          - generic
+   107→   107→            - StaticText "02"
+   108→   108→            - heading "Comunidad" [level=3, ref=e72]
+   109→   109→            - paragraph
+   110→   110→              - StaticText "Una comunidad unida por la pasión del roleplay, con eventos y actividades constantes"
+   111→   111→            - generic
+   112→   112→              - StaticText "500+ Jugadores"
+   113→   113→          - generic
+   114→   114→            - StaticText "03"
+   115→   115→            - heading "Eventos" [level=3, ref=e73]
+   116→   116→            - paragraph
+   117→   117→              - StaticText "Eventos semanales, torneos y actividades especiales para toda la comunidad"
+   118→   118→            - generic
+   119→   119→              - StaticText "150+ Realizados"
+   120→   120→          - generic
+   121→   121→            - StaticText "04"
+   122→   122→            - heading "Staff Profesional" [level=3, ref=e74]
+   123→   123→            - paragraph
+   124→   124→              - StaticText "Equipo dedicado y comprometido que asegura la calidad del roleplay en cada momento"
+   125→   125→            - generic
+   126→   126→              - StaticText "24/7 Disponible"
+   127→   127→      - generic
+   128→   128→      - generic
+   129→   129→        - generic
+   130→   130→          - heading "Preguntas Frecuentes" [level=2, ref=e47]
+   131→   131→            - StaticText "Preguntas Frecuentes"
+   132→   132→          - paragraph
+   133→   133→            - StaticText "Todo lo que necesitas saber antes de unirte a Prestigio RP"
+   134→   134→          - generic
+   135→   135→            - button "¿Cómo me uno al servidor?" [expanded=true, ref=e75]
+   136→   136→              - StaticText "¿Cómo me uno al servidor?"
+   137→   137→            - paragraph
+   138→   138→              - StaticText "El proceso es sencillo: primero únete a nuestro Discord oficial, luego solicita la whitelist completando el formulario correspondiente. Una vez aceptado, podrás conectarte a través de FiveM buscando \"Prestigio RP\" en la lista de servidores o usando la IP de conexión directa."
+   139→   139→          - generic
+   140→   140→            - button "¿Qué es la whitelist?" [expanded=false, ref=e76]
+   141→   141→              - StaticText "¿Qué es la whitelist?"
+   142→   142→          - generic
+   143→   143→            - button "¿Necesito experiencia previa?" [expanded=false, ref=e77]
+   144→   144→              - StaticText "¿Necesito experiencia previa?"
+   145→   145→          - generic
+   146→   146→            - button "¿Cuántas veces puedo solicitar la whitelist?" [expanded=false, ref=e78]
+   147→   147→              - StaticText "¿Cuántas veces puedo solicitar la whitelist?"
+   148→   148→          - generic
+   149→   149→            - button "¿Qué facciones hay disponibles?" [expanded=false, ref=e79]
+   150→   150→              - StaticText "¿Qué facciones hay disponibles?"
+   151→   151→          - generic
+   152→   152→            - button "¿Es obligatorio el voice chat?" [expanded=false, ref=e80]
+   153→   153→              - StaticText "¿Es obligatorio el voice chat?"
+   154→   154→          - generic
+   155→   155→            - button "¿Cómo puedo ser staff?" [expanded=false, ref=e81]
+   156→   156→              - StaticText "¿Cómo puedo ser staff?"
+   157→   157→          - generic
+   158→   158→            - button "¿Hay eventos especiales?" [expanded=false, ref=e82]
+   159→   159→              - StaticText "¿Hay eventos especiales?"
+   160→   160→      - generic
+   161→   161→      - generic
+   162→   162→        - generic
+   163→   163→          - heading "Lo Que Dicen Nuestros Jugadores" [level=2, ref=e48]
+   164→   164→            - StaticText "Lo Que Dicen Nuestros Jugadores"
+   165→   165→          - paragraph
+   166→   166→            - StaticText "Historias reales de nuestra comunidad"
+   167→   167→          - generic
+   168→   168→            - generic
+   169→   169→              - paragraph
+   170→   170→                - StaticText "“El mejor servidor de RP en español. La comunidad es increíble y siempre hay algo interesante que hacer en la ciudad.”"
+   171→   171→              - StaticText "C"
+   172→   172→              - StaticText "Carlos M."
+   173→   173→              - StaticText "Civil"
+   174→   174→            - button "Ir al testimonio 1" [ref=e83]
+   175→   175→            - button "Ir al testimonio 2" [ref=e84]
+   176→   176→            - button "Ir al testimonio 3" [ref=e85]
+   177→   177→            - button "Ir al testimonio 4" [ref=e86]
+   178→   178→            - button "Ir al testimonio 5" [ref=e87]
+   179→   179→            - button "Ir al testimonio 6" [ref=e88]
+   180→   180→            - StaticText "⟳ Auto-reproduciendo"
+   181→   181→      - generic
+   182→   182→      - generic
+   183→   183→        - generic
+   184→   184→          - heading "Creadores de Contenido" [level=2, ref=e49]
+   185→   185→            - StaticText "Creadores de Contenido"
+   186→   186→          - paragraph
+   187→   187→            - StaticText "Nuestros streamers y creadores que hacen la comunidad más grande"
+   188→   188→          - generic
+   189→   189→            - generic
+   190→   190→              - generic
+   191→   191→                - generic
+   192→   192→                  - StaticText "R"
+   193→   193→                  - image
+   194→   194→              - image
+   195→   195→              - StaticText "Twitch"
+   196→   196→              - StaticText "EN VIVO"
+   197→   197→              - StaticText "347"
+   198→   198→              - heading "RPKing_" [level=3, ref=e157]
+   199→   199→              - StaticText "0"
+   200→   200→              - StaticText "seguidores"
+   201→   201→              - paragraph
+   202→   202→                - StaticText "Especialista en persecuciones y acción"
+   203→   203→              - link "Ver Stream" [ref=e158]
+   204→   204→          - generic
+   205→   205→            - generic
+   206→   206→              - StaticText "L"
+   207→   207→              - image
+   208→   208→            - heading "LaJoséRP" [level=4, ref=e93]
+   209→   209→            - generic
+   210→   210→              - image
+   211→   211→              - StaticText "Twitch"
+   212→   212→            - StaticText "0"
+   213→   213→            - StaticText "seguidores"
+   214→   214→            - generic
+   215→   215→              - StaticText "Offline"
+   216→   216→            - paragraph
+   217→   217→              - StaticText "Roleplay policial de alto nivel"
+   218→   218→          - generic
+   219→   219→            - generic
+   220→   220→              - StaticText "N"
+   221→   221→            - heading "NightCityVibes" [level=4, ref=e94]
+   222→   222→            - StaticText "YouTube"
+   223→   223→            - StaticText "0"
+   224→   224→            - StaticText "subs"
+   225→   225→            - generic
+   226→   226→              - StaticText "Offline"
+   227→   227→            - paragraph
+   228→   228→              - StaticText "Documentales del mundo criminal de LS"
+   229→   229→          - generic
+   230→   230→            - generic
+   231→   231→              - StaticText "D"
+   232→   232→              - image
+   233→   233→            - heading "DocMartinez" [level=4, ref=e95]
+   234→   234→            - generic
+   235→   235→              - image
+   236→   236→              - StaticText "Twitch"
+   237→   237→            - StaticText "0"
+   238→   238→            - StaticText "seguidores"
+   239→   239→            - generic
+   240→   240→              - StaticText "EN VIVO"
+   241→   241→              - StaticText "128"
+   242→   242→            - paragraph
+   243→   243→              - StaticText "EMS roleplay y rescates épicos"
+   244→   244→          - generic
+   245→   245→            - generic
+   246→   246→              - StaticText "M"
+   247→   247→            - heading "MecánicoMax" [level=4, ref=e96]
+   248→   248→            - StaticText "YouTube"
+   249→   249→            - StaticText "0"
+   250→   250→            - StaticText "subs"
+   251→   251→            - generic
+   252→   252→              - StaticText "Offline"
+   253→   253→            - paragraph
+   254→   254→              - StaticText "Tuning, carreras y mecánica avanzada"
+   255→   255→          - generic
+   256→   256→            - generic
+   257→   257→              - StaticText "S"
+   258→   258→              - image
+   259→   259→            - heading "ShadowOps" [level=4, ref=e97]
+   260→   260→            - generic
+   261→   261→              - image
+   262→   262→              - StaticText "Twitch"
+   263→   263→            - StaticText "0"
+   264→   264→            - StaticText "seguidores"
+   265→   265→            - generic
+   266→   266→              - StaticText "Offline"
+   267→   267→            - paragraph
+   268→   268→              - StaticText "Operaciones encubiertas y espionaje"
+   269→   269→          - paragraph
+   270→   270→            - StaticText "¿Quieres unirte como creador de contenido? "
+   271→   271→            - link "Contáctanos" [ref=e89]
+   272→   272→              - StaticText "Contáctanos"
+   273→   273→      - generic
+   274→   274→      - generic
+   275→   275→        - generic
+   276→   276→          - heading "Números que Hablan" [level=2, ref=e50]
+   277→   277→            - StaticText "Números que Hablan"
+   278→   278→          - generic
+   279→   279→            - generic
+   280→   280→              - image
+   281→   281→              - generic
+   282→   282→                - StaticText "0+"
+   283→   283→            - paragraph
+   284→   284→              - StaticText "Jugadores Activos"
+   285→   285→          - generic
+   286→   286→            - generic
+   287→   287→              - image
+   288→   288→              - generic
+   289→   289→                - StaticText "0/7"
+   290→   290→            - paragraph
+   291→   291→              - StaticText "Servidor Online"
+   292→   292→          - generic
+   293→   293→            - generic
+   294→   294→              - image
+   295→   295→              - generic
+   296→   296→                - StaticText "0+"
+   297→   297→            - paragraph
+   298→   298→              - StaticText "Eventos Realizados"
+   299→   299→          - generic
+   300→   300→            - generic
+   301→   301→              - image
+   302→   302→              - generic
+   303→   303→                - StaticText "0.8%"
+   304→   304→            - paragraph
+   305→   305→              - StaticText "Uptime"
+   306→   306→      - generic
+   307→   307→      - generic
+   308→   308→        - generic
+   309→   309→          - heading "Ranking de Jugadores" [level=2, ref=e90]
+   310→   310→            - StaticText "Ranking de Jugadores"
+   311→   311→          - paragraph
+   312→   312→            - StaticText "Los mejores roleadores de la ciudad — clasificados por dedicación y actividad"
+   313→   313→          - button "Semana" [ref=e51]
+   314→   314→            - StaticText "Semana"
+   315→   315→          - button "Mes" [ref=e52]
+   316→   316→          - button "Temporada" [ref=e53]
+   317→   317→          - generic
+   318→   318→            - generic
+   319→   319→              - StaticText "S"
+   320→   320→              - StaticText "1"
+   321→   321→            - heading "ShadowRider" [level=3, ref=e98]
+   322→   322→            - StaticText "Crimen Organizado"
+   323→   323→            - StaticText "0"
+   324→   324→            - StaticText "h"
+   325→   325→            - StaticText "28"
+   326→   326→            - StaticText "+"
+   327→   327→          - generic
+   328→   328→            - generic
+   329→   329→              - StaticText "N"
+   330→   330→              - StaticText "2"
+   331→   331→            - heading "NightOwl" [level=3, ref=e99]
+   332→   332→            - StaticText "Policía"
+   333→   333→            - StaticText "0"
+   334→   334→            - StaticText "h"
+   335→   335→            - StaticText "25"
+   336→   336→            - StaticText "+"
+   337→   337→          - generic
+   338→   338→            - generic
+   339→   339→              - StaticText "G"
+   340→   340→              - StaticText "3"
+   341→   341→            - heading "GhostMedic" [level=3, ref=e100]
+   342→   342→            - StaticText "EMS"
+   343→   343→            - StaticText "0"
+   344→   344→            - StaticText "h"
+   345→   345→            - StaticText "22"
+   346→   346→          - StaticText "4"
+   347→   347→          - StaticText "U"
+   348→   348→          - paragraph
+   349→   349→            - StaticText "UrbanLegend"
+   350→   350→          - paragraph
+   351→   351→            - StaticText "Civil"
+   352→   352→          - StaticText "Civil"
+   353→   353→          - StaticText "0"
+   354→   354→          - StaticText "h"
+   355→   355→          - StaticText "20"
+   356→   356→          - StaticText "-"
+   357→   357→          - StaticText "5"
+   358→   358→          - StaticText "S"
+   359→   359→          - paragraph
+   360→   360→            - StaticText "SteelNerve"
+   361→   361→          - paragraph
+   362→   362→            - StaticText "FBI"
+   363→   363→          - StaticText "FBI"
+   364→   364→          - StaticText "0"
+   365→   365→          - StaticText "h"
+   366→   366→          - StaticText "19"
+   367→   367→          - StaticText "+"
+   368→   368→          - StaticText "6"
+   369→   369→          - StaticText "T"
+   370→   370→          - paragraph
+   371→   371→            - StaticText "TurboMax"
+   372→   372→          - paragraph
+   373→   373→            - StaticText "Mecánico"
+   374→   374→          - StaticText "Mecánico"
+   375→   375→          - StaticText "0"
+   376→   376→          - StaticText "h"
+   377→   377→          - StaticText "18"
+   378→   378→          - StaticText "7"
+   379→   379→          - StaticText "D"
+   380→   380→          - paragraph
+   381→   381→            - StaticText "DarkPhoenix"
+   382→   382→          - paragraph
+   383→   383→            - StaticText "Crimen Organizado"
+   384→   384→          - StaticText "Crimen Organizado"
+   385→   385→          - StaticText "0"
+   386→   386→          - StaticText "h"
+   387→   387→          - StaticText "17"
+   388→   388→          - StaticText "+"
+   389→   389→          - StaticText "8"
+   390→   390→          - StaticText "B"
+   391→   391→          - paragraph
+   392→   392→            - StaticText "BlueSiren"
+   393→   393→          - paragraph
+   394→   394→            - StaticText "Policía"
+   395→   395→          - StaticText "Policía"
+   396→   396→          - StaticText "0"
+   397→   397→          - StaticText "h"
+   398→   398→          - StaticText "15"
+   399→   399→          - StaticText "-"
+   400→   400→          - StaticText "9"
+   401→   401→          - StaticText "Q"
+   402→   402→          - paragraph
+   403→   403→            - StaticText "QuickFix"
+   404→   404→          - paragraph
+   405→   405→            - StaticText "Mecánico"
+   406→   406→          - StaticText "Mecánico"
+   407→   407→          - StaticText "0"
+   408→   408→          - StaticText "h"
+   409→   409→          - StaticText "14"
+   410→   410→          - StaticText "+"
+   411→   411→          - StaticText "10"
+   412→   412→          - StaticText "S"
+   413→   413→          - paragraph
+   414→   414→            - StaticText "SilentWolf"
+   415→   415→          - paragraph
+   416→   416→            - StaticText "Civil"
+   417→   417→          - StaticText "Civil"
+   418→   418→          - StaticText "0"
+   419→   419→          - StaticText "h"
+   420→   420→          - StaticText "12"
+   421→   421→          - paragraph
+   422→   422→            - StaticText "Los rankings se actualizan cada lunes a las 00:00 UTC"
+   423→   423→      - generic
+   424→   424→      - generic
+   425→   425→        - generic
+   426→   426→          - heading "Logros y Conquistas" [level=2, ref=e91]
+   427→   427→            - StaticText "Logros y Conquistas"
+   428→   428→          - paragraph
+   429→   429→            - StaticText "Demuestra tu dedicación — desbloquea logros y sube de tier"
+   430→   430→          - paragraph
+   431→   431→            - StaticText "7/12 logros desbloqueados"
+   432→   432→          - StaticText "1"
+   433→   433→          - StaticText " Diamante"
+   434→   434→          - StaticText "1"
+   435→   435→          - StaticText " Oro"
+   436→   436→          - StaticText "2"
+   437→   437→          - StaticText " Plata"
+   438→   438→          - paragraph
+   439→   439→            - StaticText "80% progreso total"
+   440→   440→          - button "Todos" [ref=e54]
+   441→   441→            - StaticText "Todos"
+   442→   442→          - button "Bronce" [ref=e55]
+   443→   443→          - button "Plata" [ref=e56]
+   444→   444→          - button "Oro" [ref=e57]
+   445→   445→          - button "Diamante" [ref=e58]
+   446→   446→          - generic
+   447→   447→            - generic
+   448→   448→              - image
+   449→   449→            - heading "Primer Paso" [level=3, ref=e101]
+   450→   450→            - paragraph
+   451→   451→              - StaticText "Has completado tu primera sesión de roleplay en el servidor."
+   452→   452→            - StaticText "Bronce"
+   453→   453→            - StaticText "100"
+   454→   454→            - StaticText "%"
+   455→   455→          - generic
+   456→   456→            - generic
+   457→   457→              - image
+   458→   458→            - heading "Sobreviviente" [level=3, ref=e102]
+   459→   459→            - paragraph
+   460→   460→              - StaticText "Has sobrevivido tus primeras 24 horas en la ciudad sin ser arrestado."
+   461→   461→            - StaticText "Bronce"
+   462→   462→            - StaticText "100"
+   463→   463→            - StaticText "%"
+   464→   464→          - generic
+   465→   465→            - generic
+   466→   466→              - image
+   467→   467→            - heading "Habitante" [level=3, ref=e103]
+   468→   468→            - paragraph
+   469→   469→              - StaticText "Has conseguido tu primera casa y un trabajo estable en la ciudad."
+   470→   470→            - StaticText "Bronce"
+   471→   471→            - StaticText "100"
+   472→   472→            - StaticText "%"
+   473→   473→          - generic
+   474→   474→            - generic
+   475→   475→              - image
+   476→   476→            - heading "Veterano" [level=3, ref=e104]
+   477→   477→            - paragraph
+   478→   478→              - StaticText "Has acumulado más de 100 horas de juego en el servidor."
+   479→   479→            - StaticText "Plata"
+   480→   480→            - StaticText "100"
+   481→   481→            - StaticText "%"
+   482→   482→          - generic
+   483→   483→            - generic
+   484→   484→              - image
+   485→   485→            - heading "???" [level=3, ref=e105]
+   486→   486→            - paragraph
+   487→   487→              - StaticText "Sigue jugando para desbloquear este logro"
+   488→   488→            - StaticText "Plata"
+   489→   489→            - StaticText "70"
+   490→   490→            - StaticText "%"
+   491→   491→          - generic
+   492→   492→            - generic
+   493→   493→              - image
+   494→   494→            - heading "Comunicador" [level=3, ref=e106]
+   495→   495→            - paragraph
+   496→   496→              - StaticText "Has participado activamente en 50 situaciones de roleplay dialogado."
+   497→   497→            - StaticText "Plata"
+   498→   498→            - StaticText "100"
+   499→   499→            - StaticText "%"
+   500→   500→          - generic
+   501→   501→            - generic
+   502→   502→              - image
+   503→   503→            - heading "???" [level=3, ref=e107]
+   504→   504→            - paragraph
+   505→   505→              - StaticText "Sigue jugando para desbloquear este logro"
+   506→   506→            - StaticText "Oro"
+   507→   507→            - StaticText "65"
+   508→   508→            - StaticText "%"
+   509→   509→          - generic
+   510→   510→            - generic
+   511→   511→              - image
+   512→   512→            - heading "Líder" [level=3, ref=e108]
+   513→   513→            - paragraph
+   514→   514→              - StaticText "Has liderado una facción con al menos 10 miembros activos."
+   515→   515→            - StaticText "Oro"
+   516→   516→            - StaticText "100"
+   517→   517→            - StaticText "%"
+   518→   518→          - generic
+   519→   519→            - generic
+   520→   520→              - image
+   521→   521→            - heading "???" [level=3, ref=e109]
+   522→   522→            - paragraph
+   523→   523→              - StaticText "Sigue jugando para desbloquear este logro"
+   524→   524→            - StaticText "Oro"
+   525→   525→            - StaticText "40"
+   526→   526→            - StaticText "%"
+   527→   527→          - generic
+   528→   528→            - generic
+   529→   529→              - image
+   530→   530→            - heading "Fundador" [level=3, ref=e110]
+   531→   531→            - paragraph
+   532→   532→              - StaticText "Fuiste parte de los primeros 50 jugadores que dieron vida a la ciudad."
+   533→   533→            - StaticText "Diamante"
+   534→   534→            - StaticText "100"
+   535→   535→            - StaticText "%"
+   536→   536→          - generic
+   537→   537→            - generic
+   538→   538→              - image
+   539→   539→            - heading "???" [level=3, ref=e111]
+   540→   540→            - paragraph
+   541→   541→              - StaticText "Sigue jugando para desbloquear este logro"
+   542→   542→            - StaticText "Diamante"
+   543→   543→            - StaticText "83"
+   544→   544→            - StaticText "%"
+   545→   545→          - generic
+   546→   546→            - generic
+   547→   547→              - image
+   548→   548→            - heading "???" [level=3, ref=e112]
+   549→   549→            - paragraph
+   550→   550→              - StaticText "Sigue jugando para desbloquear este logro"
+   551→   551→            - StaticText "Diamante"
+   552→   552→            - StaticText "0"
+   553→   553→            - StaticText "%"
+   554→   554→          - paragraph
+   555→   555→            - StaticText "Los logros se actualizan automáticamente según tu actividad en el servidor"
+   556→   556→      - generic
+   557→   557→      - generic
+   558→   558→        - generic
+   559→   559→          - generic
+   560→   560→            - heading "Estado del Servidor" [level=2, ref=e113]
+   561→   561→              - StaticText "Estado del Servidor"
+   562→   562→            - button "Actualizar datos del servidor" [ref=e114]
+   563→   563→              - StaticText "20:13:22"
+   564→   564→            - generic
+   565→   565→              - generic
+   566→   566→                - StaticText "JUGADORES ONLINE"
+   567→   567→                - paragraph
+   568→   568→                  - StaticText "38/128"
+   569→   569→            - generic
+   570→   570→              - generic
+   571→   571→                - StaticText "UPTIME"
+   572→   572→                - paragraph
+   573→   573→                  - StaticText "99.6%"
+   574→   574→                - generic
+   575→   575→                  - image
+   576→   576→                  - StaticText "99.6"
+   577→   577→                  - StaticText "%"
+   578→   578→            - generic
+   579→   579→              - generic
+   580→   580→                - StaticText "PING"
+   581→   581→                - paragraph
+   582→   582→                  - StaticText "27ms"
+   583→   583→            - generic
+   584→   584→              - generic
+   585→   585→                - StaticText "ÚLTIMO REINICIO"
+   586→   586→                - paragraph
+   587→   587→                  - StaticText "Hace 6h"
+   588→   588→            - generic
+   589→   589→              - generic
+   590→   590→                - StaticText "VERSIÓN"
+   591→   591→                - paragraph
+   592→   592→                  - StaticText "v3.2.1"
+   593→   593→            - generic
+   594→   594→              - generic
+   595→   595→                - StaticText "CANALES DE VOZ"
+   596→   596→                - paragraph
+   597→   597→                  - StaticText "10 activos"
+   598→   598→            - StaticText "Jugadores — Últimas 24h"
+   599→   599→            - StaticText "38"
+   600→   600→            - StaticText " ahora"
+   601→   601→            - image
+   602→   602→            - StaticText "-24h"
+   603→   603→            - StaticText "-18h"
+   604→   604→            - StaticText "-12h"
+   605→   605→            - StaticText "-6h"
+   606→   606→            - StaticText "Ahora"
+   607→   607→      - generic
+   608→   608→      - generic
+   609→   609→        - generic
+   610→   610→          - heading "Próximo Evento" [level=3, ref=e92]
+   611→   611→          - StaticText "Viernes, 12 De Junio"
+   612→   612→          - StaticText "•"
+   613→   613→          - StaticText "21:00 CET"
+   614→   614→          - StaticText "Carreras Nocturnas"
+   615→   615→          - generic
+   616→   616→            - StaticText "01"
+   617→   617→          - StaticText "DÍAS"
+   618→   618→          - StaticText ":"
+   619→   619→          - generic
+   620→   620→            - StaticText "00"
+   621→   621→          - StaticText "HORAS"
+   622→   622→          - StaticText ":"
+   623→   623→          - generic
+   624→   624→            - StaticText "46"
+   625→   625→          - StaticText "MIN"
+   626→   626→          - StaticText ":"
+   627→   627→          - generic
+   628→   628→            - StaticText "37"
+   629→   629→          - StaticText "SEG"
+   630→   630→          - paragraph
+   631→   631→            - StaticText "Grandes premios, carreras emocionantes y mucha diversión. ¡No te lo pierdas!"
+   632→   632→      - generic
+   633→   633→      - generic
+   634→   634→        - generic
+   635→   635→          - heading "Novedades del Servidor" [level=2, ref=e59]
+   636→   636→            - StaticText "Novedades del Servidor"
+   637→   637→          - paragraph
+   638→   638→            - StaticText "Mantente al día con las últimas actualizaciones, mejoras y eventos del servidor"
+   639→   639→          - generic
+   640→   640→            - generic
+   641→   641→              - generic
+   642→   642→                - generic
+   643→   643→                  - StaticText "CONTENIDO"
+   644→   644→                  - StaticText "15 Ene 2025"
+   645→   645→                  - heading "🆕 Nuevo sistema de vehículos custom" [level=3, ref=e159]
+   646→   646→                  - paragraph
+   647→   647→            - generic
+   648→   648→              - generic
+   649→   649→                - generic
+   650→   650→                  - StaticText "RENDIMIENTO"
+   651→   651→                  - StaticText "10 Ene 2025"
+   652→   652→                  - heading "⚡ Optimización del servidor" [level=3, ref=e160]
+   653→   653→                  - paragraph
+   654→   654→                    - StaticText "Mejora significativa en el rendimiento general: reducción del lag en un 40%, tiempos de carga más rápidos y mayor estabilidad."
+   655→   655→            - generic
+   656→   656→              - generic
+   657→   657→                - generic
+   658→   658→                  - StaticText "GAMEPLAY"
+   659→   659→                  - StaticText "5 Ene 2025"
+   660→   660→                  - heading "🎭 Nuevas animaciones RP" [level=3, ref=e161]
+   661→   661→                  - paragraph
+   662→   662→                    - StaticText "Implementación de +200 animaciones para roleplay: expresiones, gestos, interacciones con objetos y escenas de emergencia."
+   663→   663→            - generic
+   664→   664→              - generic
+   665→   665→                - generic
+   666→   666→                  - StaticText "SISTEMAS"
+   667→   667→                  - StaticText "28 Dic 2024"
+   668→   668→                  - heading "🔧 Sistema de economía v2" [level=3, ref=e162]
+   669→   669→                  - paragraph
+   670→   670→                    - StaticText "Rebalanceo completo de la economía: nuevos trabajos, salarios ajustados, sistema de impuestos y mercado de bienes raíces."
+   671→   671→            - generic
+   672→   672→              - generic
+   673→   673→                - generic
+   674→   674→                  - StaticText "EVENTO"
+   675→   675→                  - StaticText "20 Dic 2024"
+   676→   676→                  - heading "🏆 Evento Navideño" [level=3, ref=e163]
+   677→   677→                  - paragraph
+   678→   678→                    - StaticText "Evento especial con premios exclusivos: carreras de trineos, misiones festivas y recompensas únicas de temporada limitada."
+   679→   679→            - generic
+   680→   680→              - generic
+   681→   681→                - generic
+   682→   682→                  - heading "🛡️ Anti-cheat actualizado" [level=3, ref=e164]
+   683→   683→          - link "Ver Roadmap Completo" [ref=e60]
+   684→   684→          - paragraph
+   685→   685→            - StaticText "Consulta las próximas características y planes en nuestro Discord"
+   686→   686→      - generic
+   687→   687→      - region "Estadísticas de la Comunidad" [ref=e14]
+   688→   688→        - generic
+   689→   689→          - heading "Estadísticas de la Comunidad" [level=2, ref=e61]
+   690→   690→            - StaticText "Estadísticas de la Comunidad"
+   691→   691→          - paragraph
+   692→   692→            - StaticText "Actividad en tiempo real, métricas de crecimiento y distribución de facciones del servidor"
+   693→   693→          - generic
+   694→   694→            - generic
+   695→   695→              - StaticText "Pico: Sábado (112)"
+   696→   696→          - generic
+   697→   697→            - generic
+   698→   698→          - generic
+   699→   699→            - generic
+   700→   700→          - generic
+   701→   701→            - generic
+   702→   702→          - generic
+   703→   703→            - generic
+   704→   704→          - generic
+   705→   705→            - generic
+   706→   706→      - generic
+   707→   707→      - region "Calendario de Eventos" [ref=e15]
+   708→   708→        - generic
+   709→   709→          - heading "Calendario de Eventos" [level=2, ref=e62]
+   710→   710→            - StaticText "Calendario de Eventos"
+   711→   711→          - paragraph
+   712→   712→            - StaticText "Planifica tu semana — operaciones, eventos sociales, entrenamientos y reuniones"
+   713→   713→          - generic
+   714→   714→            - generic
+   715→   715→              - button [ref=e115]
+   716→   716→              - heading "Junio 2026" [level=3, ref=e116]
+   717→   717→              - button [ref=e117]
+   718→   718→              - button "1" [ref=e118]
+   719→   719→              - button "2" [ref=e119]
+   720→   720→              - button "3" [ref=e120]
+   721→   721→              - button "4" [ref=e121]
+   722→   722→              - button "5" [ref=e122]
+   723→   723→              - button "6" [ref=e123]
+   724→   724→              - button "7" [ref=e124]
+   725→   725→              - button "8" [ref=e125]
+   726→   726→              - button "9" [ref=e126]
+   727→   727→              - button "10" [ref=e127]
+   728→   728→              - button "11" [ref=e128]
+   729→   729→              - button "12" [ref=e129]
+   730→   730→              - button "13" [ref=e130]
+   731→   731→              - button "14" [ref=e131]
+   732→   732→              - button "15" [ref=e132]
+   733→   733→              - button "16" [ref=e133]
+   734→   734→              - button "17" [ref=e134]
+   735→   735→              - button "18" [ref=e135]
+   736→   736→              - button "19" [ref=e136]
+   737→   737→              - button "20" [ref=e137]
+   738→   738→              - button "21" [ref=e138]
+   739→   739→              - button "22" [ref=e139]
+   740→   740→              - button "23" [ref=e140]
+   741→   741→              - button "24" [ref=e141]
+   742→   742→              - button "25" [ref=e142]
+   743→   743→              - button "26" [ref=e143]
+   744→   744→              - button "27" [ref=e144]
+   745→   745→              - button "28" [ref=e145]
+   746→   746→              - button "29" [ref=e146]
+   747→   747→              - button "30" [ref=e147]
+   748→   748→          - generic
+   749→   749→            - generic
+   750→   750→              - heading "Eventos del 11 de Junio" [level=3, ref=e148]
+   751→   751→          - generic
+   752→   752→            - generic
+   753→   753→              - heading "Próximos Eventos" [level=3, ref=e149]
+   754→   754→              - button "12 JUN Operación Heist al Banco Central 21:00h 12 jun" [ref=e150]
+   755→   755→              - button "13 JUN Reunión de Facciones Semanal 20:00h 13 jun" [ref=e151]
+   756→   756→              - button "14 JUN Noche de Carreras Callejeras 22:00h 14 jun" [ref=e152]
+   757→   757→              - button "16 JUN Entrenamiento Táctico LSPD 19:00h 16 jun" [ref=e153]
+   758→   758→              - button "17 JUN Entrenamiento Médico de Emergencia 17:00h 17 jun" [ref=e154]
+   759→   759→      - generic
+   760→   760→        - generic
+   761→   761→          - generic
+   762→   762→            - image
+   763→   763→            - StaticText "Servidor Oficial"
+   764→   764→          - heading "Únete a la Comunidad" [level=2, ref=e63]
+   765→   765→            - StaticText "Únete a la Comunidad"
+   766→   766→          - paragraph
+   767→   767→            - StaticText "Conecta con más de 500 jugadores, participa en eventos exclusivos y sé parte de la familia Prestigio RP. Tu historia comienza aquí."
+   768→   768→          - StaticText "Voz"
+   769→   769→          - StaticText "Eventos"
+   770→   770→          - StaticText "Comunidad"
+   771→   771→          - link "Unirse al Discord" [ref=e64]
+   772→   772→            - image
+   773→   773→            - StaticText "Unirse al Discord"
+   774→   774→          - link "Conectar por FiveM" [ref=e65]
+   775→   775→          - StaticText "500+"
+   776→   776→          - StaticText "Miembros"
+   777→   777→          - StaticText "•"
+   778→   778→          - StaticText "24/7 Activo"
+   779→   779→          - StaticText "•"
+   780→   780→          - StaticText "6 Facciones"
+   781→   781→          - link "PR Prestigio Roleplay Servidor de FiveM Roleplay 500+ miembros A M R 128 general 42 en línea anuncios 5 nuevos whitelist 8 esperando Nivel 1 de Boost Unirse" [ref=e66]
+   782→   782→            - generic
+   783→   783→              - heading "Prestigio Roleplay" [level=3, ref=e155]
+   784→   784→              - button "Unirse" [ref=e156]
+   785→   785→    - contentinfo
+   786→   786→      - generic
+   787→   787→      - generic
+   788→   788→        - link "Discord" [ref=e23]
+   789→   789→        - link "Normativa" [ref=e24]
+   790→   790→        - link "FiveM" [ref=e25]
+   791→   791→        - heading "NAVEGACIÓN" [level=4, ref=e26]
+   792→   792→        - button "Inicio" [ref=e27]
+   793→   793→        - button "Normativa" [ref=e28]
+   794→   794→        - button "Galería" [ref=e29]
+   795→   795→        - button "Facciones" [ref=e30]
+   796→   796→        - button "Mapa" [ref=e31]
+   797→   797→        - button "Donaciones" [ref=e32]
+   798→   798→        - heading "COMUNIDAD" [level=4, ref=e33]
+   799→   799→        - link "Discord" [ref=e34]
+   800→   800→        - link "Normativa" [ref=e35]
+   801→   801→        - link "FiveM" [ref=e36]
+   802→   802→        - heading "SERVIDOR" [level=4, ref=e37]
+   803→   803→        - link "Abrir Discord" [ref=e38]
+   804→   804→    - button "Activar música" [ref=e16]
+   805→   805→    - heading "Configuración de Cookies" [level=3, ref=e17]
+   806→   806→    - button "Rechazar Todo" [ref=e18]
+   807→   807→    - button "Configurar" [ref=e19]
+   808→   808→    - button "Aceptar Todo" [ref=e20]
+   809→   809→    - button "Abrir chat de soporte" [ref=e21]
+   810→   810→    - button "Personalizar tema" [ref=e2]
+   811→   811→    - button "Dev Tools" [ref=e3]
+   812→   812→  - region "Notifications alt+T" [ref=e1]

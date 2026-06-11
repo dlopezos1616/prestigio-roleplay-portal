@@ -121,7 +121,7 @@ function HeroSubtitle() {
       className="text-lg sm:text-xl md:text-2xl text-[#94a3b8] max-w-2xl mb-8 sm:mb-10 min-h-[2.5rem] sm:min-h-[3rem]"
     >
       {typedText}
-      <span className="text-[#06b6d4] animate-pulse ml-0.5">|</span>
+      <span className="text-[#06b6d4] animate-pulse ml-0.5" aria-hidden="true">|</span>
     </motion.p>
   )
 }
