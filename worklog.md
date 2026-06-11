@@ -1,11 +1,202 @@
 # Prestigio Roleplay Portal — Work Log
 
-## Project Status: Phase 8 Complete ✅ — Bug Fixes, 4 New Features, Enhanced Style System, Admin Panel Overhaul
+## Project Status: Phase 9 Complete ✅ — 5 New Features, Gallery AI Images, Enhanced Facciones, Server Rules Modal, CSS System Expansion
 
 ### Current State
-The Prestigio Roleplay Portal now has 17+ homepage sections, interactive features, and a comprehensive admin/staff panel. New additions: Event Calendar, Achievement system, Chat Widget, Theme Customizer, Scroll Progress bar, and dramatically enhanced Admin metrics with SVG charts, activity heatmaps, and server health monitoring. All QA tests pass with zero lint errors.
+The Prestigio Roleplay Portal now has 19+ homepage sections, AI-generated gallery images, interactive faction system with rank structures, Server Rules Quick-View modal, "How to Connect" guide, News Ticker, and 10+ new CSS utility classes. All QA tests pass with zero lint errors, and the Gallery page scored 9/10 on VLM visual assessment.
 
 ---
+
+## Phase 9 Changes (This Session)
+
+---
+Task ID: 1
+Agent: Main Agent
+Task: Generate AI Gallery Images using Image Generation Skill
+
+Work Log:
+- Generated 5 high-quality FiveM-themed gallery images using z-ai CLI
+- patrol.png: Night police patrol in Los Santos with neon lights
+- race.png: Illegal street race with neon underglow and motion blur
+- ems.png: Emergency medical rescue scene with ambulance
+- city-night.png: Los Santos city at night with purple/cyan neon glow
+- fbi.png: FBI undercover operation with dramatic noir shadows
+- All images saved to `/home/z/my-project/public/gallery/` at 1344x768 resolution
+- Gallery now loads real images instead of 404s
+
+Stage Summary:
+- Gallery page scored 9/10 on VLM visual assessment
+- All 8 gallery items now render correctly with real images
+- Zero 404 errors in dev log for gallery images
+
+---
+Task ID: 2
+Agent: Subagent (full-stack-developer)
+Task: Create "Cómo Conectar" (How to Connect) Guide Section
+
+Work Log:
+- Created `/home/z/my-project/src/components/sections/HowToConnect.tsx`
+- 4 step cards: Instalar FiveM → Buscar Servidor → Conectar IP → Disfrutar
+- Connection info card with IP, Port, Server type, Required game
+- "Copiar IP" button with clipboard feedback (copies play.prestigiorp.com:30120)
+- F8 console command hint styled as code block
+- "¿Problemas para conectar?" troubleshooting section with 3 solutions
+- Connector arrows between step cards on desktop
+- Integrated into page.tsx after About section
+
+Stage Summary:
+- New file: `/home/z/my-project/src/components/sections/HowToConnect.tsx`
+- Zero lint errors
+
+---
+Task ID: 3
+Agent: Subagent (full-stack-developer)
+Task: Create News/Announcements Ticker Section
+
+Work Log:
+- Created `/home/z/my-project/src/components/sections/NewsTicker.tsx`
+- 3-part design: scrolling ticker banner, featured news grid, recent updates list
+- Ticker: auto-scrolling marquee with CSS animation, pauses on hover
+- 4 featured news cards: Vehículos Custom, Carreras Nocturnas, Economía v2.0, Anti-Cheat
+- 5 recent updates sidebar with timestamps
+- Framer Motion staggered entrance animations
+- Integrated into page.tsx after HowToConnect section
+
+Stage Summary:
+- New file: `/home/z/my-project/src/components/sections/NewsTicker.tsx`
+- Zero lint errors
+
+---
+Task ID: 4
+Agent: Subagent (frontend-styling-expert)
+Task: Enhanced Global CSS with 10+ New Utilities
+
+Work Log:
+- Added `.section-divider-v2`: Elaborate divider with diamond, gradient lines, glow
+- Added `.parallax-bg`: Fixed background with hover scale, blend mode
+- Added `.glass-card-premium`: Multi-layered backdrop-filter, animated border gradient
+- Added `.bg-dots-pattern`, `.bg-diagonal-lines`, `.bg-circuit-pattern`: Decorative backgrounds
+- Added `.text-gradient-animated`, `.text-shadow-neon`, `.text-glitch-hover`: Text effects
+- Added `.corner-accent-tl/tr/bl/br`: L-shaped decorative corner accents
+- Added `.card-hover-lift`: 3D perspective tilt with shadow expansion
+- Added `.ambient-glow`: Slowly pulsing ambient radial gradient
+- Added `.floating-badge`: Floating translateY oscillation with glow
+- Added `.skeleton-shimmer`: Loading skeleton with shimmer sweep
+- All use @keyframes, prefers-reduced-motion support, neon theme colors
+
+Stage Summary:
+- 10+ new CSS utility classes added to globals.css
+- No existing styles modified
+- Zero lint errors
+
+---
+Task ID: 5
+Agent: Subagent (full-stack-developer)
+Task: Create Server Rules Quick-View Modal
+
+Work Log:
+- Created `/home/z/my-project/src/components/layout/ServerRulesModal.tsx`
+- Slide-in drawer from right (420px desktop, full mobile)
+- 6 rule categories as collapsible accordions: Respeto, Roleplay, Metagaming, VDM/RDM, Powergaming, Exploits
+- Each with colored accents and 3 sub-rules
+- Custom event system (`open-server-rules`) like CommandPalette
+- Navbar integration: Scale icon button on desktop + mobile menu
+- ESC key, overlay click, X button to close
+- Body scroll lock when open
+- Footer: "Ver normativa completa" navigates to Normativa page
+
+Stage Summary:
+- New file: `/home/z/my-project/src/components/layout/ServerRulesModal.tsx`
+- Modified: Navbar.tsx (added Scale icon + openServerRules)
+- Modified: page.tsx (added ServerRulesModal component)
+- Zero lint errors
+
+---
+Task ID: 6
+Agent: Main Agent
+Task: Enhanced Facciones Section with Rank Structures & Faction Stats
+
+Work Log:
+- Added rank hierarchy system for each faction (5-6 ranks per faction)
+- Added member capacity bar showing current/max members
+- Added weekly operations count per faction
+- Added faction leader display
+- Added faction overview stats row (6 facciones, 300+ miembros, 120 operaciones)
+- Enhanced section with diagonal line background pattern, ambient glow orbs
+- Added top accent line on each card
+- Applied card-hover-lift CSS class for 3D tilt effect
+- Tags use floating-badge animation
+- Used cleaner data structure with about/joinSteps/ranks fields
+- Removed repetitive conditional rendering
+
+Stage Summary:
+- Enhanced file: `/home/z/my-project/src/components/sections/Facciones.tsx`
+- Facciones page scored 8/10 on VLM assessment, 9/10 for data display
+- Zero lint errors
+
+---
+Task ID: 7 (Main Agent)
+Agent: Main Agent
+Task: Enhanced SectionDivider Component
+
+Work Log:
+- Rewrote SectionDivider with elaborate multi-layer design
+- Added wide subtle gradient band behind the divider
+- Primary gradient line with 3-color gradient (main → secondary → main)
+- Secondary thin line below with different color accent
+- Center diamond shape (rotated 45° square with border + inner glow)
+- Left and right decorative dots with different colors
+- Spring animation for diamond entrance
+- All elements use Framer Motion whileInView animations
+
+Stage Summary:
+- Enhanced file: `/home/z/my-project/src/components/layout/SectionDivider.tsx`
+- More visually impressive section transitions
+- Zero lint errors
+
+---
+
+## Phase 9 Summary — 5 New Features, Gallery AI Images, Enhanced Facciones, CSS Expansion
+
+### New Features:
+1. **"Cómo Conectar" Guide** — Step-by-step connection guide with Copy IP button, troubleshooting
+2. **News Ticker** — Scrolling marquee + featured news grid + recent updates sidebar
+3. **Server Rules Quick-View Modal** — Slide-in drawer from Navbar with 6 collapsible rule categories
+4. **Enhanced Facciones** — Rank hierarchies, member capacity bars, weekly ops, faction leaders, overview stats
+5. **Enhanced SectionDivider** — Multi-layer design with diamond, gradient lines, decorative dots
+
+### Gallery Images (AI-Generated):
+- 5 high-quality FiveM-themed images generated using z-ai Image Generation CLI
+- All images load correctly (Gallery scored 9/10 on VLM assessment)
+
+### CSS Enhancements:
+- 10+ new utility classes (glass-card-premium, card-hover-lift, ambient-glow, floating-badge, text-glitch-hover, etc.)
+- Decorative background patterns (dots, diagonal lines, circuit)
+- Parallax background utility
+- Animated text effects
+- Corner accent decorations
+- Loading skeleton shimmer
+
+### QA Results:
+- Lint: ✅ 0 errors
+- Dev server: ✅ Compiling and serving successfully
+- Gallery images: ✅ All loading correctly (9/10 VLM score)
+- Facciones page: ✅ 8/10 VLM score, 9/10 data display
+- About section: ✅ 8/10 VLM score
+- All pages navigate without errors
+- Zero console errors
+
+### Unresolved / Future Tasks:
+- Discord Bot service (bot/ directory) — role assignment, DM notifications
+- Real image upload for gallery (currently static files)
+- Whitelist submission rate limiting (1 per 24h)
+- SEO: sitemap.xml, robots.txt
+- Security headers: CSP, X-Frame-Options
+- Discord developer configuration guide + PostgreSQL migration guide
+- Real API integration for notifications (currently mock data)
+- Real Discord bot integration for server stats
+- Performance optimization: code splitting, lazy loading
+- Mobile responsive testing for staff/admin panels
 
 ## Phase 8 Changes (This Session)
 
@@ -1333,3 +1524,111 @@ Stage Summary:
 - Smooth framer-motion slide-in/slide-out animation with glass morphism styling
 - Responsive panel (320px wide, max 85vw on mobile)
 - Zero lint errors
+
+---
+Task ID: 2
+Agent: Main Agent
+Task: Create "Cómo Conectar" (How to Connect) Guide Section
+
+Work Log:
+- Created `/home/z/my-project/src/components/sections/HowToConnect.tsx` with full neon dark theme styling
+- Built 4 step cards with staggered Framer Motion entrance animations (Instalar FiveM, Buscar Servidor, Conectar IP, Disfrutar)
+- Each card has: numbered badge, color-coded icon with glow, description in Spanish, hover glow effects, connector arrows on desktop
+- Added connection info card with IP, Port, Server type, Required game in a 2x2/4-col grid
+- Implemented functional "Copiar IP" button with clipboard API + fallback, showing checkmark feedback on copy
+- Added F8 console command hint with styled code block
+- Created "¿Problemas para conectar?" troubleshooting section with 3 solution cards (clear cache, verify GTA V, disable mods)
+- Section header: "Cómo Conectar" with "Conectar" in cyan neon-text-glow accent
+- All CSS classes consistent with project: neon-border, neon-border-cyan, card-lift, neon-glow, neon-glow-cyan, neon-glow-amber, neon-text-glow-cyan
+- Responsive: vertical stack on mobile, 2-col on sm, 4-col horizontal on lg
+- Integrated into `page.tsx` after About section with `<SectionDivider variant="cyan" />` before and after
+- Added import for HowToConnect in page.tsx
+
+Stage Summary:
+- HowToConnect section fully functional with step-by-step guide, copy IP button, connection info, and troubleshooting
+- Zero lint errors
+
+---
+Task ID: 3
+Agent: Main Agent
+Task: Create News/Announcements Ticker Section
+
+Work Log:
+- Created `/home/z/my-project/src/components/sections/NewsTicker.tsx` with 3-part design:
+  1. **Scrolling News Ticker Banner**: Horizontal auto-scrolling marquee with CSS @keyframes `tickerScroll` animation, purple gradient background, pauses on hover, duplicate content for seamless loop, fade masks on both sides
+  2. **Featured News Grid (2x2)**: 4 cards with category badges, icons, titles, descriptions, dates; each card has top accent line in category color, glass card background with hover glow, staggered Framer Motion entrance
+  3. **Recent Updates Sidebar**: 5 recent update items with icons, text, and timestamps; scrollable list with custom scrollbar styling
+- Section header: "Últimas Noticias" with "Noticias" in amber accent `text-[#f59e0b] neon-text-glow`
+- Subtitle: "Mantente informado sobre las novedades del servidor"
+- "Ver todas las noticias" CTA button linking to Discord with Newspaper icon and ChevronRight
+- Responsive: 1 col on mobile, 2x2 grid on desktop for featured news; sidebar stacks below on mobile, side-by-side on lg
+- News ticker uses `style jsx` for `@keyframes tickerScroll` with `translateX(-50%)` for seamless infinite loop
+- All CSS classes consistent with project: neon-border, card-lift, neon-text-glow, neon-glow, neon-glow-amber
+- Framer Motion staggered entrance animations on all cards and sidebar items
+- Integrated into `page.tsx` after HowToConnect section with `<SectionDivider variant="amber" />` before and `<SectionDivider variant="cyan" />` after
+
+Stage Summary:
+- NewsTicker section fully functional with scrolling ticker, featured news grid, and recent updates sidebar
+- Zero lint errors
+- Dev server compiling successfully
+
+---
+Task ID: 4
+Agent: frontend-styling-expert
+Task: Enhance Global CSS with More Styling Details
+
+Work Log:
+- Read existing globals.css (1211 lines) to understand current styles and avoid conflicts
+- Added 10 new CSS enhancement sections (appended after existing styles, no modifications)
+- All new classes use neon theme colors: #7c3aed, #06b6d4, #f59e0b, #030712
+- All animations use @keyframes as required
+- Existing prefers-reduced-motion rule (global) covers all new animations automatically
+
+New CSS classes added:
+1. `.section-divider-v2` — Elaborate divider with central diamond, gradient lines, glow, scroll-into-view animation
+2. `.parallax-bg` — Fixed background attachment, hover scale, blend mode, mobile fallback
+3. `.glass-card-premium` — Multi-layered backdrop-filter, animated border gradient (purple→cyan→amber), inner shadow, hover effects
+4. `.bg-dots-pattern` / `.bg-diagonal-lines` / `.bg-circuit-pattern` — Decorative section backgrounds
+5. `.text-gradient-animated` / `.text-shadow-neon` / `.text-glitch-hover` — Enhanced text effects
+6. `.corner-accent-tl` / `.corner-accent-tr` / `.corner-accent-bl` / `.corner-accent-br` — Decorative L-shaped corner accents (appear on hover)
+7. `.card-hover-lift` — Smooth translateY(-8px) with 3D perspective tilt, shadow expansion, border color transition
+8. `.ambient-glow` — Slowly pulsing ambient glow (8s cycle, radial gradient position shift)
+9. `.floating-badge` — Floating translateY oscillation + glow pulse on hover
+10. `.skeleton-shimmer` — Loading skeleton with shimmer sweep animation
+
+Stage Summary:
+- globals.css expanded from 1211 to ~1700 lines
+- Zero lint errors (bun run lint passes clean)
+- No existing styles were modified or removed
+- All animations respect prefers-reduced-motion via existing global rule
+
+---
+Task ID: 5
+Agent: Main Agent
+Task: Create Server Rules Quick-View Modal
+
+Work Log:
+- Created `/home/z/my-project/src/components/layout/ServerRulesModal.tsx` — a slide-in drawer from the right with neon dark theme and glass morphism
+- Component uses custom event system (`open-server-rules` event) consistent with CommandPalette pattern
+- Implemented 6 rule categories as collapsible accordion items: Respeto (purple), Roleplay (cyan), Metagaming (amber), VDM/RDM (red), Powergaming (green), Exploits (orange)
+- Each category has colored icon, accent dot, chevron toggle, and animated expand/collapse via Framer Motion AnimatePresence
+- Header includes Shield icon, title "Normas del Servidor", subtitle, and close (X) button
+- Footer includes "Ver normativa completa" button that navigates to Normativa page via useNavigation
+- Full-height drawer (~420px on desktop, full width on mobile) with scrollable content area
+- Closes on overlay click, ESC key, or X button
+- Body scroll locked when modal is open
+- Modified `/home/z/my-project/src/components/layout/Navbar.tsx`:
+  - Added Scale icon import from lucide-react
+  - Added import for `openServerRules` from ServerRulesModal
+  - Added "Normas" button (Scale icon) on desktop navbar, placed after CommandPaletteTrigger and before NotificationBell
+  - Added "Normas" button in mobile sheet menu after nav items
+- Modified `/home/z/my-project/src/app/page.tsx`:
+  - Added import for ServerRulesModal
+  - Added `<ServerRulesModal />` component after `<CommandPalette />`
+- Lint passes with zero errors
+
+Stage Summary:
+- Server Rules Quick-View Modal fully implemented and integrated
+- Users can quickly access important server rules from any page via the Navbar
+- Follows project patterns (custom events, Framer Motion, neon dark theme)
+

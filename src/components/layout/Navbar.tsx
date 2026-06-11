@@ -5,11 +5,12 @@ import { motion } from 'framer-motion'
 import { 
   Menu, Home, BookOpen, ImageIcon, Swords, Map, Info, Heart, 
   Shield, Crown, LogIn, LogOut, User, ChevronDown, Bell, UserCircle,
-  Search
+  Search, Scale
 } from 'lucide-react'
 import { useNavigation, type PageId } from '@/lib/navigation'
 import { useSession } from '@/hooks/useSession'
 import { CommandPaletteTrigger, openCommandPalette } from '@/components/layout/CommandPalette'
+import { openServerRules } from '@/components/layout/ServerRulesModal'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -221,6 +222,16 @@ export default function Navbar({ bannerVisible = false }: NavbarProps) {
             {/* Command Palette Search Button */}
             <CommandPaletteTrigger />
 
+            {/* Server Rules Quick-View Button */}
+            <button
+              onClick={openServerRules}
+              className="hidden md:flex p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+              aria-label="Normas del servidor"
+              title="Normas"
+            >
+              <Scale className="w-5 h-5" />
+            </button>
+
             {/* Notification Bell - between nav items and user dropdown */}
             <NotificationBell onClick={() => setNotifOpen(true)} />
 
@@ -324,6 +335,17 @@ export default function Navbar({ bannerVisible = false }: NavbarProps) {
                       {item.label}
                     </button>
                   ))}
+                  {/* Quick Rules Button (mobile) */}
+                  <button
+                    onClick={() => {
+                      setMobileOpen(false)
+                      openServerRules()
+                    }}
+                    className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-all"
+                  >
+                    <Scale className="w-4 h-4" />
+                    Normas
+                  </button>
                 </div>
               </SheetContent>
             </Sheet>

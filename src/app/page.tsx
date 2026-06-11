@@ -16,9 +16,11 @@ import ScrollProgress from '@/components/layout/ScrollProgress'
 import LoadingOverlay from '@/components/layout/LoadingOverlay'
 import DevLogin from '@/components/layout/DevLogin'
 import CommandPalette from '@/components/layout/CommandPalette'
+import ServerRulesModal from '@/components/layout/ServerRulesModal'
 import PageHeader from '@/components/layout/PageHeader'
 import Hero from '@/components/sections/Hero'
 import About from '@/components/sections/About'
+import HowToConnect from '@/components/sections/HowToConnect'
 import Features from '@/components/sections/Features'
 import FAQ from '@/components/sections/FAQ'
 import Testimonials from '@/components/sections/Testimonials'
@@ -38,6 +40,7 @@ import CityMap from '@/components/sections/CityMap'
 import Streamers from '@/components/sections/Streamers'
 import Leaderboard from '@/components/sections/Leaderboard'
 import Achievements from '@/components/sections/Achievements'
+import NewsTicker from '@/components/sections/NewsTicker'
 import SectionDivider from '@/components/layout/SectionDivider'
 import { WhitelistForm } from '@/components/whitelist/WhitelistForm'
 import StaffPanel from '@/components/staff/StaffPanel'
@@ -56,6 +59,10 @@ function HomePage() {
       <Hero />
       <SectionDivider />
       <About />
+      <SectionDivider variant="cyan" />
+      <HowToConnect />
+      <SectionDivider variant="amber" />
+      <NewsTicker />
       <SectionDivider variant="cyan" />
       <Features />
       <SectionDivider variant="amber" />
@@ -214,6 +221,7 @@ export default function MainRouter() {
       <ThemeCustomizer />
       <DevLogin />
       <CommandPalette />
+      <ServerRulesModal />
     </div>
   )
 }

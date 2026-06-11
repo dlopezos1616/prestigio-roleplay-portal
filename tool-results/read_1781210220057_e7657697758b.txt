@@ -1,0 +1,1714 @@
+     1→@import "tailwindcss";
+     2→@import "tw-animate-css";
+     3→
+     4→@custom-variant dark (&:is(.dark *));
+     5→
+     6→@theme inline {
+     7→  --color-background: var(--background);
+     8→  --color-foreground: var(--foreground);
+     9→  --font-sans: var(--font-geist-sans);
+    10→  --font-mono: var(--font-geist-mono);
+    11→  --color-sidebar-ring: var(--sidebar-ring);
+    12→  --color-sidebar-border: var(--sidebar-border);
+    13→  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    14→  --color-sidebar-accent: var(--sidebar-accent);
+    15→  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    16→  --color-sidebar-primary: var(--sidebar-primary);
+    17→  --color-sidebar-foreground: var(--sidebar-foreground);
+    18→  --color-sidebar: var(--sidebar);
+    19→  --color-chart-5: var(--chart-5);
+    20→  --color-chart-4: var(--chart-4);
+    21→  --color-chart-3: var(--chart-3);
+    22→  --color-chart-2: var(--chart-2);
+    23→  --color-chart-1: var(--chart-1);
+    24→  --color-ring: var(--ring);
+    25→  --color-input: var(--input);
+    26→  --color-border: var(--border);
+    27→  --color-destructive: var(--destructive);
+    28→  --color-accent-foreground: var(--accent-foreground);
+    29→  --color-accent: var(--accent);
+    30→  --color-muted-foreground: var(--muted-foreground);
+    31→  --color-muted: var(--muted);
+    32→  --color-secondary-foreground: var(--secondary-foreground);
+    33→  --color-secondary: var(--secondary);
+    34→  --color-primary-foreground: var(--primary-foreground);
+    35→  --color-primary: var(--primary);
+    36→  --color-popover-foreground: var(--popover-foreground);
+    37→  --color-popover: var(--popover);
+    38→  --color-card-foreground: var(--card-foreground);
+    39→  --color-card: var(--card);
+    40→  --radius-sm: calc(var(--radius) - 4px);
+    41→  --radius-md: calc(var(--radius) - 2px);
+    42→  --radius-lg: var(--radius);
+    43→  --radius-xl: calc(var(--radius) + 4px);
+    44→  --color-neon-primary: #7c3aed;
+    45→  --color-neon-secondary: #06b6d4;
+    46→  --color-neon-accent: #f59e0b;
+    47→  --color-neon-danger: #ef4444;
+    48→  --color-bg-dark: #030712;
+    49→  --color-bg-card: #0f172a;
+    50→}
+    51→
+    52→:root {
+    53→  --radius: 0.625rem;
+    54→  --background: #030712;
+    55→  --foreground: #f1f5f9;
+    56→  --card: #0f172a;
+    57→  --card-foreground: #f1f5f9;
+    58→  --popover: #0f172a;
+    59→  --popover-foreground: #f1f5f9;
+    60→  --primary: #7c3aed;
+    61→  --primary-foreground: #ffffff;
+    62→  --secondary: #1e293b;
+    63→  --secondary-foreground: #f1f5f9;
+    64→  --muted: #1e293b;
+    65→  --muted-foreground: #94a3b8;
+    66→  --accent: #06b6d4;
+    67→  --accent-foreground: #ffffff;
+    68→  --destructive: #ef4444;
+    69→  --border: rgba(124, 58, 237, 0.2);
+    70→  --input: rgba(124, 58, 237, 0.15);
+    71→  --ring: #7c3aed;
+    72→  --chart-1: #7c3aed;
+    73→  --chart-2: #06b6d4;
+    74→  --chart-3: #f59e0b;
+    75→  --chart-4: #ef4444;
+    76→  --chart-5: #22c55e;
+    77→  --sidebar: #0f172a;
+    78→  --sidebar-foreground: #f1f5f9;
+    79→  --sidebar-primary: #7c3aed;
+    80→  --sidebar-primary-foreground: #ffffff;
+    81→  --sidebar-accent: #1e293b;
+    82→  --sidebar-accent-foreground: #f1f5f9;
+    83→  --sidebar-border: rgba(124, 58, 237, 0.2);
+    84→  --sidebar-ring: #7c3aed;
+    85→}
+    86→
+    87→/* Neon Glow Utilities */
+    88→.neon-glow {
+    89→  box-shadow: 0 0 5px rgba(124, 58, 237, 0.4),
+    90→    0 0 20px rgba(124, 58, 237, 0.2),
+    91→    0 0 40px rgba(124, 58, 237, 0.1);
+    92→}
+    93→
+    94→.neon-glow-cyan {
+    95→  box-shadow: 0 0 5px rgba(6, 182, 212, 0.4),
+    96→    0 0 20px rgba(6, 182, 212, 0.2),
+    97→    0 0 40px rgba(6, 182, 212, 0.1);
+    98→}
+    99→
+   100→.neon-glow-amber {
+   101→  box-shadow: 0 0 5px rgba(245, 158, 11, 0.4),
+   102→    0 0 20px rgba(245, 158, 11, 0.2),
+   103→    0 0 40px rgba(245, 158, 11, 0.1);
+   104→}
+   105→
+   106→.neon-text-glow {
+   107→  text-shadow: 0 0 10px rgba(124, 58, 237, 0.6),
+   108→    0 0 30px rgba(124, 58, 237, 0.3),
+   109→    0 0 60px rgba(124, 58, 237, 0.15);
+   110→}
+   111→
+   112→.neon-text-glow-cyan {
+   113→  text-shadow: 0 0 10px rgba(6, 182, 212, 0.6),
+   114→    0 0 30px rgba(6, 182, 212, 0.3),
+   115→    0 0 60px rgba(6, 182, 212, 0.15);
+   116→}
+   117→
+   118→.neon-border {
+   119→  border: 1px solid rgba(124, 58, 237, 0.4);
+   120→  box-shadow: 0 0 10px rgba(124, 58, 237, 0.15),
+   121→    inset 0 0 10px rgba(124, 58, 237, 0.05);
+   122→}
+   123→
+   124→.neon-border-cyan {
+   125→  border: 1px solid rgba(6, 182, 212, 0.4);
+   126→  box-shadow: 0 0 10px rgba(6, 182, 212, 0.15),
+   127→    inset 0 0 10px rgba(6, 182, 212, 0.05);
+   128→}
+   129→
+   130→/* Animated gradient background */
+   131→.gradient-bg {
+   132→  background: linear-gradient(135deg, #030712 0%, #0f172a 25%, #030712 50%, #0f172a 75%, #030712 100%);
+   133→  background-size: 400% 400%;
+   134→  animation: gradientShift 15s ease infinite;
+   135→}
+   136→
+   137→@keyframes gradientShift {
+   138→  0% { background-position: 0% 50%; }
+   139→  50% { background-position: 100% 50%; }
+   140→  100% { background-position: 0% 50%; }
+   141→}
+   142→
+   143→/* Pulse glow animation */
+   144→@keyframes pulseGlow {
+   145→  0%, 100% {
+   146→    box-shadow: 0 0 5px rgba(124, 58, 237, 0.4),
+   147→      0 0 20px rgba(124, 58, 237, 0.2);
+   148→  }
+   149→  50% {
+   150→    box-shadow: 0 0 10px rgba(124, 58, 237, 0.6),
+   151→      0 0 40px rgba(124, 58, 237, 0.3),
+   152→      0 0 80px rgba(124, 58, 237, 0.1);
+   153→  }
+   154→}
+   155→
+   156→.animate-pulse-glow {
+   157→  animation: pulseGlow 3s ease-in-out infinite;
+   158→}
+   159→
+   160→/* Float animation */
+   161→@keyframes float {
+   162→  0%, 100% { transform: translateY(0px); }
+   163→  50% { transform: translateY(-10px); }
+   164→}
+   165→
+   166→.animate-float {
+   167→  animation: float 4s ease-in-out infinite;
+   168→}
+   169→
+   170→/* Particle animations */
+   171→@keyframes particleFloat1 {
+   172→  0% { transform: translate(0, 0) scale(1); opacity: 0; }
+   173→  10% { opacity: 1; }
+   174→  90% { opacity: 1; }
+   175→  100% { transform: translate(-100px, -200px) scale(0); opacity: 0; }
+   176→}
+   177→
+   178→@keyframes particleFloat2 {
+   179→  0% { transform: translate(0, 0) scale(1); opacity: 0; }
+   180→  10% { opacity: 0.8; }
+   181→  90% { opacity: 0.8; }
+   182→  100% { transform: translate(100px, -250px) scale(0); opacity: 0; }
+   183→}
+   184→
+   185→@keyframes particleFloat3 {
+   186→  0% { transform: translate(0, 0) scale(1); opacity: 0; }
+   187→  10% { opacity: 0.6; }
+   188→  90% { opacity: 0.6; }
+   189→  100% { transform: translate(-50px, -180px) scale(0); opacity: 0; }
+   190→}
+   191→
+   192→/* Grid background pattern */
+   193→.grid-pattern {
+   194→  background-image:
+   195→    linear-gradient(rgba(124, 58, 237, 0.05) 1px, transparent 1px),
+   196→    linear-gradient(90deg, rgba(124, 58, 237, 0.05) 1px, transparent 1px);
+   197→  background-size: 40px 40px;
+   198→}
+   199→
+   200→/* Scanline effect */
+   201→.scanlines::after {
+   202→  content: '';
+   203→  position: absolute;
+   204→  inset: 0;
+   205→  background: repeating-linear-gradient(
+   206→    0deg,
+   207→    transparent,
+   208→    transparent 2px,
+   209→    rgba(0, 0, 0, 0.03) 2px,
+   210→    rgba(0, 0, 0, 0.03) 4px
+   211→  );
+   212→  pointer-events: none;
+   213→  z-index: 1;
+   214→}
+   215→
+   216→/* Custom scrollbar */
+   217→::-webkit-scrollbar {
+   218→  width: 8px;
+   219→  height: 8px;
+   220→}
+   221→
+   222→::-webkit-scrollbar-track {
+   223→  background: #0f172a;
+   224→}
+   225→
+   226→::-webkit-scrollbar-thumb {
+   227→  background: rgba(124, 58, 237, 0.4);
+   228→  border-radius: 4px;
+   229→}
+   230→
+   231→::-webkit-scrollbar-thumb:hover {
+   232→  background: rgba(124, 58, 237, 0.6);
+   233→}
+   234→
+   235→/* Glass effect */
+   236→.glass {
+   237→  background: rgba(15, 23, 42, 0.7);
+   238→  backdrop-filter: blur(12px);
+   239→  -webkit-backdrop-filter: blur(12px);
+   240→  border: 1px solid rgba(124, 58, 237, 0.2);
+   241→}
+   242→
+   243→.glass-strong {
+   244→  background: rgba(15, 23, 42, 0.85);
+   245→  backdrop-filter: blur(20px);
+   246→  -webkit-backdrop-filter: blur(20px);
+   247→  border: 1px solid rgba(124, 58, 237, 0.3);
+   248→}
+   249→
+   250→@layer base {
+   251→  * {
+   252→    @apply border-border outline-ring/50;
+   253→  }
+   254→  body {
+   255→    @apply bg-background text-foreground;
+   256→  }
+   257→}
+   258→
+   259→/* Loading overlay animation */
+   260→@keyframes logoReveal {
+   261→  0% { opacity: 0; transform: scale(0.5); filter: blur(10px); }
+   262→  50% { opacity: 1; transform: scale(1.05); filter: blur(0); }
+   263→  100% { opacity: 1; transform: scale(1); filter: blur(0); }
+   264→}
+   265→
+   266→@keyframes slideUpFade {
+   267→  0% { opacity: 0; transform: translateY(20px); }
+   268→  100% { opacity: 1; transform: translateY(0); }
+   269→}
+   270→
+   271→.animate-logo-reveal {
+   272→  animation: logoReveal 1.2s ease-out forwards;
+   273→}
+   274→
+   275→.animate-slide-up-fade {
+   276→  animation: slideUpFade 0.6s ease-out forwards;
+   277→}
+   278→
+   279→/* Neon shimmer animation for headings */
+   280→@keyframes neonShimmer {
+   281→  0%, 100% { text-shadow: 0 0 10px rgba(124, 58, 237, 0.6), 0 0 30px rgba(124, 58, 237, 0.3); }
+   282→  50% { text-shadow: 0 0 20px rgba(124, 58, 237, 0.8), 0 0 50px rgba(124, 58, 237, 0.4), 0 0 80px rgba(124, 58, 237, 0.2); }
+   283→}
+   284→
+   285→.animate-neon-shimmer {
+   286→  animation: neonShimmer 3s ease-in-out infinite;
+   287→}
+   288→
+   289→/* Border glow pulse */
+   290→@keyframes borderGlowPulse {
+   291→  0%, 100% { border-color: rgba(124, 58, 237, 0.3); box-shadow: 0 0 5px rgba(124, 58, 237, 0.1); }
+   292→  50% { border-color: rgba(124, 58, 237, 0.6); box-shadow: 0 0 15px rgba(124, 58, 237, 0.3), 0 0 30px rgba(124, 58, 237, 0.1); }
+   293→}
+   294→
+   295→.animate-border-glow {
+   296→  animation: borderGlowPulse 4s ease-in-out infinite;
+   297→}
+   298→
+   299→/* Cyberpunk corner accents */
+   300→.cyber-corner {
+   301→  position: relative;
+   302→}
+   303→.cyber-corner::before,
+   304→.cyber-corner::after {
+   305→  content: '';
+   306→  position: absolute;
+   307→  width: 20px;
+   308→  height: 20px;
+   309→  border-color: rgba(124, 58, 237, 0.5);
+   310→  pointer-events: none;
+   311→}
+   312→.cyber-corner::before {
+   313→  top: -1px;
+   314→  left: -1px;
+   315→  border-top: 2px solid;
+   316→  border-left: 2px solid;
+   317→  border-color: inherit;
+   318→}
+   319→.cyber-corner::after {
+   320→  bottom: -1px;
+   321→  right: -1px;
+   322→  border-bottom: 2px solid;
+   323→  border-right: 2px solid;
+   324→  border-color: inherit;
+   325→}
+   326→
+   327→/* Glow line separator */
+   328→.glow-line {
+   329→  height: 1px;
+   330→  background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.6), transparent);
+   331→  box-shadow: 0 0 8px rgba(124, 58, 237, 0.3);
+   332→}
+   333→
+   334→/* Breathing glow for status indicators */
+   335→@keyframes breathe {
+   336→  0%, 100% { opacity: 0.6; transform: scale(1); }
+   337→  50% { opacity: 1; transform: scale(1.1); }
+   338→}
+   339→
+   340→.animate-breathe {
+   341→  animation: breathe 2.5s ease-in-out infinite;
+   342→}
+   343→
+   344→/* Slide in from left */
+   345→@keyframes slideInLeft {
+   346→  0% { opacity: 0; transform: translateX(-30px); }
+   347→  100% { opacity: 1; transform: translateX(0); }
+   348→}
+   349→
+   350→.animate-slide-in-left {
+   351→  animation: slideInLeft 0.5s ease-out forwards;
+   352→}
+   353→
+   354→/* Slide in from right */
+   355→@keyframes slideInRight {
+   356→  0% { opacity: 0; transform: translateX(30px); }
+   357→  100% { opacity: 1; transform: translateX(0); }
+   358→}
+   359→
+   360→.animate-slide-in-right {
+   361→  animation: slideInRight 0.5s ease-out forwards;
+   362→}
+   363→
+   364→/* Rotating border effect */
+   365→@keyframes rotateBorder {
+   366→  0% { border-color: rgba(124, 58, 237, 0.4); }
+   367→  33% { border-color: rgba(6, 182, 212, 0.4); }
+   368→  66% { border-color: rgba(245, 158, 11, 0.4); }
+   369→  100% { border-color: rgba(124, 58, 237, 0.4); }
+   370→}
+   371→
+   372→.animate-rotate-border {
+   373→  animation: rotateBorder 6s linear infinite;
+   374→}
+   375→
+   376→/* Neon text glow for amber */
+   377→.neon-text-glow-amber {
+   378→  text-shadow: 0 0 10px rgba(245, 158, 11, 0.6),
+   379→    0 0 30px rgba(245, 158, 11, 0.3),
+   380→    0 0 60px rgba(245, 158, 11, 0.15);
+   381→}
+   382→
+   383→/* Neon border amber */
+   384→.neon-border-amber {
+   385→  border: 1px solid rgba(245, 158, 11, 0.4);
+   386→  box-shadow: 0 0 10px rgba(245, 158, 11, 0.15),
+   387→    inset 0 0 10px rgba(245, 158, 11, 0.05);
+   388→}
+   389→
+   390→/* Selection colors */
+   391→::selection {
+   392→  background: rgba(124, 58, 237, 0.4);
+   393→  color: #ffffff;
+   394→}
+   395→
+   396→/* Focus ring style */
+   397→:focus-visible {
+   398→  outline: 2px solid rgba(124, 58, 237, 0.5);
+   399→  outline-offset: 2px;
+   400→}
+   401→
+   402→/* Smooth scroll behavior */
+   403→html {
+   404→  scroll-behavior: smooth;
+   405→}
+   406→
+   407→/* Enhanced selection for code blocks */
+   408→code::selection {
+   409→  background: rgba(6, 182, 212, 0.4);
+   410→}
+   411→
+   412→/* Noise texture overlay */
+   413→.noise-overlay::before {
+   414→  content: '';
+   415→  position: absolute;
+   416→  inset: 0;
+   417→  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+   418→  pointer-events: none;
+   419→  z-index: 0;
+   420→}
+   421→
+   422→/* ===== New Animation Utilities (Task 4-e) ===== */
+   423→
+   424→/* 3D Card Tilt Effect */
+   425→.card-3d {
+   426→  transform-style: preserve-3d;
+   427→  perspective: 1000px;
+   428→}
+   429→.card-3d:hover {
+   430→  transform: translateY(-5px);
+   431→}
+   432→
+   433→/* Animated Gradient Border */
+   434→@keyframes gradientBorder {
+   435→  0% { border-color: rgba(124, 58, 237, 0.4); }
+   436→  33% { border-color: rgba(6, 182, 212, 0.4); }
+   437→  66% { border-color: rgba(245, 158, 11, 0.4); }
+   438→  100% { border-color: rgba(124, 58, 237, 0.4); }
+   439→}
+   440→
+   441→.animate-gradient-border {
+   442→  animation: gradientBorder 6s linear infinite;
+   443→}
+   444→
+   445→/* Reveal on Scroll Animation */
+   446→@keyframes revealUp {
+   447→  0% { opacity: 0; transform: translateY(40px); filter: blur(4px); }
+   448→  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+   449→}
+   450→
+   451→.animate-reveal-up {
+   452→  animation: revealUp 0.7s ease-out forwards;
+   453→}
+   454→
+   455→/* Pulse Ring Effect for status indicators */
+   456→@keyframes pulseRing {
+   457→  0% { transform: scale(1); opacity: 0.8; }
+   458→  100% { transform: scale(2.5); opacity: 0; }
+   459→}
+   460→
+   461→.animate-pulse-ring {
+   462→  animation: pulseRing 1.5s ease-out infinite;
+   463→}
+   464→
+   465→/* Shimmer/Loading Effect */
+   466→@keyframes shimmer {
+   467→  0% { background-position: -200% 0; }
+   468→  100% { background-position: 200% 0; }
+   469→}
+   470→
+   471→.shimmer {
+   472→  background: linear-gradient(90deg, transparent 0%, rgba(124, 58, 237, 0.1) 50%, transparent 100%);
+   473→  background-size: 200% 100%;
+   474→  animation: shimmer 2s infinite;
+   475→}
+   476→
+   477→/* Shimmer sweep variant for cards on hover */
+   478→@keyframes shimmerSweep {
+   479→  0% { transform: translateX(-100%); }
+   480→  100% { transform: translateX(100%); }
+   481→}
+   482→
+   483→.shimmer-sweep {
+   484→  position: relative;
+   485→  overflow: hidden;
+   486→}
+   487→.shimmer-sweep::after {
+   488→  content: '';
+   489→  position: absolute;
+   490→  inset: 0;
+   491→  background: linear-gradient(90deg, transparent 0%, rgba(124, 58, 237, 0.06) 45%, rgba(6, 182, 212, 0.08) 50%, rgba(124, 58, 237, 0.06) 55%, transparent 100%);
+   492→  transform: translateX(-100%);
+   493→  transition: none;
+   494→  pointer-events: none;
+   495→  z-index: 1;
+   496→}
+   497→.shimmer-sweep:hover::after {
+   498→  animation: shimmerSweep 0.8s ease-out;
+   499→}
+   500→
+   501→/* Hex Pattern Background */
+   502→.hex-pattern {
+   503→  background-image: radial-gradient(circle, rgba(124, 58, 237, 0.04) 1px, transparent 1px);
+   504→  background-size: 30px 30px;
+   505→}
+   506→
+   507→/* Glitch effect for numbers */
+   508→@keyframes glitch {
+   509→  0% { text-shadow: 0 0 0 transparent; transform: translate(0); }
+   510→  10% { text-shadow: -2px 0 rgba(6, 182, 212, 0.7), 2px 0 rgba(245, 158, 11, 0.7); transform: translate(-1px, 1px); }
+   511→  20% { text-shadow: 2px 0 rgba(124, 58, 237, 0.7), -2px 0 rgba(6, 182, 212, 0.7); transform: translate(1px, -1px); }
+   512→  30% { text-shadow: -1px 0 rgba(245, 158, 11, 0.7), 1px 0 rgba(124, 58, 237, 0.7); transform: translate(0); }
+   513→  40% { text-shadow: 0 0 0 transparent; transform: translate(0); }
+   514→  100% { text-shadow: 0 0 0 transparent; transform: translate(0); }
+   515→}
+   516→
+   517→.animate-glitch {
+   518→  animation: glitch 0.6s ease-in-out;
+   519→}
+   520→
+   521→/* Icon pulse glow */
+   522→@keyframes iconPulseGlow {
+   523→  0%, 100% { box-shadow: 0 0 5px currentColor; }
+   524→  50% { box-shadow: 0 0 20px currentColor, 0 0 40px currentColor; }
+   525→}
+   526→
+   527→.animate-icon-pulse-glow {
+   528→  animation: iconPulseGlow 3s ease-in-out infinite;
+   529→}
+   530→
+   531→/* Sparkle animation for premium elements */
+   532→@keyframes sparkle {
+   533→  0%, 100% { opacity: 0; transform: scale(0); }
+   534→  50% { opacity: 1; transform: scale(1); }
+   535→}
+   536→
+   537→.animate-sparkle {
+   538→  animation: sparkle 1.5s ease-in-out infinite;
+   539→}
+   540→
+   541→/* Popular badge glow */
+   542→@keyframes popularGlow {
+   543→  0%, 100% { box-shadow: 0 0 8px rgba(255, 215, 0, 0.4), 0 0 20px rgba(255, 215, 0, 0.2); }
+   544→  50% { box-shadow: 0 0 16px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.3), 0 0 60px rgba(255, 215, 0, 0.1); }
+   545→}
+   546→
+   547→.animate-popular-glow {
+   548→  animation: popularGlow 2.5s ease-in-out infinite;
+   549→}
+   550→
+   551→/* Gradient text effect */
+   552→.gradient-text {
+   553→  background-clip: text;
+   554→  -webkit-background-clip: text;
+   555→  -webkit-text-fill-color: transparent;
+   556→}
+   557→
+   558→/* Heartbeat animation */
+   559→@keyframes heartbeat {
+   560→  0%, 100% { transform: scale(1); }
+   561→  15% { transform: scale(1.25); }
+   562→  30% { transform: scale(1); }
+   563→  45% { transform: scale(1.15); }
+   564→  60% { transform: scale(1); }
+   565→}
+   566→
+   567→.animate-heartbeat {
+   568→  animation: heartbeat 1.5s ease-in-out infinite;
+   569→}
+   570→
+   571→/* Underline slide-in on hover */
+   572→.hover-underline {
+   573→  position: relative;
+   574→}
+   575→.hover-underline::after {
+   576→  content: '';
+   577→  position: absolute;
+   578→  bottom: -2px;
+   579→  left: 0;
+   580→  width: 0;
+   581→  height: 1px;
+   582→  background: linear-gradient(90deg, #7c3aed, #06b6d4);
+   583→  transition: width 0.3s ease;
+   584→}
+   585→.hover-underline:hover::after {
+   586→  width: 100%;
+   587→}
+   588→
+   589→/* Animated gradient line for footer top */
+   590→@keyframes gradientLineShift {
+   591→  0% { background-position: 0% 50%; }
+   592→  50% { background-position: 100% 50%; }
+   593→  100% { background-position: 0% 50%; }
+   594→}
+   595→
+   596→.animate-gradient-line {
+   597→  background: linear-gradient(90deg, #7c3aed, #06b6d4, #f59e0b, #7c3aed);
+   598→  background-size: 300% 100%;
+   599→  animation: gradientLineShift 4s linear infinite;
+   600→}
+   601→
+   602→/* Card breathe animation */
+   603→@keyframes cardBreathe {
+   604→  0%, 100% { box-shadow: 0 0 5px rgba(124, 58, 237, 0.1); }
+   605→  50% { box-shadow: 0 0 15px rgba(124, 58, 237, 0.15), 0 0 30px rgba(124, 58, 237, 0.05); }
+   606→}
+   607→
+   608→.animate-card-breathe {
+   609→  animation: cardBreathe 4s ease-in-out infinite;
+   610→}
+   611→
+   612→/* Accent line shimmer (moves left to right continuously) */
+   613→@keyframes accentShimmer {
+   614→  0% { background-position: -200% 0; }
+   615→  100% { background-position: 200% 0; }
+   616→}
+   617→
+   618→.accent-shimmer-line {
+   619→  background-size: 200% 100%;
+   620→  animation: accentShimmer 3s linear infinite;
+   621→}
+   622→
+   623→/* ============================
+   624→   Hero Section Enhanced Animations
+   625→   ============================ */
+   626→
+   627→/* Orbit ring rotation */
+   628→@keyframes orbitSpin {
+   629→  0% { transform: rotate(0deg); }
+   630→  100% { transform: rotate(360deg); }
+   631→}
+   632→
+   633→@keyframes orbitSpinReverse {
+   634→  0% { transform: rotate(360deg); }
+   635→  100% { transform: rotate(0deg); }
+   636→}
+   637→
+   638→/* Floating geometric shapes */
+   639→@keyframes geoFloat1 {
+   640→  0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.15; }
+   641→  25% { transform: translateY(-20px) rotate(30deg); opacity: 0.25; }
+   642→  50% { transform: translateY(-10px) rotate(60deg); opacity: 0.15; }
+   643→  75% { transform: translateY(-25px) rotate(90deg); opacity: 0.2; }
+   644→}
+   645→
+   646→@keyframes geoFloat2 {
+   647→  0%, 100% { transform: translateY(0px) rotate(45deg); opacity: 0.12; }
+   648→  33% { transform: translateY(-30px) rotate(75deg); opacity: 0.22; }
+   649→  66% { transform: translateY(-15px) rotate(105deg); opacity: 0.15; }
+   650→}
+   651→
+   652→@keyframes geoFloat3 {
+   653→  0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.18; }
+   654→  50% { transform: translateY(-35px) rotate(-45deg); opacity: 0.28; }
+   655→}
+   656→
+   657→@keyframes geoFloat4 {
+   658→  0%, 100% { transform: translateY(0px) rotate(30deg); opacity: 0.1; }
+   659→  40% { transform: translateY(-25px) rotate(70deg); opacity: 0.2; }
+   660→  80% { transform: translateY(-12px) rotate(110deg); opacity: 0.14; }
+   661→}
+   662→
+   663→/* Nebula drift - large blurred particles */
+   664→@keyframes nebulaDrift1 {
+   665→  0% { transform: translate(0, 0) scale(1); opacity: 0; }
+   666→  15% { opacity: 0.3; }
+   667→  50% { transform: translate(-60px, -40px) scale(1.3); opacity: 0.2; }
+   668→  85% { opacity: 0.3; }
+   669→  100% { transform: translate(40px, -80px) scale(0.8); opacity: 0; }
+   670→}
+   671→
+   672→@keyframes nebulaDrift2 {
+   673→  0% { transform: translate(0, 0) scale(1); opacity: 0; }
+   674→  20% { opacity: 0.25; }
+   675→  50% { transform: translate(80px, -30px) scale(1.2); opacity: 0.15; }
+   676→  80% { opacity: 0.25; }
+   677→  100% { transform: translate(-40px, -70px) scale(0.9); opacity: 0; }
+   678→}
+   679→
+   680→@keyframes nebulaDrift3 {
+   681→  0% { transform: translate(0, 0) scale(1); opacity: 0; }
+   682→  10% { opacity: 0.2; }
+   683→  50% { transform: translate(-30px, -50px) scale(1.4); opacity: 0.3; }
+   684→  90% { opacity: 0.15; }
+   685→  100% { transform: translate(50px, -90px) scale(0.7); opacity: 0; }
+   686→}
+   687→
+   688→/* Hero badge pulse */
+   689→@keyframes badgePulse {
+   690→  0%, 100% { box-shadow: 0 0 5px rgba(34, 197, 94, 0.3), 0 0 15px rgba(34, 197, 94, 0.1); }
+   691→  50% { box-shadow: 0 0 10px rgba(34, 197, 94, 0.5), 0 0 30px rgba(34, 197, 94, 0.2), 0 0 50px rgba(34, 197, 94, 0.1); }
+   692→}
+   693→
+   694→/* Green dot indicator pulse */
+   695→@keyframes greenDotPulse {
+   696→  0%, 100% { opacity: 1; transform: scale(1); }
+   697→  50% { opacity: 0.6; transform: scale(1.3); }
+   698→}
+   699→
+   700→/* Scroll indicator bounce */
+   701→@keyframes scrollBounce {
+   702→  0%, 100% { transform: translateY(0); }
+   703→  50% { transform: translateY(6px); }
+   704→}
+   705→
+   706→/* ===== Phase 6 Enhancements ===== */
+   707→
+   708→/* Section divider — neon line with gradient */
+   709→.section-divider {
+   710→  position: relative;
+   711→  height: 80px;
+   712→  display: flex;
+   713→  align-items: center;
+   714→  justify-content: center;
+   715→  overflow: hidden;
+   716→}
+   717→.section-divider::before {
+   718→  content: '';
+   719→  position: absolute;
+   720→  left: 10%;
+   721→  right: 10%;
+   722→  height: 1px;
+   723→  background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.3), rgba(6, 182, 212, 0.3), rgba(124, 58, 237, 0.3), transparent);
+   724→  box-shadow: 0 0 8px rgba(124, 58, 237, 0.2);
+   725→}
+   726→.section-divider::after {
+   727→  content: '';
+   728→  position: absolute;
+   729→  width: 8px;
+   730→  height: 8px;
+   731→  background: #7c3aed;
+   732→  border-radius: 50%;
+   733→  box-shadow: 0 0 12px rgba(124, 58, 237, 0.6), 0 0 24px rgba(124, 58, 237, 0.3);
+   734→  animation: dividerDotPulse 3s ease-in-out infinite;
+   735→}
+   736→
+   737→@keyframes dividerDotPulse {
+   738→  0%, 100% { transform: scale(1); opacity: 0.8; }
+   739→  50% { transform: scale(1.5); opacity: 1; }
+   740→}
+   741→
+   742→/* Enhanced card hover — 3D lift with shadow */
+   743→.card-lift {
+   744→  transition: transform 0.3s ease, box-shadow 0.3s ease;
+   745→}
+   746→.card-lift:hover {
+   747→  transform: translateY(-6px) scale(1.01);
+   748→  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
+   749→    0 0 20px rgba(124, 58, 237, 0.15),
+   750→    0 0 40px rgba(124, 58, 237, 0.08);
+   751→}
+   752→
+   753→/* Neon text underline animation */
+   754→.neon-underline {
+   755→  position: relative;
+   756→  display: inline-block;
+   757→}
+   758→.neon-underline::after {
+   759→  content: '';
+   760→  position: absolute;
+   761→  bottom: -4px;
+   762→  left: 0;
+   763→  width: 0;
+   764→  height: 2px;
+   765→  background: linear-gradient(90deg, #7c3aed, #06b6d4);
+   766→  box-shadow: 0 0 8px rgba(124, 58, 237, 0.5);
+   767→  transition: width 0.4s ease;
+   768→  border-radius: 1px;
+   769→}
+   770→.neon-underline:hover::after {
+   771→  width: 100%;
+   772→}
+   773→
+   774→/* Glow pulse for status badges */
+   775→@keyframes statusGlow {
+   776→  0%, 100% { box-shadow: 0 0 4px currentColor; }
+   777→  50% { box-shadow: 0 0 12px currentColor, 0 0 24px currentColor; }
+   778→}
+   779→
+   780→.animate-status-glow {
+   781→  animation: statusGlow 2s ease-in-out infinite;
+   782→}
+   783→
+   784→/* Diagonal stripe overlay for premium/prestige areas */
+   785→.prestige-stripes {
+   786→  background-image: repeating-linear-gradient(
+   787→    -45deg,
+   788→    transparent,
+   789→    transparent 10px,
+   790→    rgba(124, 58, 237, 0.03) 10px,
+   791→    rgba(124, 58, 237, 0.03) 20px
+   792→  );
+   793→}
+   794→
+   795→/* Animated border dash — for special cards */
+   796→@keyframes dashMove {
+   797→  0% { stroke-dashoffset: 0; }
+   798→  100% { stroke-dashoffset: 100; }
+   799→}
+   800→
+   801→/* Typewriter cursor blink enhancement */
+   802→@keyframes cursorBlink {
+   803→  0%, 100% { opacity: 1; }
+   804→  50% { opacity: 0.3; }
+   805→}
+   806→
+   807→.animate-cursor-blink {
+   808→  animation: cursorBlink 1s step-end infinite;
+   809→}
+   810→
+   811→/* Noise grain texture — subtle film grain effect */
+   812→.grain-texture::before {
+   813→  content: '';
+   814→  position: fixed;
+   815→  inset: 0;
+   816→  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.015'/%3E%3C/svg%3E");
+   817→  pointer-events: none;
+   818→  z-index: 9999;
+   819→  opacity: 0.5;
+   820→}
+   821→
+   822→/* Morphing blob animation for background accents */
+   823→@keyframes morphBlob {
+   824→  0%, 100% {
+   825→    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+   826→  }
+   827→  25% {
+   828→    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+   829→  }
+   830→  50% {
+   831→    border-radius: 50% 60% 30% 60% / 30% 60% 70% 40%;
+   832→  }
+   833→  75% {
+   834→    border-radius: 60% 40% 60% 30% / 60% 40% 30% 60%;
+   835→  }
+   836→}
+   837→
+   838→.animate-morph-blob {
+   839→  animation: morphBlob 8s ease-in-out infinite;
+   840→}
+   841→
+   842→/* Gradient text — smooth animated version */
+   843→@keyframes gradientTextShift {
+   844→  0% { background-position: 0% 50%; }
+   845→  50% { background-position: 100% 50%; }
+   846→  100% { background-position: 0% 50%; }
+   847→}
+   848→
+   849→.animate-gradient-text {
+   850→  background-size: 200% auto;
+   851→  animation: gradientTextShift 4s linear infinite;
+   852→}
+   853→
+   854→/* Focus ring for form inputs */
+   855→.neon-focus:focus {
+   856→  outline: none;
+   857→  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.5), 0 0 15px rgba(124, 58, 237, 0.2);
+   858→  border-color: rgba(124, 58, 237, 0.6);
+   859→}
+   860→
+   861→/* Dot grid pattern — alternative to hex-pattern */
+   862→.dot-pattern {
+   863→  background-image: radial-gradient(circle, rgba(124, 58, 237, 0.08) 1px, transparent 1px);
+   864→  background-size: 24px 24px;
+   865→}
+   866→
+   867→/* Double neon border — for premium elements */
+   868→.neon-border-double {
+   869→  border: 1px solid rgba(124, 58, 237, 0.3);
+   870→  box-shadow:
+   871→    0 0 10px rgba(124, 58, 237, 0.1),
+   872→    inset 0 0 10px rgba(124, 58, 237, 0.05),
+   873→    0 0 0 3px rgba(124, 58, 237, 0.05);
+   874→}
+   875→
+   876→/* Animated glow border with conic gradient */
+   877→@keyframes rotateConicBorder {
+   878→  0% { --conic-angle: 0deg; }
+   879→  100% { --conic-angle: 360deg; }
+   880→}
+   881→
+   882→/* ===== Phase 8 — Enhanced Style System ===== */
+   883→
+   884→/* Scroll progress bar */
+   885→.scroll-progress {
+   886→  position: fixed;
+   887→  top: 0;
+   888→  left: 0;
+   889→  height: 2px;
+   890→  background: linear-gradient(90deg, #7c3aed, #06b6d4, #f59e0b);
+   891→  z-index: 9999;
+   892→  transition: width 0.1s linear;
+   893→  box-shadow: 0 0 8px rgba(124, 58, 237, 0.5);
+   894→}
+   895→
+   896→/* Button ripple effect */
+   897→.btn-ripple {
+   898→  position: relative;
+   899→  overflow: hidden;
+   900→}
+   901→.btn-ripple::after {
+   902→  content: '';
+   903→  position: absolute;
+   904→  width: 100%;
+   905→  height: 100%;
+   906→  top: 0;
+   907→  left: 0;
+   908→  pointer-events: none;
+   909→  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.15) 10%, transparent 10.01%);
+   910→  background-repeat: no-repeat;
+   911→  background-position: 50%;
+   912→  transform: scale(10, 10);
+   913→  opacity: 0;
+   914→  transition: transform 0.5s, opacity 1s;
+   915→}
+   916→.btn-ripple:active::after {
+   917→  transform: scale(0, 0);
+   918→  opacity: 0.3;
+   919→  transition: 0s;
+   920→}
+   921→
+   922→/* Neon link hover */
+   923→.neon-link {
+   924→  position: relative;
+   925→  color: #94a3b8;
+   926→  transition: color 0.3s ease, text-shadow 0.3s ease;
+   927→}
+   928→.neon-link:hover {
+   929→  color: #7c3aed;
+   930→  text-shadow: 0 0 8px rgba(124, 58, 237, 0.4);
+   931→}
+   932→
+   933→/* Glow badge */
+   934→.glow-badge {
+   935→  position: relative;
+   936→  overflow: hidden;
+   937→}
+   938→.glow-badge::before {
+   939→  content: '';
+   940→  position: absolute;
+   941→  inset: 0;
+   942→  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+   943→  background-size: 200% 100%;
+   944→  animation: shimmer 3s infinite;
+   945→}
+   946→
+   947→/* Card shine effect on hover */
+   948→.card-shine {
+   949→  position: relative;
+   950→  overflow: hidden;
+   951→}
+   952→.card-shine::before {
+   953→  content: '';
+   954→  position: absolute;
+   955→  top: -50%;
+   956→  left: -50%;
+   957→  width: 200%;
+   958→  height: 200%;
+   959→  background: conic-gradient(from 0deg, transparent 0deg, rgba(124, 58, 237, 0.03) 90deg, transparent 180deg);
+   960→  animation: rotateConicBorder 8s linear infinite;
+   961→  pointer-events: none;
+   962→}
+   963→
+   964→/* Section reveal animation */
+   965→.section-reveal {
+   966→  opacity: 0;
+   967→  transform: translateY(30px);
+   968→  transition: opacity 0.8s ease, transform 0.8s ease;
+   969→}
+   970→.section-reveal.visible {
+   971→  opacity: 1;
+   972→  transform: translateY(0);
+   973→}
+   974→
+   975→/* Staggered children animation */
+   976→.stagger-children > * {
+   977→  opacity: 0;
+   978→  transform: translateY(20px);
+   979→  animation: staggerIn 0.5s ease forwards;
+   980→}
+   981→.stagger-children > *:nth-child(1) { animation-delay: 0.05s; }
+   982→.stagger-children > *:nth-child(2) { animation-delay: 0.1s; }
+   983→.stagger-children > *:nth-child(3) { animation-delay: 0.15s; }
+   984→.stagger-children > *:nth-child(4) { animation-delay: 0.2s; }
+   985→.stagger-children > *:nth-child(5) { animation-delay: 0.25s; }
+   986→.stagger-children > *:nth-child(6) { animation-delay: 0.3s; }
+   987→.stagger-children > *:nth-child(7) { animation-delay: 0.35s; }
+   988→.stagger-children > *:nth-child(8) { animation-delay: 0.4s; }
+   989→
+   990→@keyframes staggerIn {
+   991→  to {
+   992→    opacity: 1;
+   993→    transform: translateY(0);
+   994→  }
+   995→}
+   996→
+   997→/* Neon border animation — flowing gradient */
+   998→@keyframes flowBorder {
+   999→  0% { background-position: 0% 50%; }
+  1000→  50% { background-position: 100% 50%; }
+  1001→  100% { background-position: 0% 50%; }
+  1002→}
+  1003→
+  1004→.neon-flow-border {
+  1005→  border: 1px solid transparent;
+  1006→  background-clip: padding-box;
+  1007→  position: relative;
+  1008→}
+  1009→.neon-flow-border::before {
+  1010→  content: '';
+  1011→  position: absolute;
+  1012→  inset: -1px;
+  1013→  background: linear-gradient(90deg, #7c3aed, #06b6d4, #f59e0b, #7c3aed);
+  1014→  background-size: 300% 100%;
+  1015→  animation: flowBorder 4s linear infinite;
+  1016→  z-index: -1;
+  1017→  border-radius: inherit;
+  1018→  opacity: 0.4;
+  1019→}
+  1020→
+  1021→/* Glow dot indicator */
+  1022→.glow-dot {
+  1023→  width: 6px;
+  1024→  height: 6px;
+  1025→  border-radius: 50%;
+  1026→  position: relative;
+  1027→}
+  1028→.glow-dot::after {
+  1029→  content: '';
+  1030→  position: absolute;
+  1031→  inset: -3px;
+  1032→  border-radius: 50%;
+  1033→  background: inherit;
+  1034→  opacity: 0.3;
+  1035→  animation: breathe 2s ease-in-out infinite;
+  1036→}
+  1037→
+  1038→/* Enhanced focus styles for accessibility */
+  1039→input:focus-visible,
+  1040→textarea:focus-visible,
+  1041→select:focus-visible {
+  1042→  outline: 2px solid rgba(124, 58, 237, 0.5);
+  1043→  outline-offset: 2px;
+  1044→  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.15);
+  1045→}
+  1046→
+  1047→/* Reduced motion support */
+  1048→@media (prefers-reduced-motion: reduce) {
+  1049→  *,
+  1050→  *::before,
+  1051→  *::after {
+  1052→    animation-duration: 0.01ms !important;
+  1053→    animation-iteration-count: 1 !important;
+  1054→    transition-duration: 0.01ms !important;
+  1055→    scroll-behavior: auto !important;
+  1056→  }
+  1057→}
+  1058→
+  1059→/* Theme customizer — transition speed variable */
+  1060→:root {
+  1061→  --transition-speed: 1;
+  1062→}
+  1063→
+  1064→/* Theme customizer — glow intensity */
+  1065→[data-glow-intensity="0"] .neon-glow,
+  1066→[data-glow-intensity="0"] .neon-glow-cyan,
+  1067→[data-glow-intensity="0"] .neon-glow-amber,
+  1068→[data-glow-intensity="0"] .neon-text-glow,
+  1069→[data-glow-intensity="0"] .neon-text-glow-cyan {
+  1070→  box-shadow: none !important;
+  1071→  text-shadow: none !important;
+  1072→}
+  1073→
+  1074→/* Background style variants */
+  1075→[data-bg-style="grid"] .gradient-bg {
+  1076→  background: #030712;
+  1077→  background-image:
+  1078→    linear-gradient(rgba(124, 58, 237, 0.03) 1px, transparent 1px),
+  1079→    linear-gradient(90deg, rgba(124, 58, 237, 0.03) 1px, transparent 1px);
+  1080→  background-size: 40px 40px;
+  1081→  animation: none;
+  1082→}
+  1083→
+  1084→[data-bg-style="clean"] .gradient-bg {
+  1085→  background: #030712;
+  1086→  animation: none;
+  1087→}
+  1088→
+  1089→/* Scroll margin for fixed navbar */
+  1090→section[id] {
+  1091→  scroll-margin-top: 5rem;
+  1092→}
+  1093→
+  1094→/* Page transition shimmer */
+  1095→@keyframes pageTransition {
+  1096→  0% { opacity: 0; transform: translateY(8px); filter: blur(2px); }
+  1097→  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+  1098→}
+  1099→
+  1100→.page-enter {
+  1101→  animation: pageTransition 0.4s ease-out;
+  1102→}
+  1103→
+  1104→/* Ambient floating particles — CSS-only version */
+  1105→@keyframes ambientFloat1 {
+  1106→  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+  1107→  25% { transform: translate(10px, -20px) scale(1.1); opacity: 0.5; }
+  1108→  50% { transform: translate(-5px, -35px) scale(0.9); opacity: 0.2; }
+  1109→  75% { transform: translate(15px, -15px) scale(1.05); opacity: 0.4; }
+  1110→}
+  1111→
+  1112→@keyframes ambientFloat2 {
+  1113→  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.2; }
+  1114→  33% { transform: translate(-15px, -25px) scale(1.15); opacity: 0.4; }
+  1115→  66% { transform: translate(10px, -40px) scale(0.85); opacity: 0.15; }
+  1116→}
+  1117→
+  1118→.ambient-particle {
+  1119→  position: absolute;
+  1120→  width: 3px;
+  1121→  height: 3px;
+  1122→  border-radius: 50%;
+  1123→  background: #7c3aed;
+  1124→  pointer-events: none;
+  1125→}
+  1126→
+  1127→.ambient-particle:nth-child(odd) {
+  1128→  animation: ambientFloat1 8s ease-in-out infinite;
+  1129→}
+  1130→
+  1131→.ambient-particle:nth-child(even) {
+  1132→  animation: ambientFloat2 10s ease-in-out infinite;
+  1133→  background: #06b6d4;
+  1134→}
+  1135→
+  1136→/* Enhanced scrollbar for dark theme */
+  1137→* {
+  1138→  scrollbar-width: thin;
+  1139→  scrollbar-color: rgba(124, 58, 237, 0.3) rgba(15, 23, 42, 0.5);
+  1140→}
+  1141→
+  1142→/* Interactive card glow on mouse position */
+  1143→.mouse-glow {
+  1144→  position: relative;
+  1145→  overflow: hidden;
+  1146→}
+  1147→.mouse-glow::after {
+  1148→  content: '';
+  1149→  position: absolute;
+  1150→  width: 200px;
+  1151→  height: 200px;
+  1152→  border-radius: 50%;
+  1153→  background: radial-gradient(circle, rgba(124, 58, 237, 0.08), transparent 70%);
+  1154→  pointer-events: none;
+  1155→  opacity: 0;
+  1156→  transition: opacity 0.3s ease;
+  1157→  transform: translate(-50%, -50%);
+  1158→}
+  1159→.mouse-glow:hover::after {
+  1160→  opacity: 1;
+  1161→}
+  1162→
+  1163→/* Neon text cycling colors */
+  1164→@keyframes neonColorCycle {
+  1165→  0%, 100% { color: #7c3aed; text-shadow: 0 0 10px rgba(124, 58, 237, 0.6); }
+  1166→  33% { color: #06b6d4; text-shadow: 0 0 10px rgba(6, 182, 212, 0.6); }
+  1167→  66% { color: #f59e0b; text-shadow: 0 0 10px rgba(245, 158, 11, 0.6); }
+  1168→}
+  1169→
+  1170→.animate-neon-cycle {
+  1171→  animation: neonColorCycle 6s ease-in-out infinite;
+  1172→}
+  1173→
+  1174→/* Smooth counter animation for numbers */
+  1175→@keyframes countUp {
+  1176→  from { opacity: 0; transform: translateY(10px); }
+  1177→  to { opacity: 1; transform: translateY(0); }
+  1178→}
+  1179→
+  1180→.animate-count-up {
+  1181→  animation: countUp 0.5s ease-out forwards;
+  1182→}
+  1183→
+  1184→/* Tooltip style for hover info */
+  1185→.tooltip-neon {
+  1186→  position: relative;
+  1187→}
+  1188→.tooltip-neon::after {
+  1189→  content: attr(data-tooltip);
+  1190→  position: absolute;
+  1191→  bottom: calc(100% + 8px);
+  1192→  left: 50%;
+  1193→  transform: translateX(-50%) scale(0.8);
+  1194→  padding: 6px 12px;
+  1195→  background: rgba(15, 23, 42, 0.95);
+  1196→  border: 1px solid rgba(124, 58, 237, 0.3);
+  1197→  border-radius: 6px;
+  1198→  color: #f1f5f9;
+  1199→  font-size: 12px;
+  1200→  white-space: nowrap;
+  1201→  pointer-events: none;
+  1202→  opacity: 0;
+  1203→  transition: opacity 0.2s, transform 0.2s;
+  1204→  z-index: 100;
+  1205→  box-shadow: 0 0 10px rgba(124, 58, 237, 0.2);
+  1206→}
+  1207→.tooltip-neon:hover::after {
+  1208→  opacity: 1;
+  1209→  transform: translateX(-50%) scale(1);
+  1210→}
+  1211→
+  1212→/* ======================================================================
+  1213→   TASK 4 — Enhanced Global CSS Styling Details
+  1214→   Neon Theme Colors: #7c3aed (purple), #06b6d4 (cyan), #f59e0b (amber), #030712 (dark)
+  1215→   ====================================================================== */
+  1216→
+  1217→/* ===== 1. Enhanced Section Divider V2 ===== */
+  1218→
+  1219→.section-divider-v2 {
+  1220→  position: relative;
+  1221→  height: 80px;
+  1222→  display: flex;
+  1223→  align-items: center;
+  1224→  justify-content: center;
+  1225→  overflow: hidden;
+  1226→}
+  1227→
+  1228→/* Gradient lines extending from both sides */
+  1229→.section-divider-v2::before {
+  1230→  content: '';
+  1231→  position: absolute;
+  1232→  left: 5%;
+  1233→  right: 5%;
+  1234→  height: 1px;
+  1235→  background: linear-gradient(
+  1236→    90deg,
+  1237→    transparent 0%,
+  1238→    rgba(124, 58, 237, 0.4) 20%,
+  1239→    rgba(6, 182, 212, 0.4) 50%,
+  1240→    rgba(124, 58, 237, 0.4) 80%,
+  1241→    transparent 100%
+  1242→  );
+  1243→  box-shadow: 0 0 12px rgba(124, 58, 237, 0.25), 0 0 24px rgba(6, 182, 212, 0.1);
+  1244→}
+  1245→
+  1246→/* Central diamond shape */
+  1247→.section-divider-v2::after {
+  1248→  content: '';
+  1249→  position: absolute;
+  1250→  width: 12px;
+  1251→  height: 12px;
+  1252→  background: linear-gradient(135deg, #7c3aed, #06b6d4);
+  1253→  transform: rotate(45deg);
+  1254→  box-shadow:
+  1255→    0 0 12px rgba(124, 58, 237, 0.6),
+  1256→    0 0 24px rgba(124, 58, 237, 0.3),
+  1257→    0 0 48px rgba(6, 182, 212, 0.15);
+  1258→  animation: dividerV2Pulse 4s ease-in-out infinite;
+  1259→}
+  1260→
+  1261→@keyframes dividerV2Pulse {
+  1262→  0%, 100% {
+  1263→    transform: rotate(45deg) scale(1);
+  1264→    box-shadow:
+  1265→      0 0 12px rgba(124, 58, 237, 0.6),
+  1266→      0 0 24px rgba(124, 58, 237, 0.3),
+  1267→      0 0 48px rgba(6, 182, 212, 0.15);
+  1268→  }
+  1269→  50% {
+  1270→    transform: rotate(45deg) scale(1.3);
+  1271→    box-shadow:
+  1272→      0 0 18px rgba(124, 58, 237, 0.8),
+  1273→      0 0 36px rgba(124, 58, 237, 0.4),
+  1274→      0 0 60px rgba(6, 182, 212, 0.25);
+  1275→  }
+  1276→}
+  1277→
+  1278→/* Scroll-into-view animation for divider v2 */
+  1279→.section-divider-v2 {
+  1280→  opacity: 0;
+  1281→  transform: scaleX(0.5);
+  1282→  transition: opacity 0.8s ease, transform 0.8s ease;
+  1283→}
+  1284→
+  1285→.section-divider-v2.visible {
+  1286→  opacity: 1;
+  1287→  transform: scaleX(1);
+  1288→}
+  1289→
+  1290→/* ===== 2. Parallax Background Effects ===== */
+  1291→
+  1292→.parallax-bg {
+  1293→  background-attachment: fixed;
+  1294→  background-position: center;
+  1295→  background-repeat: no-repeat;
+  1296→  background-size: cover;
+  1297→  background-blend-mode: overlay;
+  1298→  transition: transform 0.4s ease;
+  1299→}
+  1300→
+  1301→.parallax-bg:hover {
+  1302→  transform: scale(1.02);
+  1303→}
+  1304→
+  1305→/* Disable fixed attachment on mobile for performance */
+  1306→@media (max-width: 768px) {
+  1307→  .parallax-bg {
+  1308→    background-attachment: scroll;
+  1309→  }
+  1310→  .parallax-bg:hover {
+  1311→    transform: none;
+  1312→  }
+  1313→}
+  1314→
+  1315→/* ===== 3. Glass Morphism Enhancements ===== */
+  1316→
+  1317→.glass-card-premium {
+  1318→  position: relative;
+  1319→  background: rgba(15, 23, 42, 0.6);
+  1320→  backdrop-filter: blur(16px) brightness(1.05) saturate(1.4);
+  1321→  -webkit-backdrop-filter: blur(16px) brightness(1.05) saturate(1.4);
+  1322→  border: 1px solid transparent;
+  1323→  border-radius: 12px;
+  1324→  box-shadow:
+  1325→    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+  1326→    inset 0 -1px 0 rgba(0, 0, 0, 0.2),
+  1327→    0 8px 32px rgba(0, 0, 0, 0.3);
+  1328→  overflow: hidden;
+  1329→  transition: backdrop-filter 0.4s ease, box-shadow 0.4s ease;
+  1330→}
+  1331→
+  1332→/* Animated border gradient */
+  1333→.glass-card-premium::before {
+  1334→  content: '';
+  1335→  position: absolute;
+  1336→  inset: 0;
+  1337→  border-radius: inherit;
+  1338→  padding: 1px;
+  1339→  background: linear-gradient(
+  1340→    90deg,
+  1341→    rgba(124, 58, 237, 0.5),
+  1342→    rgba(6, 182, 212, 0.5),
+  1343→    rgba(245, 158, 11, 0.5),
+  1344→    rgba(124, 58, 237, 0.5)
+  1345→  );
+  1346→  background-size: 300% 100%;
+  1347→  animation: glassBorderShift 6s linear infinite;
+  1348→  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  1349→  -webkit-mask-composite: xor;
+  1350→  mask-composite: exclude;
+  1351→  pointer-events: none;
+  1352→}
+  1353→
+  1354→/* Inner shadow for depth */
+  1355→.glass-card-premium::after {
+  1356→  content: '';
+  1357→  position: absolute;
+  1358→  inset: 0;
+  1359→  border-radius: inherit;
+  1360→  box-shadow: inset 0 0 30px rgba(124, 58, 237, 0.03);
+  1361→  pointer-events: none;
+  1362→}
+  1363→
+  1364→/* Hover: increased blur + glow intensity */
+  1365→.glass-card-premium:hover {
+  1366→  backdrop-filter: blur(24px) brightness(1.1) saturate(1.6);
+  1367→  -webkit-backdrop-filter: blur(24px) brightness(1.1) saturate(1.6);
+  1368→  box-shadow:
+  1369→    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+  1370→    inset 0 -1px 0 rgba(0, 0, 0, 0.2),
+  1371→    0 12px 48px rgba(0, 0, 0, 0.4),
+  1372→    0 0 20px rgba(124, 58, 237, 0.1),
+  1373→    0 0 40px rgba(6, 182, 212, 0.05);
+  1374→}
+  1375→
+  1376→@keyframes glassBorderShift {
+  1377→  0% { background-position: 0% 50%; }
+  1378→  50% { background-position: 100% 50%; }
+  1379→  100% { background-position: 0% 50%; }
+  1380→}
+  1381→
+  1382→/* ===== 4. Section Background Variants ===== */
+  1383→
+  1384→/* Dot pattern background */
+  1385→.bg-dots-pattern {
+  1386→  background-image: radial-gradient(
+  1387→    circle,
+  1388→    rgba(124, 58, 237, 0.12) 1px,
+  1389→    transparent 1px
+  1390→  );
+  1391→  background-size: 20px 20px;
+  1392→  background-position: 0 0;
+  1393→}
+  1394→
+  1395→/* Diagonal line pattern background */
+  1396→.bg-diagonal-lines {
+  1397→  background-image: repeating-linear-gradient(
+  1398→    -45deg,
+  1399→    transparent,
+  1400→    transparent 8px,
+  1401→    rgba(124, 58, 237, 0.04) 8px,
+  1402→    rgba(124, 58, 237, 0.04) 9px
+  1403→  );
+  1404→}
+  1405→
+  1406→/* Circuit board style pattern */
+  1407→.bg-circuit-pattern {
+  1408→  position: relative;
+  1409→}
+  1410→
+  1411→.bg-circuit-pattern::before {
+  1412→  content: '';
+  1413→  position: absolute;
+  1414→  inset: 0;
+  1415→  background-image:
+  1416→    linear-gradient(rgba(124, 58, 237, 0.06) 1px, transparent 1px),
+  1417→    linear-gradient(90deg, rgba(124, 58, 237, 0.06) 1px, transparent 1px),
+  1418→    radial-gradient(circle, rgba(6, 182, 212, 0.08) 2px, transparent 2px);
+  1419→  background-size:
+  1420→    40px 40px,
+  1421→    40px 40px,
+  1422→    80px 80px;
+  1423→  background-position:
+  1424→    0 0,
+  1425→    0 0,
+  1426→    20px 20px;
+  1427→  pointer-events: none;
+  1428→  z-index: 0;
+  1429→  opacity: 0.7;
+  1430→}
+  1431→
+  1432→/* ===== 5. Enhanced Text Effects ===== */
+  1433→
+  1434→/* Animated gradient text that shifts colors */
+  1435→.text-gradient-animated {
+  1436→  background: linear-gradient(
+  1437→    90deg,
+  1438→    #7c3aed,
+  1439→    #06b6d4,
+  1440→    #f59e0b,
+  1441→    #7c3aed
+  1442→  );
+  1443→  background-size: 300% 100%;
+  1444→  background-clip: text;
+  1445→  -webkit-background-clip: text;
+  1446→  -webkit-text-fill-color: transparent;
+  1447→  animation: textGradientShift 6s linear infinite;
+  1448→}
+  1449→
+  1450→@keyframes textGradientShift {
+  1451→  0% { background-position: 0% 50%; }
+  1452→  50% { background-position: 100% 50%; }
+  1453→  100% { background-position: 0% 50%; }
+  1454→}
+  1455→
+  1456→/* Text with animated neon glow that pulses */
+  1457→.text-shadow-neon {
+  1458→  color: #f1f5f9;
+  1459→  animation: neonTextPulse 3s ease-in-out infinite;
+  1460→}
+  1461→
+  1462→@keyframes neonTextPulse {
+  1463→  0%, 100% {
+  1464→    text-shadow:
+  1465→      0 0 7px rgba(124, 58, 237, 0.5),
+  1466→      0 0 20px rgba(124, 58, 237, 0.25),
+  1467→      0 0 40px rgba(124, 58, 237, 0.1);
+  1468→  }
+  1469→  50% {
+  1470→    text-shadow:
+  1471→      0 0 14px rgba(6, 182, 212, 0.7),
+  1472→      0 0 40px rgba(6, 182, 212, 0.4),
+  1473→      0 0 80px rgba(124, 58, 237, 0.2),
+  1474→      0 0 120px rgba(245, 158, 11, 0.1);
+  1475→  }
+  1476→}
+  1477→
+  1478→/* Brief glitch effect on hover */
+  1479→.text-glitch-hover {
+  1480→  position: relative;
+  1481→  display: inline-block;
+  1482→  transition: transform 0.1s ease;
+  1483→}
+  1484→
+  1485→.text-glitch-hover:hover {
+  1486→  animation: glitchJitter 0.3s ease;
+  1487→}
+  1488→
+  1489→@keyframes glitchJitter {
+  1490→  0% { transform: translateX(0) skewX(0deg); }
+  1491→  15% { transform: translateX(-3px) skewX(-2deg); }
+  1492→  30% { transform: translateX(3px) skewX(1deg); }
+  1493→  45% { transform: translateX(-2px) skewX(-1deg); }
+  1494→  60% { transform: translateX(2px) skewX(2deg); }
+  1495→  75% { transform: translateX(-1px) skewX(0deg); }
+  1496→  100% { transform: translateX(0) skewX(0deg); }
+  1497→}
+  1498→
+  1499→/* ===== 6. Decorative Corner Accents ===== */
+  1500→
+  1501→/* Top-left corner accent */
+  1502→.corner-accent-tl {
+  1503→  position: relative;
+  1504→}
+  1505→
+  1506→.corner-accent-tl::before {
+  1507→  content: '';
+  1508→  position: absolute;
+  1509→  top: 0;
+  1510→  left: 0;
+  1511→  width: 20px;
+  1512→  height: 20px;
+  1513→  border-top: 2px solid rgba(124, 58, 237, 0.3);
+  1514→  border-left: 2px solid rgba(124, 58, 237, 0.3);
+  1515→  opacity: 0;
+  1516→  transition: opacity 0.3s ease;
+  1517→  pointer-events: none;
+  1518→}
+  1519→
+  1520→.corner-accent-tl:hover::before {
+  1521→  opacity: 1;
+  1522→}
+  1523→
+  1524→/* Top-right corner accent */
+  1525→.corner-accent-tr {
+  1526→  position: relative;
+  1527→}
+  1528→
+  1529→.corner-accent-tr::before {
+  1530→  content: '';
+  1531→  position: absolute;
+  1532→  top: 0;
+  1533→  right: 0;
+  1534→  width: 20px;
+  1535→  height: 20px;
+  1536→  border-top: 2px solid rgba(124, 58, 237, 0.3);
+  1537→  border-right: 2px solid rgba(124, 58, 237, 0.3);
+  1538→  opacity: 0;
+  1539→  transition: opacity 0.3s ease;
+  1540→  pointer-events: none;
+  1541→}
+  1542→
+  1543→.corner-accent-tr:hover::before {
+  1544→  opacity: 1;
+  1545→}
+  1546→
+  1547→/* Bottom-left corner accent */
+  1548→.corner-accent-bl {
+  1549→  position: relative;
+  1550→}
+  1551→
+  1552→.corner-accent-bl::before {
+  1553→  content: '';
+  1554→  position: absolute;
+  1555→  bottom: 0;
+  1556→  left: 0;
+  1557→  width: 20px;
+  1558→  height: 20px;
+  1559→  border-bottom: 2px solid rgba(124, 58, 237, 0.3);
+  1560→  border-left: 2px solid rgba(124, 58, 237, 0.3);
+  1561→  opacity: 0;
+  1562→  transition: opacity 0.3s ease;
+  1563→  pointer-events: none;
+  1564→}
+  1565→
+  1566→.corner-accent-bl:hover::before {
+  1567→  opacity: 1;
+  1568→}
+  1569→
+  1570→/* Bottom-right corner accent */
+  1571→.corner-accent-br {
+  1572→  position: relative;
+  1573→}
+  1574→
+  1575→.corner-accent-br::before {
+  1576→  content: '';
+  1577→  position: absolute;
+  1578→  bottom: 0;
+  1579→  right: 0;
+  1580→  width: 20px;
+  1581→  height: 20px;
+  1582→  border-bottom: 2px solid rgba(124, 58, 237, 0.3);
+  1583→  border-right: 2px solid rgba(124, 58, 237, 0.3);
+  1584→  opacity: 0;
+  1585→  transition: opacity 0.3s ease;
+  1586→  pointer-events: none;
+  1587→}
+  1588→
+  1589→.corner-accent-br:hover::before {
+  1590→  opacity: 1;
+  1591→}
+  1592→
+  1593→/* ===== 7. Improved Card Hover States ===== */
+  1594→
+  1595→.card-hover-lift {
+  1596→  transition:
+  1597→    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+  1598→    box-shadow 0.35s ease,
+  1599→    border-color 0.35s ease;
+  1600→  transform-style: preserve-3d;
+  1601→  perspective: 800px;
+  1602→  border-color: rgba(124, 58, 237, 0.15);
+  1603→}
+  1604→
+  1605→.card-hover-lift:hover {
+  1606→  transform: translateY(-8px) rotateX(2deg) rotateY(-1deg);
+  1607→  box-shadow:
+  1608→    0 24px 48px rgba(0, 0, 0, 0.35),
+  1609→    0 0 24px rgba(124, 58, 237, 0.12),
+  1610→    0 0 48px rgba(6, 182, 212, 0.06);
+  1611→  border-color: rgba(124, 58, 237, 0.4);
+  1612→}
+  1613→
+  1614→/* ===== 8. Ambient Glow Animation ===== */
+  1615→
+  1616→.ambient-glow {
+  1617→  position: relative;
+  1618→  overflow: hidden;
+  1619→}
+  1620→
+  1621→.ambient-glow::before {
+  1622→  content: '';
+  1623→  position: absolute;
+  1624→  inset: -50%;
+  1625→  background: radial-gradient(
+  1626→    circle at 30% 40%,
+  1627→    rgba(124, 58, 237, 0.08) 0%,
+  1628→    transparent 50%
+  1629→  );
+  1630→  animation: ambientGlowShift 8s ease-in-out infinite;
+  1631→  pointer-events: none;
+  1632→}
+  1633→
+  1634→@keyframes ambientGlowShift {
+  1635→  0%, 100% {
+  1636→    background: radial-gradient(
+  1637→      circle at 30% 40%,
+  1638→      rgba(124, 58, 237, 0.08) 0%,
+  1639→      transparent 50%
+  1640→    );
+  1641→  }
+  1642→  33% {
+  1643→    background: radial-gradient(
+  1644→      circle at 70% 30%,
+  1645→      rgba(6, 182, 212, 0.07) 0%,
+  1646→      transparent 50%
+  1647→    );
+  1648→  }
+  1649→  66% {
+  1650→    background: radial-gradient(
+  1651→      circle at 50% 70%,
+  1652→      rgba(245, 158, 11, 0.05) 0%,
+  1653→      transparent 50%
+  1654→    );
+  1655→  }
+  1656→}
+  1657→
+  1658→/* ===== 9. Floating Badge Animation ===== */
+  1659→
+  1660→.floating-badge {
+  1661→  animation: badgeFloat 3s ease-in-out infinite;
+  1662→  box-shadow: 0 0 8px rgba(124, 58, 237, 0.3);
+  1663→  transition: box-shadow 0.3s ease;
+  1664→}
+  1665→
+  1666→.floating-badge:hover {
+  1667→  box-shadow:
+  1668→    0 0 12px rgba(124, 58, 237, 0.5),
+  1669→    0 0 24px rgba(124, 58, 237, 0.25),
+  1670→    0 0 48px rgba(6, 182, 212, 0.1);
+  1671→  animation: badgeFloat 3s ease-in-out infinite, badgeGlowPulse 1.5s ease-in-out infinite;
+  1672→}
+  1673→
+  1674→@keyframes badgeFloat {
+  1675→  0%, 100% { transform: translateY(0px); }
+  1676→  50% { transform: translateY(-6px); }
+  1677→}
+  1678→
+  1679→@keyframes badgeGlowPulse {
+  1680→  0%, 100% {
+  1681→    box-shadow: 0 0 8px rgba(124, 58, 237, 0.3);
+  1682→  }
+  1683→  50% {
+  1684→    box-shadow:
+  1685→      0 0 16px rgba(124, 58, 237, 0.5),
+  1686→      0 0 32px rgba(6, 182, 212, 0.2);
+  1687→  }
+  1688→}
+  1689→
+  1690→/* ===== 10. Loading Skeleton Shimmer ===== */
+  1691→
+  1692→.skeleton-shimmer {
+  1693→  background: linear-gradient(
+  1694→    90deg,
+  1695→    rgba(30, 41, 59, 0.6) 25%,
+  1696→    rgba(51, 65, 85, 0.4) 37%,
+  1697→    rgba(30, 41, 59, 0.6) 63%
+  1698→  );
+  1699→  background-size: 400% 100%;
+  1700→  animation: skeletonSweep 1.8s ease-in-out infinite;
+  1701→  border-radius: 4px;
+  1702→}
+  1703→
+  1704→@keyframes skeletonSweep {
+  1705→  0% { background-position: 100% 50%; }
+  1706→  100% { background-position: 0% 50%; }
+  1707→}
+  1708→
+  1709→/* ===== Task 4 — Reduced Motion Override ===== */
+  1710→/* All new animations from Task 4 respect prefers-reduced-motion.
+  1711→   The existing global reduced-motion rule (line 1048) already disables
+  1712→   all animations and transitions globally. The classes above are
+  1713→   automatically covered by that rule. No additional overrides needed. */
+  1714→

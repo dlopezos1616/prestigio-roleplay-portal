@@ -1,0 +1,1211 @@
+     1→@import "tailwindcss";
+     2→@import "tw-animate-css";
+     3→
+     4→@custom-variant dark (&:is(.dark *));
+     5→
+     6→@theme inline {
+     7→  --color-background: var(--background);
+     8→  --color-foreground: var(--foreground);
+     9→  --font-sans: var(--font-geist-sans);
+    10→  --font-mono: var(--font-geist-mono);
+    11→  --color-sidebar-ring: var(--sidebar-ring);
+    12→  --color-sidebar-border: var(--sidebar-border);
+    13→  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    14→  --color-sidebar-accent: var(--sidebar-accent);
+    15→  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    16→  --color-sidebar-primary: var(--sidebar-primary);
+    17→  --color-sidebar-foreground: var(--sidebar-foreground);
+    18→  --color-sidebar: var(--sidebar);
+    19→  --color-chart-5: var(--chart-5);
+    20→  --color-chart-4: var(--chart-4);
+    21→  --color-chart-3: var(--chart-3);
+    22→  --color-chart-2: var(--chart-2);
+    23→  --color-chart-1: var(--chart-1);
+    24→  --color-ring: var(--ring);
+    25→  --color-input: var(--input);
+    26→  --color-border: var(--border);
+    27→  --color-destructive: var(--destructive);
+    28→  --color-accent-foreground: var(--accent-foreground);
+    29→  --color-accent: var(--accent);
+    30→  --color-muted-foreground: var(--muted-foreground);
+    31→  --color-muted: var(--muted);
+    32→  --color-secondary-foreground: var(--secondary-foreground);
+    33→  --color-secondary: var(--secondary);
+    34→  --color-primary-foreground: var(--primary-foreground);
+    35→  --color-primary: var(--primary);
+    36→  --color-popover-foreground: var(--popover-foreground);
+    37→  --color-popover: var(--popover);
+    38→  --color-card-foreground: var(--card-foreground);
+    39→  --color-card: var(--card);
+    40→  --radius-sm: calc(var(--radius) - 4px);
+    41→  --radius-md: calc(var(--radius) - 2px);
+    42→  --radius-lg: var(--radius);
+    43→  --radius-xl: calc(var(--radius) + 4px);
+    44→  --color-neon-primary: #7c3aed;
+    45→  --color-neon-secondary: #06b6d4;
+    46→  --color-neon-accent: #f59e0b;
+    47→  --color-neon-danger: #ef4444;
+    48→  --color-bg-dark: #030712;
+    49→  --color-bg-card: #0f172a;
+    50→}
+    51→
+    52→:root {
+    53→  --radius: 0.625rem;
+    54→  --background: #030712;
+    55→  --foreground: #f1f5f9;
+    56→  --card: #0f172a;
+    57→  --card-foreground: #f1f5f9;
+    58→  --popover: #0f172a;
+    59→  --popover-foreground: #f1f5f9;
+    60→  --primary: #7c3aed;
+    61→  --primary-foreground: #ffffff;
+    62→  --secondary: #1e293b;
+    63→  --secondary-foreground: #f1f5f9;
+    64→  --muted: #1e293b;
+    65→  --muted-foreground: #94a3b8;
+    66→  --accent: #06b6d4;
+    67→  --accent-foreground: #ffffff;
+    68→  --destructive: #ef4444;
+    69→  --border: rgba(124, 58, 237, 0.2);
+    70→  --input: rgba(124, 58, 237, 0.15);
+    71→  --ring: #7c3aed;
+    72→  --chart-1: #7c3aed;
+    73→  --chart-2: #06b6d4;
+    74→  --chart-3: #f59e0b;
+    75→  --chart-4: #ef4444;
+    76→  --chart-5: #22c55e;
+    77→  --sidebar: #0f172a;
+    78→  --sidebar-foreground: #f1f5f9;
+    79→  --sidebar-primary: #7c3aed;
+    80→  --sidebar-primary-foreground: #ffffff;
+    81→  --sidebar-accent: #1e293b;
+    82→  --sidebar-accent-foreground: #f1f5f9;
+    83→  --sidebar-border: rgba(124, 58, 237, 0.2);
+    84→  --sidebar-ring: #7c3aed;
+    85→}
+    86→
+    87→/* Neon Glow Utilities */
+    88→.neon-glow {
+    89→  box-shadow: 0 0 5px rgba(124, 58, 237, 0.4),
+    90→    0 0 20px rgba(124, 58, 237, 0.2),
+    91→    0 0 40px rgba(124, 58, 237, 0.1);
+    92→}
+    93→
+    94→.neon-glow-cyan {
+    95→  box-shadow: 0 0 5px rgba(6, 182, 212, 0.4),
+    96→    0 0 20px rgba(6, 182, 212, 0.2),
+    97→    0 0 40px rgba(6, 182, 212, 0.1);
+    98→}
+    99→
+   100→.neon-glow-amber {
+   101→  box-shadow: 0 0 5px rgba(245, 158, 11, 0.4),
+   102→    0 0 20px rgba(245, 158, 11, 0.2),
+   103→    0 0 40px rgba(245, 158, 11, 0.1);
+   104→}
+   105→
+   106→.neon-text-glow {
+   107→  text-shadow: 0 0 10px rgba(124, 58, 237, 0.6),
+   108→    0 0 30px rgba(124, 58, 237, 0.3),
+   109→    0 0 60px rgba(124, 58, 237, 0.15);
+   110→}
+   111→
+   112→.neon-text-glow-cyan {
+   113→  text-shadow: 0 0 10px rgba(6, 182, 212, 0.6),
+   114→    0 0 30px rgba(6, 182, 212, 0.3),
+   115→    0 0 60px rgba(6, 182, 212, 0.15);
+   116→}
+   117→
+   118→.neon-border {
+   119→  border: 1px solid rgba(124, 58, 237, 0.4);
+   120→  box-shadow: 0 0 10px rgba(124, 58, 237, 0.15),
+   121→    inset 0 0 10px rgba(124, 58, 237, 0.05);
+   122→}
+   123→
+   124→.neon-border-cyan {
+   125→  border: 1px solid rgba(6, 182, 212, 0.4);
+   126→  box-shadow: 0 0 10px rgba(6, 182, 212, 0.15),
+   127→    inset 0 0 10px rgba(6, 182, 212, 0.05);
+   128→}
+   129→
+   130→/* Animated gradient background */
+   131→.gradient-bg {
+   132→  background: linear-gradient(135deg, #030712 0%, #0f172a 25%, #030712 50%, #0f172a 75%, #030712 100%);
+   133→  background-size: 400% 400%;
+   134→  animation: gradientShift 15s ease infinite;
+   135→}
+   136→
+   137→@keyframes gradientShift {
+   138→  0% { background-position: 0% 50%; }
+   139→  50% { background-position: 100% 50%; }
+   140→  100% { background-position: 0% 50%; }
+   141→}
+   142→
+   143→/* Pulse glow animation */
+   144→@keyframes pulseGlow {
+   145→  0%, 100% {
+   146→    box-shadow: 0 0 5px rgba(124, 58, 237, 0.4),
+   147→      0 0 20px rgba(124, 58, 237, 0.2);
+   148→  }
+   149→  50% {
+   150→    box-shadow: 0 0 10px rgba(124, 58, 237, 0.6),
+   151→      0 0 40px rgba(124, 58, 237, 0.3),
+   152→      0 0 80px rgba(124, 58, 237, 0.1);
+   153→  }
+   154→}
+   155→
+   156→.animate-pulse-glow {
+   157→  animation: pulseGlow 3s ease-in-out infinite;
+   158→}
+   159→
+   160→/* Float animation */
+   161→@keyframes float {
+   162→  0%, 100% { transform: translateY(0px); }
+   163→  50% { transform: translateY(-10px); }
+   164→}
+   165→
+   166→.animate-float {
+   167→  animation: float 4s ease-in-out infinite;
+   168→}
+   169→
+   170→/* Particle animations */
+   171→@keyframes particleFloat1 {
+   172→  0% { transform: translate(0, 0) scale(1); opacity: 0; }
+   173→  10% { opacity: 1; }
+   174→  90% { opacity: 1; }
+   175→  100% { transform: translate(-100px, -200px) scale(0); opacity: 0; }
+   176→}
+   177→
+   178→@keyframes particleFloat2 {
+   179→  0% { transform: translate(0, 0) scale(1); opacity: 0; }
+   180→  10% { opacity: 0.8; }
+   181→  90% { opacity: 0.8; }
+   182→  100% { transform: translate(100px, -250px) scale(0); opacity: 0; }
+   183→}
+   184→
+   185→@keyframes particleFloat3 {
+   186→  0% { transform: translate(0, 0) scale(1); opacity: 0; }
+   187→  10% { opacity: 0.6; }
+   188→  90% { opacity: 0.6; }
+   189→  100% { transform: translate(-50px, -180px) scale(0); opacity: 0; }
+   190→}
+   191→
+   192→/* Grid background pattern */
+   193→.grid-pattern {
+   194→  background-image:
+   195→    linear-gradient(rgba(124, 58, 237, 0.05) 1px, transparent 1px),
+   196→    linear-gradient(90deg, rgba(124, 58, 237, 0.05) 1px, transparent 1px);
+   197→  background-size: 40px 40px;
+   198→}
+   199→
+   200→/* Scanline effect */
+   201→.scanlines::after {
+   202→  content: '';
+   203→  position: absolute;
+   204→  inset: 0;
+   205→  background: repeating-linear-gradient(
+   206→    0deg,
+   207→    transparent,
+   208→    transparent 2px,
+   209→    rgba(0, 0, 0, 0.03) 2px,
+   210→    rgba(0, 0, 0, 0.03) 4px
+   211→  );
+   212→  pointer-events: none;
+   213→  z-index: 1;
+   214→}
+   215→
+   216→/* Custom scrollbar */
+   217→::-webkit-scrollbar {
+   218→  width: 8px;
+   219→  height: 8px;
+   220→}
+   221→
+   222→::-webkit-scrollbar-track {
+   223→  background: #0f172a;
+   224→}
+   225→
+   226→::-webkit-scrollbar-thumb {
+   227→  background: rgba(124, 58, 237, 0.4);
+   228→  border-radius: 4px;
+   229→}
+   230→
+   231→::-webkit-scrollbar-thumb:hover {
+   232→  background: rgba(124, 58, 237, 0.6);
+   233→}
+   234→
+   235→/* Glass effect */
+   236→.glass {
+   237→  background: rgba(15, 23, 42, 0.7);
+   238→  backdrop-filter: blur(12px);
+   239→  -webkit-backdrop-filter: blur(12px);
+   240→  border: 1px solid rgba(124, 58, 237, 0.2);
+   241→}
+   242→
+   243→.glass-strong {
+   244→  background: rgba(15, 23, 42, 0.85);
+   245→  backdrop-filter: blur(20px);
+   246→  -webkit-backdrop-filter: blur(20px);
+   247→  border: 1px solid rgba(124, 58, 237, 0.3);
+   248→}
+   249→
+   250→@layer base {
+   251→  * {
+   252→    @apply border-border outline-ring/50;
+   253→  }
+   254→  body {
+   255→    @apply bg-background text-foreground;
+   256→  }
+   257→}
+   258→
+   259→/* Loading overlay animation */
+   260→@keyframes logoReveal {
+   261→  0% { opacity: 0; transform: scale(0.5); filter: blur(10px); }
+   262→  50% { opacity: 1; transform: scale(1.05); filter: blur(0); }
+   263→  100% { opacity: 1; transform: scale(1); filter: blur(0); }
+   264→}
+   265→
+   266→@keyframes slideUpFade {
+   267→  0% { opacity: 0; transform: translateY(20px); }
+   268→  100% { opacity: 1; transform: translateY(0); }
+   269→}
+   270→
+   271→.animate-logo-reveal {
+   272→  animation: logoReveal 1.2s ease-out forwards;
+   273→}
+   274→
+   275→.animate-slide-up-fade {
+   276→  animation: slideUpFade 0.6s ease-out forwards;
+   277→}
+   278→
+   279→/* Neon shimmer animation for headings */
+   280→@keyframes neonShimmer {
+   281→  0%, 100% { text-shadow: 0 0 10px rgba(124, 58, 237, 0.6), 0 0 30px rgba(124, 58, 237, 0.3); }
+   282→  50% { text-shadow: 0 0 20px rgba(124, 58, 237, 0.8), 0 0 50px rgba(124, 58, 237, 0.4), 0 0 80px rgba(124, 58, 237, 0.2); }
+   283→}
+   284→
+   285→.animate-neon-shimmer {
+   286→  animation: neonShimmer 3s ease-in-out infinite;
+   287→}
+   288→
+   289→/* Border glow pulse */
+   290→@keyframes borderGlowPulse {
+   291→  0%, 100% { border-color: rgba(124, 58, 237, 0.3); box-shadow: 0 0 5px rgba(124, 58, 237, 0.1); }
+   292→  50% { border-color: rgba(124, 58, 237, 0.6); box-shadow: 0 0 15px rgba(124, 58, 237, 0.3), 0 0 30px rgba(124, 58, 237, 0.1); }
+   293→}
+   294→
+   295→.animate-border-glow {
+   296→  animation: borderGlowPulse 4s ease-in-out infinite;
+   297→}
+   298→
+   299→/* Cyberpunk corner accents */
+   300→.cyber-corner {
+   301→  position: relative;
+   302→}
+   303→.cyber-corner::before,
+   304→.cyber-corner::after {
+   305→  content: '';
+   306→  position: absolute;
+   307→  width: 20px;
+   308→  height: 20px;
+   309→  border-color: rgba(124, 58, 237, 0.5);
+   310→  pointer-events: none;
+   311→}
+   312→.cyber-corner::before {
+   313→  top: -1px;
+   314→  left: -1px;
+   315→  border-top: 2px solid;
+   316→  border-left: 2px solid;
+   317→  border-color: inherit;
+   318→}
+   319→.cyber-corner::after {
+   320→  bottom: -1px;
+   321→  right: -1px;
+   322→  border-bottom: 2px solid;
+   323→  border-right: 2px solid;
+   324→  border-color: inherit;
+   325→}
+   326→
+   327→/* Glow line separator */
+   328→.glow-line {
+   329→  height: 1px;
+   330→  background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.6), transparent);
+   331→  box-shadow: 0 0 8px rgba(124, 58, 237, 0.3);
+   332→}
+   333→
+   334→/* Breathing glow for status indicators */
+   335→@keyframes breathe {
+   336→  0%, 100% { opacity: 0.6; transform: scale(1); }
+   337→  50% { opacity: 1; transform: scale(1.1); }
+   338→}
+   339→
+   340→.animate-breathe {
+   341→  animation: breathe 2.5s ease-in-out infinite;
+   342→}
+   343→
+   344→/* Slide in from left */
+   345→@keyframes slideInLeft {
+   346→  0% { opacity: 0; transform: translateX(-30px); }
+   347→  100% { opacity: 1; transform: translateX(0); }
+   348→}
+   349→
+   350→.animate-slide-in-left {
+   351→  animation: slideInLeft 0.5s ease-out forwards;
+   352→}
+   353→
+   354→/* Slide in from right */
+   355→@keyframes slideInRight {
+   356→  0% { opacity: 0; transform: translateX(30px); }
+   357→  100% { opacity: 1; transform: translateX(0); }
+   358→}
+   359→
+   360→.animate-slide-in-right {
+   361→  animation: slideInRight 0.5s ease-out forwards;
+   362→}
+   363→
+   364→/* Rotating border effect */
+   365→@keyframes rotateBorder {
+   366→  0% { border-color: rgba(124, 58, 237, 0.4); }
+   367→  33% { border-color: rgba(6, 182, 212, 0.4); }
+   368→  66% { border-color: rgba(245, 158, 11, 0.4); }
+   369→  100% { border-color: rgba(124, 58, 237, 0.4); }
+   370→}
+   371→
+   372→.animate-rotate-border {
+   373→  animation: rotateBorder 6s linear infinite;
+   374→}
+   375→
+   376→/* Neon text glow for amber */
+   377→.neon-text-glow-amber {
+   378→  text-shadow: 0 0 10px rgba(245, 158, 11, 0.6),
+   379→    0 0 30px rgba(245, 158, 11, 0.3),
+   380→    0 0 60px rgba(245, 158, 11, 0.15);
+   381→}
+   382→
+   383→/* Neon border amber */
+   384→.neon-border-amber {
+   385→  border: 1px solid rgba(245, 158, 11, 0.4);
+   386→  box-shadow: 0 0 10px rgba(245, 158, 11, 0.15),
+   387→    inset 0 0 10px rgba(245, 158, 11, 0.05);
+   388→}
+   389→
+   390→/* Selection colors */
+   391→::selection {
+   392→  background: rgba(124, 58, 237, 0.4);
+   393→  color: #ffffff;
+   394→}
+   395→
+   396→/* Focus ring style */
+   397→:focus-visible {
+   398→  outline: 2px solid rgba(124, 58, 237, 0.5);
+   399→  outline-offset: 2px;
+   400→}
+   401→
+   402→/* Smooth scroll behavior */
+   403→html {
+   404→  scroll-behavior: smooth;
+   405→}
+   406→
+   407→/* Enhanced selection for code blocks */
+   408→code::selection {
+   409→  background: rgba(6, 182, 212, 0.4);
+   410→}
+   411→
+   412→/* Noise texture overlay */
+   413→.noise-overlay::before {
+   414→  content: '';
+   415→  position: absolute;
+   416→  inset: 0;
+   417→  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+   418→  pointer-events: none;
+   419→  z-index: 0;
+   420→}
+   421→
+   422→/* ===== New Animation Utilities (Task 4-e) ===== */
+   423→
+   424→/* 3D Card Tilt Effect */
+   425→.card-3d {
+   426→  transform-style: preserve-3d;
+   427→  perspective: 1000px;
+   428→}
+   429→.card-3d:hover {
+   430→  transform: translateY(-5px);
+   431→}
+   432→
+   433→/* Animated Gradient Border */
+   434→@keyframes gradientBorder {
+   435→  0% { border-color: rgba(124, 58, 237, 0.4); }
+   436→  33% { border-color: rgba(6, 182, 212, 0.4); }
+   437→  66% { border-color: rgba(245, 158, 11, 0.4); }
+   438→  100% { border-color: rgba(124, 58, 237, 0.4); }
+   439→}
+   440→
+   441→.animate-gradient-border {
+   442→  animation: gradientBorder 6s linear infinite;
+   443→}
+   444→
+   445→/* Reveal on Scroll Animation */
+   446→@keyframes revealUp {
+   447→  0% { opacity: 0; transform: translateY(40px); filter: blur(4px); }
+   448→  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+   449→}
+   450→
+   451→.animate-reveal-up {
+   452→  animation: revealUp 0.7s ease-out forwards;
+   453→}
+   454→
+   455→/* Pulse Ring Effect for status indicators */
+   456→@keyframes pulseRing {
+   457→  0% { transform: scale(1); opacity: 0.8; }
+   458→  100% { transform: scale(2.5); opacity: 0; }
+   459→}
+   460→
+   461→.animate-pulse-ring {
+   462→  animation: pulseRing 1.5s ease-out infinite;
+   463→}
+   464→
+   465→/* Shimmer/Loading Effect */
+   466→@keyframes shimmer {
+   467→  0% { background-position: -200% 0; }
+   468→  100% { background-position: 200% 0; }
+   469→}
+   470→
+   471→.shimmer {
+   472→  background: linear-gradient(90deg, transparent 0%, rgba(124, 58, 237, 0.1) 50%, transparent 100%);
+   473→  background-size: 200% 100%;
+   474→  animation: shimmer 2s infinite;
+   475→}
+   476→
+   477→/* Shimmer sweep variant for cards on hover */
+   478→@keyframes shimmerSweep {
+   479→  0% { transform: translateX(-100%); }
+   480→  100% { transform: translateX(100%); }
+   481→}
+   482→
+   483→.shimmer-sweep {
+   484→  position: relative;
+   485→  overflow: hidden;
+   486→}
+   487→.shimmer-sweep::after {
+   488→  content: '';
+   489→  position: absolute;
+   490→  inset: 0;
+   491→  background: linear-gradient(90deg, transparent 0%, rgba(124, 58, 237, 0.06) 45%, rgba(6, 182, 212, 0.08) 50%, rgba(124, 58, 237, 0.06) 55%, transparent 100%);
+   492→  transform: translateX(-100%);
+   493→  transition: none;
+   494→  pointer-events: none;
+   495→  z-index: 1;
+   496→}
+   497→.shimmer-sweep:hover::after {
+   498→  animation: shimmerSweep 0.8s ease-out;
+   499→}
+   500→
+   501→/* Hex Pattern Background */
+   502→.hex-pattern {
+   503→  background-image: radial-gradient(circle, rgba(124, 58, 237, 0.04) 1px, transparent 1px);
+   504→  background-size: 30px 30px;
+   505→}
+   506→
+   507→/* Glitch effect for numbers */
+   508→@keyframes glitch {
+   509→  0% { text-shadow: 0 0 0 transparent; transform: translate(0); }
+   510→  10% { text-shadow: -2px 0 rgba(6, 182, 212, 0.7), 2px 0 rgba(245, 158, 11, 0.7); transform: translate(-1px, 1px); }
+   511→  20% { text-shadow: 2px 0 rgba(124, 58, 237, 0.7), -2px 0 rgba(6, 182, 212, 0.7); transform: translate(1px, -1px); }
+   512→  30% { text-shadow: -1px 0 rgba(245, 158, 11, 0.7), 1px 0 rgba(124, 58, 237, 0.7); transform: translate(0); }
+   513→  40% { text-shadow: 0 0 0 transparent; transform: translate(0); }
+   514→  100% { text-shadow: 0 0 0 transparent; transform: translate(0); }
+   515→}
+   516→
+   517→.animate-glitch {
+   518→  animation: glitch 0.6s ease-in-out;
+   519→}
+   520→
+   521→/* Icon pulse glow */
+   522→@keyframes iconPulseGlow {
+   523→  0%, 100% { box-shadow: 0 0 5px currentColor; }
+   524→  50% { box-shadow: 0 0 20px currentColor, 0 0 40px currentColor; }
+   525→}
+   526→
+   527→.animate-icon-pulse-glow {
+   528→  animation: iconPulseGlow 3s ease-in-out infinite;
+   529→}
+   530→
+   531→/* Sparkle animation for premium elements */
+   532→@keyframes sparkle {
+   533→  0%, 100% { opacity: 0; transform: scale(0); }
+   534→  50% { opacity: 1; transform: scale(1); }
+   535→}
+   536→
+   537→.animate-sparkle {
+   538→  animation: sparkle 1.5s ease-in-out infinite;
+   539→}
+   540→
+   541→/* Popular badge glow */
+   542→@keyframes popularGlow {
+   543→  0%, 100% { box-shadow: 0 0 8px rgba(255, 215, 0, 0.4), 0 0 20px rgba(255, 215, 0, 0.2); }
+   544→  50% { box-shadow: 0 0 16px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.3), 0 0 60px rgba(255, 215, 0, 0.1); }
+   545→}
+   546→
+   547→.animate-popular-glow {
+   548→  animation: popularGlow 2.5s ease-in-out infinite;
+   549→}
+   550→
+   551→/* Gradient text effect */
+   552→.gradient-text {
+   553→  background-clip: text;
+   554→  -webkit-background-clip: text;
+   555→  -webkit-text-fill-color: transparent;
+   556→}
+   557→
+   558→/* Heartbeat animation */
+   559→@keyframes heartbeat {
+   560→  0%, 100% { transform: scale(1); }
+   561→  15% { transform: scale(1.25); }
+   562→  30% { transform: scale(1); }
+   563→  45% { transform: scale(1.15); }
+   564→  60% { transform: scale(1); }
+   565→}
+   566→
+   567→.animate-heartbeat {
+   568→  animation: heartbeat 1.5s ease-in-out infinite;
+   569→}
+   570→
+   571→/* Underline slide-in on hover */
+   572→.hover-underline {
+   573→  position: relative;
+   574→}
+   575→.hover-underline::after {
+   576→  content: '';
+   577→  position: absolute;
+   578→  bottom: -2px;
+   579→  left: 0;
+   580→  width: 0;
+   581→  height: 1px;
+   582→  background: linear-gradient(90deg, #7c3aed, #06b6d4);
+   583→  transition: width 0.3s ease;
+   584→}
+   585→.hover-underline:hover::after {
+   586→  width: 100%;
+   587→}
+   588→
+   589→/* Animated gradient line for footer top */
+   590→@keyframes gradientLineShift {
+   591→  0% { background-position: 0% 50%; }
+   592→  50% { background-position: 100% 50%; }
+   593→  100% { background-position: 0% 50%; }
+   594→}
+   595→
+   596→.animate-gradient-line {
+   597→  background: linear-gradient(90deg, #7c3aed, #06b6d4, #f59e0b, #7c3aed);
+   598→  background-size: 300% 100%;
+   599→  animation: gradientLineShift 4s linear infinite;
+   600→}
+   601→
+   602→/* Card breathe animation */
+   603→@keyframes cardBreathe {
+   604→  0%, 100% { box-shadow: 0 0 5px rgba(124, 58, 237, 0.1); }
+   605→  50% { box-shadow: 0 0 15px rgba(124, 58, 237, 0.15), 0 0 30px rgba(124, 58, 237, 0.05); }
+   606→}
+   607→
+   608→.animate-card-breathe {
+   609→  animation: cardBreathe 4s ease-in-out infinite;
+   610→}
+   611→
+   612→/* Accent line shimmer (moves left to right continuously) */
+   613→@keyframes accentShimmer {
+   614→  0% { background-position: -200% 0; }
+   615→  100% { background-position: 200% 0; }
+   616→}
+   617→
+   618→.accent-shimmer-line {
+   619→  background-size: 200% 100%;
+   620→  animation: accentShimmer 3s linear infinite;
+   621→}
+   622→
+   623→/* ============================
+   624→   Hero Section Enhanced Animations
+   625→   ============================ */
+   626→
+   627→/* Orbit ring rotation */
+   628→@keyframes orbitSpin {
+   629→  0% { transform: rotate(0deg); }
+   630→  100% { transform: rotate(360deg); }
+   631→}
+   632→
+   633→@keyframes orbitSpinReverse {
+   634→  0% { transform: rotate(360deg); }
+   635→  100% { transform: rotate(0deg); }
+   636→}
+   637→
+   638→/* Floating geometric shapes */
+   639→@keyframes geoFloat1 {
+   640→  0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.15; }
+   641→  25% { transform: translateY(-20px) rotate(30deg); opacity: 0.25; }
+   642→  50% { transform: translateY(-10px) rotate(60deg); opacity: 0.15; }
+   643→  75% { transform: translateY(-25px) rotate(90deg); opacity: 0.2; }
+   644→}
+   645→
+   646→@keyframes geoFloat2 {
+   647→  0%, 100% { transform: translateY(0px) rotate(45deg); opacity: 0.12; }
+   648→  33% { transform: translateY(-30px) rotate(75deg); opacity: 0.22; }
+   649→  66% { transform: translateY(-15px) rotate(105deg); opacity: 0.15; }
+   650→}
+   651→
+   652→@keyframes geoFloat3 {
+   653→  0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.18; }
+   654→  50% { transform: translateY(-35px) rotate(-45deg); opacity: 0.28; }
+   655→}
+   656→
+   657→@keyframes geoFloat4 {
+   658→  0%, 100% { transform: translateY(0px) rotate(30deg); opacity: 0.1; }
+   659→  40% { transform: translateY(-25px) rotate(70deg); opacity: 0.2; }
+   660→  80% { transform: translateY(-12px) rotate(110deg); opacity: 0.14; }
+   661→}
+   662→
+   663→/* Nebula drift - large blurred particles */
+   664→@keyframes nebulaDrift1 {
+   665→  0% { transform: translate(0, 0) scale(1); opacity: 0; }
+   666→  15% { opacity: 0.3; }
+   667→  50% { transform: translate(-60px, -40px) scale(1.3); opacity: 0.2; }
+   668→  85% { opacity: 0.3; }
+   669→  100% { transform: translate(40px, -80px) scale(0.8); opacity: 0; }
+   670→}
+   671→
+   672→@keyframes nebulaDrift2 {
+   673→  0% { transform: translate(0, 0) scale(1); opacity: 0; }
+   674→  20% { opacity: 0.25; }
+   675→  50% { transform: translate(80px, -30px) scale(1.2); opacity: 0.15; }
+   676→  80% { opacity: 0.25; }
+   677→  100% { transform: translate(-40px, -70px) scale(0.9); opacity: 0; }
+   678→}
+   679→
+   680→@keyframes nebulaDrift3 {
+   681→  0% { transform: translate(0, 0) scale(1); opacity: 0; }
+   682→  10% { opacity: 0.2; }
+   683→  50% { transform: translate(-30px, -50px) scale(1.4); opacity: 0.3; }
+   684→  90% { opacity: 0.15; }
+   685→  100% { transform: translate(50px, -90px) scale(0.7); opacity: 0; }
+   686→}
+   687→
+   688→/* Hero badge pulse */
+   689→@keyframes badgePulse {
+   690→  0%, 100% { box-shadow: 0 0 5px rgba(34, 197, 94, 0.3), 0 0 15px rgba(34, 197, 94, 0.1); }
+   691→  50% { box-shadow: 0 0 10px rgba(34, 197, 94, 0.5), 0 0 30px rgba(34, 197, 94, 0.2), 0 0 50px rgba(34, 197, 94, 0.1); }
+   692→}
+   693→
+   694→/* Green dot indicator pulse */
+   695→@keyframes greenDotPulse {
+   696→  0%, 100% { opacity: 1; transform: scale(1); }
+   697→  50% { opacity: 0.6; transform: scale(1.3); }
+   698→}
+   699→
+   700→/* Scroll indicator bounce */
+   701→@keyframes scrollBounce {
+   702→  0%, 100% { transform: translateY(0); }
+   703→  50% { transform: translateY(6px); }
+   704→}
+   705→
+   706→/* ===== Phase 6 Enhancements ===== */
+   707→
+   708→/* Section divider — neon line with gradient */
+   709→.section-divider {
+   710→  position: relative;
+   711→  height: 80px;
+   712→  display: flex;
+   713→  align-items: center;
+   714→  justify-content: center;
+   715→  overflow: hidden;
+   716→}
+   717→.section-divider::before {
+   718→  content: '';
+   719→  position: absolute;
+   720→  left: 10%;
+   721→  right: 10%;
+   722→  height: 1px;
+   723→  background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.3), rgba(6, 182, 212, 0.3), rgba(124, 58, 237, 0.3), transparent);
+   724→  box-shadow: 0 0 8px rgba(124, 58, 237, 0.2);
+   725→}
+   726→.section-divider::after {
+   727→  content: '';
+   728→  position: absolute;
+   729→  width: 8px;
+   730→  height: 8px;
+   731→  background: #7c3aed;
+   732→  border-radius: 50%;
+   733→  box-shadow: 0 0 12px rgba(124, 58, 237, 0.6), 0 0 24px rgba(124, 58, 237, 0.3);
+   734→  animation: dividerDotPulse 3s ease-in-out infinite;
+   735→}
+   736→
+   737→@keyframes dividerDotPulse {
+   738→  0%, 100% { transform: scale(1); opacity: 0.8; }
+   739→  50% { transform: scale(1.5); opacity: 1; }
+   740→}
+   741→
+   742→/* Enhanced card hover — 3D lift with shadow */
+   743→.card-lift {
+   744→  transition: transform 0.3s ease, box-shadow 0.3s ease;
+   745→}
+   746→.card-lift:hover {
+   747→  transform: translateY(-6px) scale(1.01);
+   748→  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
+   749→    0 0 20px rgba(124, 58, 237, 0.15),
+   750→    0 0 40px rgba(124, 58, 237, 0.08);
+   751→}
+   752→
+   753→/* Neon text underline animation */
+   754→.neon-underline {
+   755→  position: relative;
+   756→  display: inline-block;
+   757→}
+   758→.neon-underline::after {
+   759→  content: '';
+   760→  position: absolute;
+   761→  bottom: -4px;
+   762→  left: 0;
+   763→  width: 0;
+   764→  height: 2px;
+   765→  background: linear-gradient(90deg, #7c3aed, #06b6d4);
+   766→  box-shadow: 0 0 8px rgba(124, 58, 237, 0.5);
+   767→  transition: width 0.4s ease;
+   768→  border-radius: 1px;
+   769→}
+   770→.neon-underline:hover::after {
+   771→  width: 100%;
+   772→}
+   773→
+   774→/* Glow pulse for status badges */
+   775→@keyframes statusGlow {
+   776→  0%, 100% { box-shadow: 0 0 4px currentColor; }
+   777→  50% { box-shadow: 0 0 12px currentColor, 0 0 24px currentColor; }
+   778→}
+   779→
+   780→.animate-status-glow {
+   781→  animation: statusGlow 2s ease-in-out infinite;
+   782→}
+   783→
+   784→/* Diagonal stripe overlay for premium/prestige areas */
+   785→.prestige-stripes {
+   786→  background-image: repeating-linear-gradient(
+   787→    -45deg,
+   788→    transparent,
+   789→    transparent 10px,
+   790→    rgba(124, 58, 237, 0.03) 10px,
+   791→    rgba(124, 58, 237, 0.03) 20px
+   792→  );
+   793→}
+   794→
+   795→/* Animated border dash — for special cards */
+   796→@keyframes dashMove {
+   797→  0% { stroke-dashoffset: 0; }
+   798→  100% { stroke-dashoffset: 100; }
+   799→}
+   800→
+   801→/* Typewriter cursor blink enhancement */
+   802→@keyframes cursorBlink {
+   803→  0%, 100% { opacity: 1; }
+   804→  50% { opacity: 0.3; }
+   805→}
+   806→
+   807→.animate-cursor-blink {
+   808→  animation: cursorBlink 1s step-end infinite;
+   809→}
+   810→
+   811→/* Noise grain texture — subtle film grain effect */
+   812→.grain-texture::before {
+   813→  content: '';
+   814→  position: fixed;
+   815→  inset: 0;
+   816→  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.015'/%3E%3C/svg%3E");
+   817→  pointer-events: none;
+   818→  z-index: 9999;
+   819→  opacity: 0.5;
+   820→}
+   821→
+   822→/* Morphing blob animation for background accents */
+   823→@keyframes morphBlob {
+   824→  0%, 100% {
+   825→    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+   826→  }
+   827→  25% {
+   828→    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+   829→  }
+   830→  50% {
+   831→    border-radius: 50% 60% 30% 60% / 30% 60% 70% 40%;
+   832→  }
+   833→  75% {
+   834→    border-radius: 60% 40% 60% 30% / 60% 40% 30% 60%;
+   835→  }
+   836→}
+   837→
+   838→.animate-morph-blob {
+   839→  animation: morphBlob 8s ease-in-out infinite;
+   840→}
+   841→
+   842→/* Gradient text — smooth animated version */
+   843→@keyframes gradientTextShift {
+   844→  0% { background-position: 0% 50%; }
+   845→  50% { background-position: 100% 50%; }
+   846→  100% { background-position: 0% 50%; }
+   847→}
+   848→
+   849→.animate-gradient-text {
+   850→  background-size: 200% auto;
+   851→  animation: gradientTextShift 4s linear infinite;
+   852→}
+   853→
+   854→/* Focus ring for form inputs */
+   855→.neon-focus:focus {
+   856→  outline: none;
+   857→  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.5), 0 0 15px rgba(124, 58, 237, 0.2);
+   858→  border-color: rgba(124, 58, 237, 0.6);
+   859→}
+   860→
+   861→/* Dot grid pattern — alternative to hex-pattern */
+   862→.dot-pattern {
+   863→  background-image: radial-gradient(circle, rgba(124, 58, 237, 0.08) 1px, transparent 1px);
+   864→  background-size: 24px 24px;
+   865→}
+   866→
+   867→/* Double neon border — for premium elements */
+   868→.neon-border-double {
+   869→  border: 1px solid rgba(124, 58, 237, 0.3);
+   870→  box-shadow:
+   871→    0 0 10px rgba(124, 58, 237, 0.1),
+   872→    inset 0 0 10px rgba(124, 58, 237, 0.05),
+   873→    0 0 0 3px rgba(124, 58, 237, 0.05);
+   874→}
+   875→
+   876→/* Animated glow border with conic gradient */
+   877→@keyframes rotateConicBorder {
+   878→  0% { --conic-angle: 0deg; }
+   879→  100% { --conic-angle: 360deg; }
+   880→}
+   881→
+   882→/* ===== Phase 8 — Enhanced Style System ===== */
+   883→
+   884→/* Scroll progress bar */
+   885→.scroll-progress {
+   886→  position: fixed;
+   887→  top: 0;
+   888→  left: 0;
+   889→  height: 2px;
+   890→  background: linear-gradient(90deg, #7c3aed, #06b6d4, #f59e0b);
+   891→  z-index: 9999;
+   892→  transition: width 0.1s linear;
+   893→  box-shadow: 0 0 8px rgba(124, 58, 237, 0.5);
+   894→}
+   895→
+   896→/* Button ripple effect */
+   897→.btn-ripple {
+   898→  position: relative;
+   899→  overflow: hidden;
+   900→}
+   901→.btn-ripple::after {
+   902→  content: '';
+   903→  position: absolute;
+   904→  width: 100%;
+   905→  height: 100%;
+   906→  top: 0;
+   907→  left: 0;
+   908→  pointer-events: none;
+   909→  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.15) 10%, transparent 10.01%);
+   910→  background-repeat: no-repeat;
+   911→  background-position: 50%;
+   912→  transform: scale(10, 10);
+   913→  opacity: 0;
+   914→  transition: transform 0.5s, opacity 1s;
+   915→}
+   916→.btn-ripple:active::after {
+   917→  transform: scale(0, 0);
+   918→  opacity: 0.3;
+   919→  transition: 0s;
+   920→}
+   921→
+   922→/* Neon link hover */
+   923→.neon-link {
+   924→  position: relative;
+   925→  color: #94a3b8;
+   926→  transition: color 0.3s ease, text-shadow 0.3s ease;
+   927→}
+   928→.neon-link:hover {
+   929→  color: #7c3aed;
+   930→  text-shadow: 0 0 8px rgba(124, 58, 237, 0.4);
+   931→}
+   932→
+   933→/* Glow badge */
+   934→.glow-badge {
+   935→  position: relative;
+   936→  overflow: hidden;
+   937→}
+   938→.glow-badge::before {
+   939→  content: '';
+   940→  position: absolute;
+   941→  inset: 0;
+   942→  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+   943→  background-size: 200% 100%;
+   944→  animation: shimmer 3s infinite;
+   945→}
+   946→
+   947→/* Card shine effect on hover */
+   948→.card-shine {
+   949→  position: relative;
+   950→  overflow: hidden;
+   951→}
+   952→.card-shine::before {
+   953→  content: '';
+   954→  position: absolute;
+   955→  top: -50%;
+   956→  left: -50%;
+   957→  width: 200%;
+   958→  height: 200%;
+   959→  background: conic-gradient(from 0deg, transparent 0deg, rgba(124, 58, 237, 0.03) 90deg, transparent 180deg);
+   960→  animation: rotateConicBorder 8s linear infinite;
+   961→  pointer-events: none;
+   962→}
+   963→
+   964→/* Section reveal animation */
+   965→.section-reveal {
+   966→  opacity: 0;
+   967→  transform: translateY(30px);
+   968→  transition: opacity 0.8s ease, transform 0.8s ease;
+   969→}
+   970→.section-reveal.visible {
+   971→  opacity: 1;
+   972→  transform: translateY(0);
+   973→}
+   974→
+   975→/* Staggered children animation */
+   976→.stagger-children > * {
+   977→  opacity: 0;
+   978→  transform: translateY(20px);
+   979→  animation: staggerIn 0.5s ease forwards;
+   980→}
+   981→.stagger-children > *:nth-child(1) { animation-delay: 0.05s; }
+   982→.stagger-children > *:nth-child(2) { animation-delay: 0.1s; }
+   983→.stagger-children > *:nth-child(3) { animation-delay: 0.15s; }
+   984→.stagger-children > *:nth-child(4) { animation-delay: 0.2s; }
+   985→.stagger-children > *:nth-child(5) { animation-delay: 0.25s; }
+   986→.stagger-children > *:nth-child(6) { animation-delay: 0.3s; }
+   987→.stagger-children > *:nth-child(7) { animation-delay: 0.35s; }
+   988→.stagger-children > *:nth-child(8) { animation-delay: 0.4s; }
+   989→
+   990→@keyframes staggerIn {
+   991→  to {
+   992→    opacity: 1;
+   993→    transform: translateY(0);
+   994→  }
+   995→}
+   996→
+   997→/* Neon border animation — flowing gradient */
+   998→@keyframes flowBorder {
+   999→  0% { background-position: 0% 50%; }
+  1000→  50% { background-position: 100% 50%; }
+  1001→  100% { background-position: 0% 50%; }
+  1002→}
+  1003→
+  1004→.neon-flow-border {
+  1005→  border: 1px solid transparent;
+  1006→  background-clip: padding-box;
+  1007→  position: relative;
+  1008→}
+  1009→.neon-flow-border::before {
+  1010→  content: '';
+  1011→  position: absolute;
+  1012→  inset: -1px;
+  1013→  background: linear-gradient(90deg, #7c3aed, #06b6d4, #f59e0b, #7c3aed);
+  1014→  background-size: 300% 100%;
+  1015→  animation: flowBorder 4s linear infinite;
+  1016→  z-index: -1;
+  1017→  border-radius: inherit;
+  1018→  opacity: 0.4;
+  1019→}
+  1020→
+  1021→/* Glow dot indicator */
+  1022→.glow-dot {
+  1023→  width: 6px;
+  1024→  height: 6px;
+  1025→  border-radius: 50%;
+  1026→  position: relative;
+  1027→}
+  1028→.glow-dot::after {
+  1029→  content: '';
+  1030→  position: absolute;
+  1031→  inset: -3px;
+  1032→  border-radius: 50%;
+  1033→  background: inherit;
+  1034→  opacity: 0.3;
+  1035→  animation: breathe 2s ease-in-out infinite;
+  1036→}
+  1037→
+  1038→/* Enhanced focus styles for accessibility */
+  1039→input:focus-visible,
+  1040→textarea:focus-visible,
+  1041→select:focus-visible {
+  1042→  outline: 2px solid rgba(124, 58, 237, 0.5);
+  1043→  outline-offset: 2px;
+  1044→  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.15);
+  1045→}
+  1046→
+  1047→/* Reduced motion support */
+  1048→@media (prefers-reduced-motion: reduce) {
+  1049→  *,
+  1050→  *::before,
+  1051→  *::after {
+  1052→    animation-duration: 0.01ms !important;
+  1053→    animation-iteration-count: 1 !important;
+  1054→    transition-duration: 0.01ms !important;
+  1055→    scroll-behavior: auto !important;
+  1056→  }
+  1057→}
+  1058→
+  1059→/* Theme customizer — transition speed variable */
+  1060→:root {
+  1061→  --transition-speed: 1;
+  1062→}
+  1063→
+  1064→/* Theme customizer — glow intensity */
+  1065→[data-glow-intensity="0"] .neon-glow,
+  1066→[data-glow-intensity="0"] .neon-glow-cyan,
+  1067→[data-glow-intensity="0"] .neon-glow-amber,
+  1068→[data-glow-intensity="0"] .neon-text-glow,
+  1069→[data-glow-intensity="0"] .neon-text-glow-cyan {
+  1070→  box-shadow: none !important;
+  1071→  text-shadow: none !important;
+  1072→}
+  1073→
+  1074→/* Background style variants */
+  1075→[data-bg-style="grid"] .gradient-bg {
+  1076→  background: #030712;
+  1077→  background-image:
+  1078→    linear-gradient(rgba(124, 58, 237, 0.03) 1px, transparent 1px),
+  1079→    linear-gradient(90deg, rgba(124, 58, 237, 0.03) 1px, transparent 1px);
+  1080→  background-size: 40px 40px;
+  1081→  animation: none;
+  1082→}
+  1083→
+  1084→[data-bg-style="clean"] .gradient-bg {
+  1085→  background: #030712;
+  1086→  animation: none;
+  1087→}
+  1088→
+  1089→/* Scroll margin for fixed navbar */
+  1090→section[id] {
+  1091→  scroll-margin-top: 5rem;
+  1092→}
+  1093→
+  1094→/* Page transition shimmer */
+  1095→@keyframes pageTransition {
+  1096→  0% { opacity: 0; transform: translateY(8px); filter: blur(2px); }
+  1097→  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+  1098→}
+  1099→
+  1100→.page-enter {
+  1101→  animation: pageTransition 0.4s ease-out;
+  1102→}
+  1103→
+  1104→/* Ambient floating particles — CSS-only version */
+  1105→@keyframes ambientFloat1 {
+  1106→  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+  1107→  25% { transform: translate(10px, -20px) scale(1.1); opacity: 0.5; }
+  1108→  50% { transform: translate(-5px, -35px) scale(0.9); opacity: 0.2; }
+  1109→  75% { transform: translate(15px, -15px) scale(1.05); opacity: 0.4; }
+  1110→}
+  1111→
+  1112→@keyframes ambientFloat2 {
+  1113→  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.2; }
+  1114→  33% { transform: translate(-15px, -25px) scale(1.15); opacity: 0.4; }
+  1115→  66% { transform: translate(10px, -40px) scale(0.85); opacity: 0.15; }
+  1116→}
+  1117→
+  1118→.ambient-particle {
+  1119→  position: absolute;
+  1120→  width: 3px;
+  1121→  height: 3px;
+  1122→  border-radius: 50%;
+  1123→  background: #7c3aed;
+  1124→  pointer-events: none;
+  1125→}
+  1126→
+  1127→.ambient-particle:nth-child(odd) {
+  1128→  animation: ambientFloat1 8s ease-in-out infinite;
+  1129→}
+  1130→
+  1131→.ambient-particle:nth-child(even) {
+  1132→  animation: ambientFloat2 10s ease-in-out infinite;
+  1133→  background: #06b6d4;
+  1134→}
+  1135→
+  1136→/* Enhanced scrollbar for dark theme */
+  1137→* {
+  1138→  scrollbar-width: thin;
+  1139→  scrollbar-color: rgba(124, 58, 237, 0.3) rgba(15, 23, 42, 0.5);
+  1140→}
+  1141→
+  1142→/* Interactive card glow on mouse position */
+  1143→.mouse-glow {
+  1144→  position: relative;
+  1145→  overflow: hidden;
+  1146→}
+  1147→.mouse-glow::after {
+  1148→  content: '';
+  1149→  position: absolute;
+  1150→  width: 200px;
+  1151→  height: 200px;
+  1152→  border-radius: 50%;
+  1153→  background: radial-gradient(circle, rgba(124, 58, 237, 0.08), transparent 70%);
+  1154→  pointer-events: none;
+  1155→  opacity: 0;
+  1156→  transition: opacity 0.3s ease;
+  1157→  transform: translate(-50%, -50%);
+  1158→}
+  1159→.mouse-glow:hover::after {
+  1160→  opacity: 1;
+  1161→}
+  1162→
+  1163→/* Neon text cycling colors */
+  1164→@keyframes neonColorCycle {
+  1165→  0%, 100% { color: #7c3aed; text-shadow: 0 0 10px rgba(124, 58, 237, 0.6); }
+  1166→  33% { color: #06b6d4; text-shadow: 0 0 10px rgba(6, 182, 212, 0.6); }
+  1167→  66% { color: #f59e0b; text-shadow: 0 0 10px rgba(245, 158, 11, 0.6); }
+  1168→}
+  1169→
+  1170→.animate-neon-cycle {
+  1171→  animation: neonColorCycle 6s ease-in-out infinite;
+  1172→}
+  1173→
+  1174→/* Smooth counter animation for numbers */
+  1175→@keyframes countUp {
+  1176→  from { opacity: 0; transform: translateY(10px); }
+  1177→  to { opacity: 1; transform: translateY(0); }
+  1178→}
+  1179→
+  1180→.animate-count-up {
+  1181→  animation: countUp 0.5s ease-out forwards;
+  1182→}
+  1183→
+  1184→/* Tooltip style for hover info */
+  1185→.tooltip-neon {
+  1186→  position: relative;
+  1187→}
+  1188→.tooltip-neon::after {
+  1189→  content: attr(data-tooltip);
+  1190→  position: absolute;
+  1191→  bottom: calc(100% + 8px);
+  1192→  left: 50%;
+  1193→  transform: translateX(-50%) scale(0.8);
+  1194→  padding: 6px 12px;
+  1195→  background: rgba(15, 23, 42, 0.95);
+  1196→  border: 1px solid rgba(124, 58, 237, 0.3);
+  1197→  border-radius: 6px;
+  1198→  color: #f1f5f9;
+  1199→  font-size: 12px;
+  1200→  white-space: nowrap;
+  1201→  pointer-events: none;
+  1202→  opacity: 0;
+  1203→  transition: opacity 0.2s, transform 0.2s;
+  1204→  z-index: 100;
+  1205→  box-shadow: 0 0 10px rgba(124, 58, 237, 0.2);
+  1206→}
+  1207→.tooltip-neon:hover::after {
+  1208→  opacity: 1;
+  1209→  transform: translateX(-50%) scale(1);
+  1210→}
+  1211→
