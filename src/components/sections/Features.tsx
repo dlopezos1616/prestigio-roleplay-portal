@@ -88,7 +88,7 @@ export default function Features() {
             return (
               <motion.div
                 key={feature.title}
-                className="group relative rounded-xl bg-[#0f172a] p-6 sm:p-7 card-lift shimmer-sweep cursor-default overflow-hidden"
+                className="group relative rounded-xl glass-card p-6 sm:p-7 card-hover-lift shimmer-sweep spotlight-card cursor-default overflow-hidden"
                 style={{
                   border: `1px solid ${feature.borderColor}`,
                   boxShadow: `0 0 10px ${feature.borderColor.split('0.4').join('0.1')}30`,

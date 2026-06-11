@@ -166,10 +166,10 @@ export default function Navbar({ bannerVisible = false }: NavbarProps) {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
-      className={`fixed left-0 right-0 z-50 transition-all duration-300 ${bannerVisible ? 'top-[40px]' : 'top-0'} ${
+      className={`fixed left-0 right-0 z-50 transition-all duration-500 ${bannerVisible ? 'top-[40px]' : 'top-0'} ${
         scrolled
-          ? 'glass-strong shadow-lg shadow-[#7c3aed]/10'
-          : 'bg-transparent'
+          ? 'navbar-glass scrolled'
+          : 'navbar-glass'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

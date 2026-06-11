@@ -86,8 +86,7 @@ function AboutCard({ item, index }: { item: typeof aboutItems[number]; index: nu
   return (
     <motion.div
       ref={ref}
-      className="group relative rounded-xl bg-[#0f172a] p-6 sm:p-8 neon-border card-3d cyber-corner shimmer-sweep transition-all duration-300 hover:shadow-[0_0_25px_rgba(124,58,237,0.2)] cursor-default"
-      style={{ borderColor: `${item.color}40` }}
+      className="group relative rounded-xl glass-card p-6 sm:p-8 card-hover-lift shimmer-sweep spotlight-card cursor-default"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-50px' }}

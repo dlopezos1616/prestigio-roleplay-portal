@@ -305,7 +305,7 @@ export default function Hero() {
   const contentY = useTransform(scrollYProgress, [0, 0.5], [0, 50])
 
   return (
-    <section ref={sectionRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section ref={sectionRef} className="relative min-h-screen flex items-center justify-center overflow-hidden hero-scanlines cinematic-lines vignette">
       {/* Gradient background */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#030712] via-[#0f172a] to-[#030712]" />
 
@@ -322,11 +322,16 @@ export default function Hero() {
       <div className="absolute inset-0 grid-pattern" />
 
       {/* Radial glow — center */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(124,58,237,0.15)_0%,transparent_70%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(124,58,237,0.18)_0%,transparent_70%)]" />
       {/* Radial glow — bottom left amber tint */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_20%_80%,rgba(245,158,11,0.06)_0%,transparent_50%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_20%_80%,rgba(245,158,11,0.08)_0%,transparent_50%)]" />
       {/* Radial glow — top right cyan tint */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_80%_20%,rgba(6,182,212,0.08)_0%,transparent_50%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_80%_20%,rgba(6,182,212,0.10)_0%,transparent_50%)]" />
+
+      {/* Animated nebula orbs */}
+      <div className="absolute top-[20%] left-[5%] w-40 h-40 bg-[#7c3aed]/8 rounded-full blur-[80px] animate-morph-blob" />
+      <div className="absolute bottom-[15%] right-[8%] w-52 h-52 bg-[#06b6d4]/6 rounded-full blur-[100px] animate-morph-blob" style={{ animationDelay: '3s' }} />
+      <div className="absolute top-[60%] left-[50%] w-36 h-36 bg-[#f59e0b]/5 rounded-full blur-[70px] animate-morph-blob" style={{ animationDelay: '6s' }} />
 
       {/* Canvas-based particle system */}
       <ParticleCanvas />
@@ -366,9 +371,9 @@ export default function Hero() {
         <motion.h1
           variants={fadeInUp}
           transition={{ duration: 0.6 }}
-          className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-wider neon-text-glow text-white mb-4 sm:mb-6"
+          className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-wider animate-hero-glitch text-white mb-4 sm:mb-6"
         >
-          PRESTIGIO <span className="text-[#7c3aed]">ROLEPLAY</span>
+          PRESTIGIO <span className="text-[#7c3aed] chromatic-text">ROLEPLAY</span>
         </motion.h1>
 
         {/* Subtitle with typing effect */}
@@ -385,7 +390,7 @@ export default function Hero() {
             href="https://discord.gg/vGpKd6yt8M"
             target="_blank"
             rel="noopener noreferrer"
-            className="group inline-flex items-center gap-2 px-8 py-4 rounded-lg bg-[#7c3aed] text-white font-bold text-lg sm:text-xl transition-all duration-300 hover:bg-[#6d28d9] hover:shadow-[0_0_30px_rgba(124,58,237,0.5),0_0_60px_rgba(124,58,237,0.2)] active:scale-95"
+            className="group inline-flex items-center gap-2 px-8 py-4 rounded-lg bg-[#7c3aed] text-white font-bold text-lg sm:text-xl transition-all duration-300 hover:bg-[#6d28d9] hover:shadow-[0_0_30px_rgba(124,58,237,0.5),0_0_60px_rgba(124,58,237,0.2)] active:scale-95 neon-pulse-btn btn-ripple"
           >
             <svg
               className="w-6 h-6 sm:w-7 sm:h-7"
@@ -443,8 +448,7 @@ export default function Hero() {
             />
           </div>
           <span
-            className="text-xs sm:text-sm text-[#7c3aed]/60 font-medium tracking-widest uppercase"
-            style={{ animation: 'scrollBounce 2s ease-in-out infinite' }}
+            className="text-xs sm:text-sm text-[#7c3aed]/60 font-medium tracking-widest uppercase smooth-bounce"
           >
             Descubre más
           </span>

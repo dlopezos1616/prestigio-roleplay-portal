@@ -42,6 +42,9 @@ import Leaderboard from '@/components/sections/Leaderboard'
 import Achievements from '@/components/sections/Achievements'
 import NewsTicker from '@/components/sections/NewsTicker'
 import SectionDivider from '@/components/layout/SectionDivider'
+import VehicleShowcase from '@/components/sections/VehicleShowcase'
+import ServerTimeline from '@/components/sections/ServerTimeline'
+import DiscordWidget from '@/components/sections/DiscordWidget'
 import { WhitelistForm } from '@/components/whitelist/WhitelistForm'
 import StaffPanel from '@/components/staff/StaffPanel'
 import AdminPanel from '@/components/admin/AdminPanel'
@@ -66,6 +69,8 @@ function HomePage() {
       <SectionDivider variant="cyan" />
       <Features />
       <SectionDivider variant="amber" />
+      <VehicleShowcase />
+      <SectionDivider variant="cyan" />
       <FAQ />
       <SectionDivider />
       <Testimonials />
@@ -74,6 +79,8 @@ function HomePage() {
       <SectionDivider variant="amber" />
       <StatsCounter />
       <SectionDivider />
+      <ServerTimeline />
+      <SectionDivider variant="amber" />
       <Leaderboard />
       <SectionDivider variant="cyan" />
       <Achievements />
@@ -82,6 +89,8 @@ function HomePage() {
       <SectionDivider variant="amber" />
       <NextEvent />
       <SectionDivider />
+      <DiscordWidget />
+      <SectionDivider variant="cyan" />
       <Changelog />
       <SectionDivider variant="cyan" />
       <CommunityStats />

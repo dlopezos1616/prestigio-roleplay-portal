@@ -1708,3 +1708,345 @@ section[id] {
    The existing global reduced-motion rule (line 1048) already disables
    all animations and transitions globally. The classes above are
    automatically covered by that rule. No additional overrides needed. */
+
+/* ============================
+   Phase 10 — Enhanced Style System
+   ============================ */
+
+/* Glassmorphism Card — Premium */
+.glass-card {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(16px) saturate(1.5);
+  -webkit-backdrop-filter: blur(16px) saturate(1.5);
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.glass-card:hover {
+  border-color: rgba(124, 58, 237, 0.4);
+  box-shadow:
+    0 8px 40px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(124, 58, 237, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Glass card with cyan accent */
+.glass-card-cyan {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(16px) saturate(1.5);
+  -webkit-backdrop-filter: blur(16px) saturate(1.5);
+  border: 1px solid rgba(6, 182, 212, 0.2);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.glass-card-cyan:hover {
+  border-color: rgba(6, 182, 212, 0.4);
+  box-shadow:
+    0 8px 40px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(6, 182, 212, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Glass card with amber accent */
+.glass-card-amber {
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(16px) saturate(1.5);
+  -webkit-backdrop-filter: blur(16px) saturate(1.5);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.glass-card-amber:hover {
+  border-color: rgba(245, 158, 11, 0.4);
+  box-shadow:
+    0 8px 40px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(245, 158, 11, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Hero Scanline Effect — cinematic overlay */
+.hero-scanlines::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.015) 2px,
+    rgba(0, 0, 0, 0.015) 4px
+  );
+  pointer-events: none;
+  z-index: 3;
+  animation: scanlineDrift 8s linear infinite;
+}
+
+@keyframes scanlineDrift {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(4px); }
+}
+
+/* Hero Glitch Title Effect */
+@keyframes heroGlitch {
+  0%, 90%, 100% {
+    text-shadow:
+      0 0 10px rgba(124, 58, 237, 0.6),
+      0 0 30px rgba(124, 58, 237, 0.3),
+      0 0 60px rgba(124, 58, 237, 0.15);
+    transform: translate(0);
+  }
+  92% {
+    text-shadow:
+      -2px 0 rgba(6, 182, 212, 0.8),
+      2px 0 rgba(245, 158, 11, 0.8);
+    transform: translate(2px, -1px);
+  }
+  94% {
+    text-shadow:
+      2px 0 rgba(124, 58, 237, 0.8),
+      -2px 0 rgba(6, 182, 212, 0.8);
+    transform: translate(-2px, 1px);
+  }
+  96% {
+    text-shadow:
+      -1px 0 rgba(245, 158, 11, 0.8),
+      1px 0 rgba(124, 58, 237, 0.8);
+    transform: translate(1px, 0);
+  }
+  98% {
+    text-shadow:
+      0 0 10px rgba(124, 58, 237, 0.6),
+      0 0 30px rgba(124, 58, 237, 0.3);
+    transform: translate(0);
+  }
+}
+
+.animate-hero-glitch {
+  animation: heroGlitch 6s ease-in-out infinite;
+}
+
+/* Cinematic Vignette Effect */
+.vignette::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 50%,
+    rgba(3, 7, 18, 0.6) 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Enhanced Navbar Glassmorphism */
+.navbar-glass {
+  background: rgba(3, 7, 18, 0.75);
+  backdrop-filter: blur(20px) saturate(1.8);
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
+  border-bottom: 1px solid rgba(124, 58, 237, 0.15);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-glass.scrolled {
+  background: rgba(3, 7, 18, 0.9);
+  border-bottom-color: rgba(124, 58, 237, 0.3);
+  box-shadow:
+    0 4px 30px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(124, 58, 237, 0.08);
+}
+
+/* Neon Pulse Button */
+@keyframes neonPulse {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(124, 58, 237, 0.4), 0 0 15px rgba(124, 58, 237, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 10px rgba(124, 58, 237, 0.6), 0 0 30px rgba(124, 58, 237, 0.3), 0 0 60px rgba(124, 58, 237, 0.1);
+  }
+}
+
+.neon-pulse-btn {
+  animation: neonPulse 3s ease-in-out infinite;
+}
+
+/* Stat Bar Fill Animation */
+@keyframes statBarFill {
+  0% { width: 0%; }
+}
+
+.stat-bar-fill {
+  animation: statBarFill 1s ease-out forwards;
+}
+
+/* Enhanced Section Title Gradient Line */
+.section-title-line {
+  position: relative;
+  display: inline-block;
+}
+
+.section-title-line::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #7c3aed, #06b6d4, #f59e0b);
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.4), 0 0 20px rgba(6, 182, 212, 0.2);
+}
+
+/* Mouse Trail Glow Effect */
+.mouse-glow {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Rotating Border Gradient */
+@keyframes borderRotate {
+  0% { --angle: 0deg; }
+  100% { ---angle: 360deg; }
+}
+
+/* Electric Arc Effect */
+@keyframes electricArc {
+  0%, 100% { opacity: 0.3; }
+  10% { opacity: 0.8; }
+  20% { opacity: 0.2; }
+  30% { opacity: 0.9; }
+  40% { opacity: 0.4; }
+  50% { opacity: 0.7; }
+  60% { opacity: 0.2; }
+  70% { opacity: 0.8; }
+  80% { opacity: 0.3; }
+  90% { opacity: 0.6; }
+}
+
+.electric-arc {
+  animation: electricArc 2s ease-in-out infinite;
+}
+
+/* Spotlight hover effect on cards */
+.spotlight-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.spotlight-card::before {
+  content: '';
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.15), transparent 70%);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.spotlight-card:hover::before {
+  opacity: 1;
+}
+
+/* Chromatic Aberration Text */
+@keyframes chromaticShift {
+  0%, 100% { text-shadow: none; }
+  25% { text-shadow: -1px 0 rgba(6, 182, 212, 0.4), 1px 0 rgba(245, 158, 11, 0.4); }
+  75% { text-shadow: 1px 0 rgba(124, 58, 237, 0.4), -1px 0 rgba(6, 182, 212, 0.4); }
+}
+
+.chromatic-text:hover {
+  animation: chromaticShift 0.5s ease-in-out;
+}
+
+/* Smooth Scroll Indicator */
+@keyframes smoothBounce {
+  0%, 100% { transform: translateY(0); opacity: 0.6; }
+  50% { transform: translateY(8px); opacity: 1; }
+}
+
+.smooth-bounce {
+  animation: smoothBounce 2s ease-in-out infinite;
+}
+
+/* Neon Gradient Border with animation */
+.neon-gradient-border {
+  position: relative;
+  background: rgba(15, 23, 42, 0.8);
+  border-radius: 0.75rem;
+}
+
+.neon-gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #7c3aed, #06b6d4, #f59e0b, #7c3aed);
+  background-size: 300% 100%;
+  animation: gradientBorderFlow 4s linear infinite;
+  z-index: -1;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  padding: 1px;
+}
+
+@keyframes gradientBorderFlow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 300% 50%; }
+}
+
+/* Cinematic Horizontal Lines */
+.cinematic-lines::before,
+.cinematic-lines::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  pointer-events: none;
+  z-index: 2;
+}
+.cinematic-lines::before {
+  top: 12%;
+  background: linear-gradient(90deg, transparent 0%, rgba(124, 58, 237, 0.15) 20%, rgba(124, 58, 237, 0.15) 80%, transparent 100%);
+}
+.cinematic-lines::after {
+  bottom: 12%;
+  background: linear-gradient(90deg, transparent 0%, rgba(6, 182, 212, 0.15) 20%, rgba(6, 182, 212, 0.15) 80%, transparent 100%);
+}
+
+/* Enhanced Glow Dot */
+.glow-dot-enhanced {
+  position: relative;
+}
+
+.glow-dot-enhanced::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200%;
+  height: 200%;
+  border-radius: 50%;
+  background: inherit;
+  opacity: 0.3;
+  animation: glowDotPulse 2s ease-in-out infinite;
+}
+
+@keyframes glowDotPulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
+  50% { transform: translate(-50%, -50%) scale(1.5); opacity: 0.1; }
+}

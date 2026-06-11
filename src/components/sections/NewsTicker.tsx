@@ -83,7 +83,7 @@ function FeaturedNewsCard({ item, index }: { item: FeaturedNews; index: number }
 
   return (
     <motion.div
-      className="group relative rounded-xl bg-[#0f172a] border border-white/[0.06] p-5 sm:p-6 neon-border card-lift overflow-hidden transition-all duration-300 hover:border-white/[0.12] hover:shadow-[0_0_25px_rgba(124,58,237,0.15)]"
+      className="group relative rounded-xl glass-card p-5 sm:p-6 card-hover-lift shimmer-sweep overflow-hidden transition-all duration-300"
       style={{ borderColor: `${item.color}20` }}
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -283,7 +283,7 @@ export default function NewsTicker() {
             viewport={{ once: true, margin: '-40px' }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <div className="rounded-xl bg-[#0f172a] border border-white/[0.06] p-5 sm:p-6 overflow-hidden relative">
+            <div className="rounded-xl glass-card p-5 sm:p-6 overflow-hidden relative">
               {/* Top accent */}
               <div
                 className="absolute top-0 left-0 right-0 h-[2px]"

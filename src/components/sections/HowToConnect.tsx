@@ -101,7 +101,7 @@ function StepCard({
   return (
     <motion.div
       ref={ref}
-      className="group relative rounded-xl bg-[#0f172a] p-6 sm:p-8 neon-border card-lift overflow-hidden"
+      className="group relative rounded-xl glass-card p-6 sm:p-8 card-hover-lift shimmer-sweep overflow-hidden"
       style={{ borderColor: `${step.color}40` }}
       initial={{ opacity: 0, y: 40 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -264,7 +264,7 @@ export default function HowToConnect() {
 
         {/* Connection Info Card + Copy IP */}
         <motion.div
-          className="rounded-xl bg-[#0f172a] p-6 sm:p-8 neon-border-cyan mb-12"
+          className="rounded-xl glass-card-cyan p-6 sm:p-8 mb-12"
           style={{ borderColor: 'rgba(6, 182, 212, 0.4)' }}
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -338,7 +338,7 @@ export default function HowToConnect() {
               return (
                 <motion.div
                   key={item.title}
-                  className="group rounded-lg bg-[#0f172a] p-5 border border-[#f59e0b]/20 hover:border-[#f59e0b]/40 transition-all duration-300"
+                  className="group rounded-lg glass-card-amber p-5 hover:border-[#f59e0b]/40 transition-all duration-300"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: '-30px' }}
