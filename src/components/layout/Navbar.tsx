@@ -197,13 +197,23 @@ export default function Navbar({ bannerVisible = false }: NavbarProps) {
               <button
                 key={item.id}
                 onClick={() => handleNavigate(item.id)}
-                className={`relative px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-1.5 ${
+                className={`relative px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center gap-1.5 group ${
                   currentPage === item.id
                     ? 'text-[#7c3aed] bg-[#7c3aed]/10'
                     : 'text-gray-400 hover:text-white hover:bg-white/5'
                 }`}
+                onMouseEnter={(e) => {
+                  if (currentPage !== item.id) {
+                    e.currentTarget.style.textShadow = '0 0 8px rgba(124, 58, 237, 0.3)'
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.textShadow = ''
+                }}
               >
-                {item.icon}
+                <span className="transition-transform duration-300 group-hover:scale-110">
+                  {item.icon}
+                </span>
                 {item.label}
                 {currentPage === item.id && (
                   <motion.div
@@ -212,6 +222,10 @@ export default function Navbar({ bannerVisible = false }: NavbarProps) {
                     style={{ boxShadow: '0 0 8px rgba(124, 58, 237, 0.6)' }}
                     transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                   />
+                )}
+                {/* Hover glow underline */}
+                {currentPage !== item.id && (
+                  <span className="absolute bottom-0 left-2 right-2 h-0.5 bg-[#7c3aed] rounded-full scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left opacity-50" />
                 )}
               </button>
             ))}

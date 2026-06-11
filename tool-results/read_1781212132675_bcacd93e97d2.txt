@@ -1,0 +1,870 @@
+     1→'use client'
+     2→
+     3→import { useState, useCallback } from 'react'
+     4→import { motion, AnimatePresence } from 'framer-motion'
+     5→import {
+     6→  MapPin,
+     7→  Shield,
+     8→  Heart,
+     9→  Building,
+    10→  Wrench,
+    11→  Skull,
+    12→  Crosshair,
+    13→  X,
+    14→  Navigation,
+    15→  Layers,
+    16→} from 'lucide-react'
+    17→import type { LucideIcon } from 'lucide-react'
+    18→
+    19→/* ------------------------------------------------------------------ */
+    20→/*  Types                                                              */
+    21→/* ------------------------------------------------------------------ */
+    22→
+    23→type LocationCategory = 'police' | 'ems' | 'business' | 'crime' | 'mechanic'
+    24→
+    25→interface MapLocation {
+    26→  id: string
+    27→  name: string
+    28→  x: number // percentage position on map (0–100)
+    29→  y: number
+    30→  category: LocationCategory
+    31→  color: string
+    32→  description: string
+    33→  icon: LucideIcon
+    34→}
+    35→
+    36→/* ------------------------------------------------------------------ */
+    37→/*  Data                                                               */
+    38→/* ------------------------------------------------------------------ */
+    39→
+    40→const locations: MapLocation[] = [
+    41→  {
+    42→    id: 'lspd',
+    43→    name: 'Comisaría LSPD',
+    44→    x: 35,
+    45→    y: 30,
+    46→    category: 'police',
+    47→    color: '#06b6d4',
+    48→    description: 'Cuartel general de la policía de Los Santos. Centro de operaciones de todas las patrullas y unidades especiales.',
+    49→    icon: Shield,
+    50→  },
+    51→  {
+    52→    id: 'hospital',
+    53→    name: 'Hospital Central',
+    54→    x: 55,
+    55→    y: 25,
+    56→    category: 'ems',
+    57→    color: '#22c55e',
+    58→    description: 'Centro médico principal de la ciudad. Atención 24/7, cirugías y servicios de emergencia.',
+    59→    icon: Heart,
+    60→  },
+    61→  {
+    62→    id: 'garaje',
+    63→    name: 'Garaje Central',
+    64→    x: 25,
+    65→    y: 55,
+    66→    category: 'mechanic',
+    67→    color: '#f97316',
+    68→    description: 'Taller de reparaciones y tuning. El lugar donde los mecánicos hacen su magia.',
+    69→    icon: Wrench,
+    70→  },
+    71→  {
+    72→    id: 'crimen-norte',
+    73→    name: 'Callejero Norte',
+    74→    x: 70,
+    75→    y: 20,
+    76→    category: 'crime',
+    77→    color: '#ef4444',
+    78→    description: 'Zona de actividad criminal conocida. Las sombras esconden los secretos más oscuros de la ciudad.',
+    79→    icon: Skull,
+    80→  },
+    81→  {
+    82→    id: 'puerto',
+    83→    name: 'Puerto',
+    84→    x: 15,
+    85→    y: 70,
+    86→    category: 'business',
+    87→    color: '#f59e0b',
+    88→    description: 'Zona portuaria y de negocios. Importaciones, exportaciones y tratos bajo la mesa.',
+    89→    icon: Building,
+    90→  },
+    91→  {
+    92→    id: 'centro-comercial',
+    93→    name: 'Centro Comercial',
+    94→    x: 50,
+    95→    y: 50,
+    96→    category: 'business',
+    97→    color: '#f59e0b',
+    98→    description: 'Principal zona comercial de LS. Tiendas, restaurantes y vida social.',
+    99→    icon: Building,
+   100→  },
+   101→  {
+   102→    id: 'fbi',
+   103→    name: 'FBI Headquarters',
+   104→    x: 65,
+   105→    y: 40,
+   106→    category: 'police',
+   107→    color: '#f59e0b',
+   108→    description: 'Oficinas federales de investigación. Operaciones encubiertas y vigilancia de alto nivel.',
+   109→    icon: Crosshair,
+   110→  },
+   111→  {
+   112→    id: 'barrio-sur',
+   113→    name: 'Barrio Sur',
+   114→    x: 30,
+   115→    y: 75,
+   116→    category: 'crime',
+   117→    color: '#ef4444',
+   118→    description: 'Territorio de bandas del sur. Respeta el territorio o enfrenta las consecuencias.',
+   119→    icon: Skull,
+   120→  },
+   121→  {
+   122→    id: 'aeropuerto',
+   123→    name: 'Aeropuerto',
+   124→    x: 80,
+   125→    y: 65,
+   126→    category: 'business',
+   127→    color: '#f59e0b',
+   128→    description: 'Aeropuerto internacional de LS. La puerta de entrada y salida de la ciudad.',
+   129→    icon: Building,
+   130→  },
+   131→  {
+   132→    id: 'taller-este',
+   133→    name: 'Taller Este',
+   134→    x: 75,
+   135→    y: 50,
+   136→    category: 'mechanic',
+   137→    color: '#f97316',
+   138→    description: 'Segundo taller de la ciudad. Especializado en reparaciones rápidas y tuning de alto rendimiento.',
+   139→    icon: Wrench,
+   140→  },
+   141→]
+   142→
+   143→const categoryConfig: Record<LocationCategory, { label: string; icon: LucideIcon; color: string }> = {
+   144→  police: { label: 'Policía', icon: Shield, color: '#06b6d4' },
+   145→  ems: { label: 'EMS', icon: Heart, color: '#22c55e' },
+   146→  business: { label: 'Negocios', icon: Building, color: '#f59e0b' },
+   147→  crime: { label: 'Crimen', icon: Skull, color: '#ef4444' },
+   148→  mechanic: { label: 'Talleres', icon: Wrench, color: '#f97316' },
+   149→}
+   150→
+   151→const categoryKeys = Object.keys(categoryConfig) as LocationCategory[]
+   152→
+   153→/* ------------------------------------------------------------------ */
+   154→/*  SVG Map Sub-components                                             */
+   155→/* ------------------------------------------------------------------ */
+   156→
+   157→function CyberpunkGrid() {
+   158→  const lines = []
+   159→  // Vertical lines
+   160→  for (let i = 0; i <= 20; i++) {
+   161→    lines.push(
+   162→      <line
+   163→        key={`v-${i}`}
+   164→        x1={`${i * 5}%`}
+   165→        y1="0%"
+   166→        x2={`${i * 5}%`}
+   167→        y2="100%"
+   168→        stroke="#7c3aed"
+   169→        strokeWidth={i % 4 === 0 ? 0.5 : 0.25}
+   170→        opacity={i % 4 === 0 ? 0.12 : 0.05}
+   171→      />
+   172→    )
+   173→  }
+   174→  // Horizontal lines
+   175→  for (let i = 0; i <= 14; i++) {
+   176→    lines.push(
+   177→      <line
+   178→        key={`h-${i}`}
+   179→        x1="0%"
+   180→        y1={`${i * 7}%`}
+   181→        x2="100%"
+   182→        y2={`${i * 7}%`}
+   183→        stroke="#7c3aed"
+   184→        strokeWidth={i % 2 === 0 ? 0.5 : 0.25}
+   185→        opacity={i % 2 === 0 ? 0.12 : 0.05}
+   186→      />
+   187→    )
+   188→  }
+   189→  return <g className="grid-lines">{lines}</g>
+   190→}
+   191→
+   192→function MajorRoads() {
+   193→  return (
+   194→    <g className="major-roads">
+   195→      {/* Main horizontal highway */}
+   196→      <line x1="0%" y1="40%" x2="100%" y2="40%" stroke="#7c3aed" strokeWidth="2" opacity="0.3">
+   197→        <animate attributeName="opacity" values="0.2;0.4;0.2" dur="3s" repeatCount="indefinite" />
+   198→      </line>
+   199→      {/* Main vertical highway */}
+   200→      <line x1="50%" y1="0%" x2="50%" y2="100%" stroke="#7c3aed" strokeWidth="2" opacity="0.3">
+   201→        <animate attributeName="opacity" values="0.2;0.4;0.2" dur="3.5s" repeatCount="indefinite" />
+   202→      </line>
+   203→      {/* Diagonal road NE */}
+   204→      <line x1="20%" y1="10%" x2="85%" y2="60%" stroke="#7c3aed" strokeWidth="1.2" opacity="0.18" />
+   205→      {/* Diagonal road SW */}
+   206→      <line x1="10%" y1="55%" x2="65%" y2="90%" stroke="#7c3aed" strokeWidth="1.2" opacity="0.18" />
+   207→      {/* Secondary horizontal */}
+   208→      <line x1="5%" y1="22%" x2="90%" y2="22%" stroke="#7c3aed" strokeWidth="0.8" opacity="0.12" />
+   209→      <line x1="10%" y1="65%" x2="95%" y2="65%" stroke="#7c3aed" strokeWidth="0.8" opacity="0.12" />
+   210→      {/* Secondary vertical */}
+   211→      <line x1="30%" y1="5%" x2="30%" y2="95%" stroke="#7c3aed" strokeWidth="0.8" opacity="0.12" />
+   212→      <line x1="70%" y1="5%" x2="70%" y2="85%" stroke="#7c3aed" strokeWidth="0.8" opacity="0.12" />
+   213→      {/* Ring road segments */}
+   214→      <path
+   215→        d="M 25 15 Q 50 8 75 15 Q 82 40 80 65 Q 75 85 50 90 Q 25 85 18 65 Q 15 40 25 15"
+   216→        stroke="#7c3aed"
+   217→        strokeWidth="1"
+   218→        fill="none"
+   219→        opacity="0.1"
+   220→        transform="translate(0,0) scale(1 1)"
+   221→      />
+   222→      {/* Glow filter for highways */}
+   223→      <defs>
+   224→        <filter id="road-glow" x="-20%" y="-20%" width="140%" height="140%">
+   225→          <feGaussianBlur stdDeviation="3" result="blur" />
+   226→          <feMerge>
+   227→            <feMergeNode in="blur" />
+   228→            <feMergeNode in="SourceGraphic" />
+   229→          </feMerge>
+   230→        </filter>
+   231→      </defs>
+   232→      {/* Re-draw highways with glow */}
+   233→      <line x1="0%" y1="40%" x2="100%" y2="40%" stroke="#7c3aed" strokeWidth="1" opacity="0.6" filter="url(#road-glow)" />
+   234→      <line x1="50%" y1="0%" x2="50%" y2="100%" stroke="#7c3aed" strokeWidth="1" opacity="0.6" filter="url(#road-glow)" />
+   235→    </g>
+   236→  )
+   237→}
+   238→
+   239→function WaterAreas() {
+   240→  return (
+   241→    <g className="water-areas">
+   242→      {/* Ocean / coastline on the south */}
+   243→      <path
+   244→        d="M 0 82 Q 15 78 30 83 Q 50 88 70 82 Q 85 79 100 83 L 100 100 L 0 100 Z"
+   245→        fill="#06b6d4"
+   246→        opacity="0.08"
+   247→      />
+   248→      {/* Water shimmer */}
+   249→      <path
+   250→        d="M 0 82 Q 15 78 30 83 Q 50 88 70 82 Q 85 79 100 83 L 100 100 L 0 100 Z"
+   251→        fill="none"
+   252→        stroke="#06b6d4"
+   253→        strokeWidth="0.5"
+   254→        opacity="0.25"
+   255→      >
+   256→        <animate attributeName="opacity" values="0.15;0.35;0.15" dur="4s" repeatCount="indefinite" />
+   257→      </path>
+   258→      {/* West coast water */}
+   259→      <path
+   260→        d="M 0 55 Q 5 60 3 70 Q 2 78 0 82 L 0 55 Z"
+   261→        fill="#06b6d4"
+   262→        opacity="0.08"
+   263→      />
+   264→      {/* Lake in the hills */}
+   265→      <ellipse cx="82" cy="28" rx="6" ry="4" fill="#06b6d4" opacity="0.06" stroke="#06b6d4" strokeWidth="0.3" strokeOpacity="0.15" />
+   266→    </g>
+   267→  )
+   268→}
+   269→
+   270→function BuildingBlocks() {
+   271→  return (
+   272→    <g className="building-blocks">
+   273→      {/* Downtown cluster - center */}
+   274→      <rect x="42" y="38" width="16" height="12" rx="1" fill="#1e293b" opacity="0.6" stroke="#334155" strokeWidth="0.3" />
+   275→      <rect x="44" y="40" width="5" height="4" rx="0.5" fill="#1e293b" opacity="0.4" stroke="#475569" strokeWidth="0.2" />
+   276→      <rect x="51" y="40" width="5" height="4" rx="0.5" fill="#1e293b" opacity="0.4" stroke="#475569" strokeWidth="0.2" />
+   277→      <rect x="44" y="45" width="5" height="3" rx="0.5" fill="#1e293b" opacity="0.4" stroke="#475569" strokeWidth="0.2" />
+   278→      <rect x="51" y="45" width="5" height="3" rx="0.5" fill="#1e293b" opacity="0.4" stroke="#475569" strokeWidth="0.2" />
+   279→
+   280→      {/* Police district - north central */}
+   281→      <rect x="28" y="22" width="14" height="10" rx="1" fill="#1e293b" opacity="0.5" stroke="#0e7490" strokeWidth="0.3" />
+   282→      <rect x="30" y="24" width="4" height="3" rx="0.5" fill="#1e293b" opacity="0.3" />
+   283→      <rect x="36" y="24" width="4" height="3" rx="0.5" fill="#1e293b" opacity="0.3" />
+   284→
+   285→      {/* Hospital area - northeast */}
+   286→      <rect x="50" y="18" width="12" height="9" rx="1" fill="#1e293b" opacity="0.5" stroke="#16a34a" strokeWidth="0.3" />
+   287→      <rect x="52" y="20" width="8" height="5" rx="0.5" fill="#1e293b" opacity="0.3" />
+   288→
+   289→      {/* Airport - east */}
+   290→      <rect x="73" y="58" width="18" height="8" rx="1" fill="#1e293b" opacity="0.4" stroke="#475569" strokeWidth="0.3" />
+   291→      <line x1="75" y1="62" x2="89" y2="62" stroke="#64748b" strokeWidth="0.5" opacity="0.4" strokeDasharray="2 1" />
+   292→
+   293→      {/* Port - southwest */}
+   294→      <rect x="8" y="62" width="12" height="8" rx="1" fill="#1e293b" opacity="0.4" stroke="#475569" strokeWidth="0.3" />
+   295→
+   296→      {/* South district */}
+   297→      <rect x="22" y="67" width="16" height="10" rx="1" fill="#1e293b" opacity="0.5" stroke="#7f1d1d" strokeWidth="0.3" />
+   298→      <rect x="24" y="69" width="5" height="3" rx="0.5" fill="#1e293b" opacity="0.3" />
+   299→      <rect x="31" y="69" width="5" height="3" rx="0.5" fill="#1e293b" opacity="0.3" />
+   300→      <rect x="24" y="73" width="12" height="2" rx="0.5" fill="#1e293b" opacity="0.3" />
+   301→
+   302→      {/* North hills / residential */}
+   303→      <rect x="60" y="12" width="10" height="8" rx="1" fill="#1e293b" opacity="0.35" stroke="#475569" strokeWidth="0.2" />
+   304→
+   305→      {/* Garage block */}
+   306→      <rect x="18" y="48" width="12" height="10" rx="1" fill="#1e293b" opacity="0.5" stroke="#c2410c" strokeWidth="0.3" />
+   307→
+   308→      {/* East workshop */}
+   309→      <rect x="69" y="43" width="12" height="10" rx="1" fill="#1e293b" opacity="0.5" stroke="#c2410c" strokeWidth="0.3" />
+   310→    </g>
+   311→  )
+   312→}
+   313→
+   314→/* ------------------------------------------------------------------ */
+   315→/*  Location Marker                                                    */
+   316→/* ------------------------------------------------------------------ */
+   317→
+   318→function LocationMarker({
+   319→  location,
+   320→  isSelected,
+   321→  isHovered,
+   322→  onSelect,
+   323→  onHover,
+   324→  visible,
+   325→}: {
+   326→  location: MapLocation
+   327→  isSelected: boolean
+   328→  isHovered: boolean
+   329→  onSelect: () => void
+   330→  onHover: (id: string | null) => void
+   331→  visible: boolean
+   332→}) {
+   333→  const IconComponent = location.icon
+   334→
+   335→  return (
+   336→    <AnimatePresence>
+   337→      {visible && (
+   338→        <motion.g
+   339→          initial={{ opacity: 0, scale: 0 }}
+   340→          animate={{ opacity: 1, scale: 1 }}
+   341→          exit={{ opacity: 0, scale: 0 }}
+   342→          transition={{ duration: 0.3, type: 'spring', stiffness: 200 }}
+   343→          style={{ cursor: 'pointer' }}
+   344→          onClick={onSelect}
+   345→          onMouseEnter={() => onHover(location.id)}
+   346→          onMouseLeave={() => onHover(null)}
+   347→        >
+   348→          {/* Pulse ring - outer */}
+   349→          <motion.circle
+   350→            cx={`${location.x}%`}
+   351→            cy={`${location.y}%`}
+   352→            r={isSelected ? 14 : isHovered ? 12 : 8}
+   353→            fill="none"
+   354→            stroke={location.color}
+   355→            strokeWidth={isSelected ? 2 : 1}
+   356→            opacity={isSelected ? 0.6 : isHovered ? 0.4 : 0.2}
+   357→            animate={
+   358→              isSelected
+   359→                ? { r: [10, 16, 10], opacity: [0.6, 0.2, 0.6] }
+   360→                : isHovered
+   361→                ? { r: [8, 13, 8], opacity: [0.4, 0.15, 0.4] }
+   362→                : {}
+   363→            }
+   364→            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+   365→          />
+   366→
+   367→          {/* Second pulse ring for selected */}
+   368→          {isSelected && (
+   369→            <motion.circle
+   370→              cx={`${location.x}%`}
+   371→              cy={`${location.y}%`}
+   372→              r={18}
+   373→              fill="none"
+   374→              stroke={location.color}
+   375→              strokeWidth={1}
+   376→              animate={{ r: [14, 22, 14], opacity: [0.3, 0, 0.3] }}
+   377→              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut', delay: 0.3 }}
+   378→            />
+   379→          )}
+   380→
+   381→          {/* Glow circle */}
+   382→          <circle
+   383→            cx={`${location.x}%`}
+   384→            cy={`${location.y}%`}
+   385→            r={isHovered || isSelected ? 7 : 5}
+   386→            fill={location.color}
+   387→            opacity={0.15}
+   388→            filter="url(#marker-glow)"
+   389→          />
+   390→
+   391→          {/* Main dot */}
+   392→          <motion.circle
+   393→            cx={`${location.x}%`}
+   394→            cy={`${location.y}%`}
+   395→            r={isSelected ? 6 : isHovered ? 5.5 : 4}
+   396→            fill={location.color}
+   397→            style={{
+   398→              filter: `drop-shadow(0 0 4px ${location.color}) drop-shadow(0 0 8px ${location.color}40)`,
+   399→            }}
+   400→            animate={
+   401→              isSelected
+   402→                ? { scale: [1, 1.15, 1] }
+   403→                : isHovered
+   404→                ? { scale: [1, 1.1, 1] }
+   405→                : {}
+   406→            }
+   407→            transition={{ duration: 0.8, repeat: Infinity, ease: 'easeInOut' }}
+   408→          />
+   409→
+   410→          {/* Inner white dot */}
+   411→          <circle
+   412→            cx={`${location.x}%`}
+   413→            cy={`${location.y}%`}
+   414→            r={1.5}
+   415→            fill="white"
+   416→            opacity={0.8}
+   417→          />
+   418→
+   419→          {/* Icon at marker - only on hover/select */}
+   420→          {(isHovered || isSelected) && (
+   421→            <motion.foreignObject
+   422→              x={`${location.x - 1.5}%`}
+   423→              y={`${location.y - 3}%`}
+   424→              width="3%"
+   425→              height="3%"
+   426→              initial={{ opacity: 0, scale: 0.5 }}
+   427→              animate={{ opacity: 1, scale: 1 }}
+   428→              exit={{ opacity: 0, scale: 0.5 }}
+   429→              style={{ overflow: 'visible' }}
+   430→            >
+   431→              <div className="flex items-center justify-center w-full h-full">
+   432→                <IconComponent
+   433→                  style={{ color: location.color, width: '100%', height: '100%', maxWidth: 16, maxHeight: 16, filter: `drop-shadow(0 0 3px ${location.color})` }}
+   434→                />
+   435→              </div>
+   436→            </motion.foreignObject>
+   437→          )}
+   438→
+   439→          {/* Label tooltip on hover */}
+   440→          {(isHovered || isSelected) && (
+   441→            <motion.g
+   442→              initial={{ opacity: 0, y: 5 }}
+   443→              animate={{ opacity: 1, y: 0 }}
+   444→              exit={{ opacity: 0, y: 5 }}
+   445→              transition={{ duration: 0.2 }}
+   446→            >
+   447→              <rect
+   448→                x={`${location.x - 8}%`}
+   449→                y={`${location.y - 10}%`}
+   450→                width="16%"
+   451→                height="5%"
+   452→                rx="3"
+   453→                fill="#0f172a"
+   454→                stroke={location.color}
+   455→                strokeWidth="0.5"
+   456→                opacity="0.95"
+   457→              />
+   458→              <text
+   459→                x={`${location.x}%`}
+   460→                y={`${location.y - 7.2}%`}
+   461→                textAnchor="middle"
+   462→                fill={location.color}
+   463→                fontSize="3.2"
+   464→                fontFamily="system-ui, sans-serif"
+   465→                fontWeight="600"
+   466→                style={{ textShadow: `0 0 6px ${location.color}60` }}
+   467→              >
+   468→                {location.name}
+   469→              </text>
+   470→            </motion.g>
+   471→          )}
+   472→        </motion.g>
+   473→      )}
+   474→    </AnimatePresence>
+   475→  )
+   476→}
+   477→
+   478→/* ------------------------------------------------------------------ */
+   479→/*  Details Panel                                                      */
+   480→/* ------------------------------------------------------------------ */
+   481→
+   482→function DetailsPanel({
+   483→  location,
+   484→  onClose,
+   485→}: {
+   486→  location: MapLocation | null
+   487→  onClose: () => void
+   488→}) {
+   489→  const IconComponent = location?.icon ?? MapPin
+   490→
+   491→  return (
+   492→    <AnimatePresence>
+   493→      {location && (
+   494→        <motion.div
+   495→          initial={{ x: '100%', opacity: 0 }}
+   496→          animate={{ x: 0, opacity: 1 }}
+   497→          exit={{ x: '100%', opacity: 0 }}
+   498→          transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+   499→          className="absolute top-4 right-4 w-80 max-w-[calc(100%-2rem)] z-20"
+   500→        >
+   501→          <div
+   502→            className="rounded-xl overflow-hidden"
+   503→            style={{
+   504→              backgroundColor: '#0f172a',
+   505→              border: `1px solid ${location.color}40`,
+   506→              boxShadow: `0 0 20px ${location.color}20, 0 0 60px ${location.color}10, 0 8px 32px rgba(0,0,0,0.5)`,
+   507→            }}
+   508→          >
+   509→            {/* Header */}
+   510→            <div
+   511→              className="relative p-5 pb-4"
+   512→              style={{
+   513→                background: `linear-gradient(135deg, ${location.color}15 0%, transparent 60%)`,
+   514→                borderBottom: `1px solid ${location.color}20`,
+   515→              }}
+   516→            >
+   517→              <button
+   518→                onClick={onClose}
+   519→                className="absolute top-3 right-3 p-1.5 rounded-lg transition-colors hover:bg-white/10"
+   520→                style={{ color: location.color }}
+   521→                aria-label="Cerrar panel"
+   522→              >
+   523→                <X className="w-4 h-4" />
+   524→              </button>
+   525→              <div className="flex items-center gap-3">
+   526→                <div
+   527→                  className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
+   528→                  style={{
+   529→                    backgroundColor: `${location.color}15`,
+   530→                    border: `1px solid ${location.color}30`,
+   531→                  }}
+   532→                >
+   533→                  <IconComponent
+   534→                    className="w-6 h-6"
+   535→                    style={{ color: location.color, filter: `drop-shadow(0 0 4px ${location.color})` }}
+   536→                  />
+   537→                </div>
+   538→                <div className="min-w-0">
+   539→                  <h3
+   540→                    className="text-lg font-bold truncate"
+   541→                    style={{ color: location.color }}
+   542→                  >
+   543→                    {location.name}
+   544→                  </h3>
+   545→                  <span
+   546→                    className="inline-block mt-1 px-2 py-0.5 rounded text-xs font-medium"
+   547→                    style={{
+   548→                      backgroundColor: `${location.color}15`,
+   549→                      color: location.color,
+   550→                      border: `1px solid ${location.color}25`,
+   551→                    }}
+   552→                  >
+   553→                    {categoryConfig[location.category].label}
+   554→                  </span>
+   555→                </div>
+   556→              </div>
+   557→            </div>
+   558→
+   559→            {/* Body */}
+   560→            <div className="p-5">
+   561→              <p className="text-[#94a3b8] text-sm leading-relaxed mb-5">
+   562→                {location.description}
+   563→              </p>
+   564→
+   565→              {/* Location coordinates */}
+   566→              <div
+   567→                className="flex items-center gap-2 px-3 py-2 rounded-lg mb-4"
+   568→                style={{ backgroundColor: `${location.color}08`, border: `1px solid ${location.color}15` }}
+   569→              >
+   570→                <Navigation className="w-4 h-4" style={{ color: location.color }} />
+   571→                <span className="text-xs text-[#64748b]">
+   572→                  Coordenadas: {location.x.toFixed(0)}°N, {location.y.toFixed(0)}°W
+   573→                </span>
+   574→              </div>
+   575→
+   576→              {/* Status indicator */}
+   577→              <div className="flex items-center gap-2">
+   578→                <motion.div
+   579→                  className="w-2 h-2 rounded-full"
+   580→                  style={{ backgroundColor: location.color, boxShadow: `0 0 6px ${location.color}` }}
+   581→                  animate={{ opacity: [1, 0.4, 1] }}
+   582→                  transition={{ duration: 2, repeat: Infinity }}
+   583→                />
+   584→                <span className="text-xs text-[#64748b]">Ubicación activa</span>
+   585→              </div>
+   586→            </div>
+   587→          </div>
+   588→        </motion.div>
+   589→      )}
+   590→    </AnimatePresence>
+   591→  )
+   592→}
+   593→
+   594→/* ------------------------------------------------------------------ */
+   595→/*  Main Component                                                     */
+   596→/* ------------------------------------------------------------------ */
+   597→
+   598→export default function CityMap() {
+   599→  const [selectedLocation, setSelectedLocation] = useState<MapLocation | null>(null)
+   600→  const [hoveredLocation, setHoveredLocation] = useState<string | null>(null)
+   601→  const [activeFilters, setActiveFilters] = useState<Set<LocationCategory>>(
+   602→    new Set(categoryKeys)
+   603→  )
+   604→
+   605→  const toggleFilter = useCallback((category: LocationCategory) => {
+   606→    setActiveFilters((prev) => {
+   607→      const next = new Set(prev)
+   608→      if (next.has(category)) {
+   609→        // Don't allow deselecting all
+   610→        if (next.size > 1) {
+   611→          next.delete(category)
+   612→        }
+   613→      } else {
+   614→        next.add(category)
+   615→      }
+   616→      return next
+   617→    })
+   618→  }, [])
+   619→
+   620→  const handleLocationSelect = useCallback((location: MapLocation) => {
+   621→    setSelectedLocation((prev) => (prev?.id === location.id ? null : location))
+   622→  }, [])
+   623→
+   624→  const isLocationVisible = useCallback(
+   625→    (location: MapLocation) => activeFilters.has(location.category),
+   626→    [activeFilters]
+   627→  )
+   628→
+   629→  return (
+   630→    <section className="relative py-20 px-4 sm:px-6 lg:px-8">
+   631→      {/* Background */}
+   632→      <div className="absolute inset-0 bg-[#030712]" />
+   633→      <div className="absolute inset-0 grid-pattern opacity-30" />
+   634→
+   635→      <div className="relative mx-auto max-w-7xl">
+   636→        {/* Section Header */}
+   637→        <div className="text-center mb-12">
+   638→          <motion.h2
+   639→            initial={{ opacity: 0, y: 20 }}
+   640→            whileInView={{ opacity: 1, y: 0 }}
+   641→            viewport={{ once: true }}
+   642→            transition={{ duration: 0.6 }}
+   643→            className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4"
+   644→          >
+   645→            <span className="text-[#7c3aed] neon-text-glow">Mapa de Los Santos</span>
+   646→          </motion.h2>
+   647→          <motion.p
+   648→            initial={{ opacity: 0, y: 10 }}
+   649→            whileInView={{ opacity: 1, y: 0 }}
+   650→            viewport={{ once: true }}
+   651→            transition={{ duration: 0.6, delay: 0.2 }}
+   652→            className="text-[#94a3b8] text-lg flex items-center justify-center gap-2"
+   653→          >
+   654→            <MapPin className="w-5 h-5" />
+   655→            Explora los puntos de interés y territorios de la ciudad
+   656→          </motion.p>
+   657→          <motion.div
+   658→            initial={{ scaleX: 0 }}
+   659→            whileInView={{ scaleX: 1 }}
+   660→            viewport={{ once: true }}
+   661→            transition={{ duration: 0.8, delay: 0.3 }}
+   662→            className="mt-4 h-0.5 mx-auto max-w-[120px] rounded-full bg-gradient-to-r from-transparent via-[#7c3aed] to-transparent"
+   663→            style={{ boxShadow: '0 0 10px rgba(124,58,237,0.5)' }}
+   664→          />
+   665→        </div>
+   666→
+   667→        {/* Filter Legend */}
+   668→        <motion.div
+   669→          initial={{ opacity: 0, y: 10 }}
+   670→          whileInView={{ opacity: 1, y: 0 }}
+   671→          viewport={{ once: true }}
+   672→          transition={{ duration: 0.6, delay: 0.3 }}
+   673→          className="flex flex-wrap justify-center gap-3 mb-10"
+   674→        >
+   675→          <div className="flex items-center gap-2 mr-2 text-[#64748b] text-sm">
+   676→            <Layers className="w-4 h-4" />
+   677→            <span className="hidden sm:inline">Filtros:</span>
+   678→          </div>
+   679→          {categoryKeys.map((category) => {
+   680→            const config = categoryConfig[category]
+   681→            const Icon = config.icon
+   682→            const isActive = activeFilters.has(category)
+   683→
+   684→            return (
+   685→              <button
+   686→                key={category}
+   687→                onClick={() => toggleFilter(category)}
+   688→                className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+   689→                  isActive
+   690→                    ? 'text-white'
+   691→                    : 'text-[#475569] bg-[#0f172a] border border-[#1e293b] opacity-50'
+   692→                }`}
+   693→                style={
+   694→                  isActive
+   695→                    ? {
+   696→                        backgroundColor: `${config.color}20`,
+   697→                        border: `1px solid ${config.color}50`,
+   698→                        boxShadow: `0 0 10px ${config.color}25, 0 0 30px ${config.color}10`,
+   699→                      }
+   700→                    : {}
+   701→                }
+   702→              >
+   703→                <Icon className="w-4 h-4" style={{ color: isActive ? config.color : undefined }} />
+   704→                <span style={{ color: isActive ? config.color : undefined }}>
+   705→                  {config.label}
+   706→                </span>
+   707→              </button>
+   708→            )
+   709→          })}
+   710→        </motion.div>
+   711→
+   712→        {/* Map Container */}
+   713→        <motion.div
+   714→          initial={{ opacity: 0, scale: 0.95 }}
+   715→          whileInView={{ opacity: 1, scale: 1 }}
+   716→          viewport={{ once: true }}
+   717→          transition={{ duration: 0.8, delay: 0.4 }}
+   718→          className="relative rounded-2xl overflow-hidden"
+   719→          style={{
+   720→            border: '1px solid rgba(124, 58, 237, 0.2)',
+   721→            boxShadow: '0 0 30px rgba(124, 58, 237, 0.1), 0 0 80px rgba(124, 58, 237, 0.05), inset 0 0 30px rgba(0,0,0,0.3)',
+   722→          }}
+   723→        >
+   724→          {/* Map SVG */}
+   725→          <svg
+   726→            viewBox="0 0 100 100"
+   727→            className="w-full h-auto block"
+   728→            style={{ backgroundColor: '#0f172a', minHeight: '400px', maxHeight: '70vh' }}
+   729→            preserveAspectRatio="xMidYMid meet"
+   730→          >
+   731→            {/* SVG Defs */}
+   732→            <defs>
+   733→              <filter id="marker-glow" x="-50%" y="-50%" width="200%" height="200%">
+   734→                <feGaussianBlur stdDeviation="4" result="blur" />
+   735→                <feMerge>
+   736→                  <feMergeNode in="blur" />
+   737→                  <feMergeNode in="SourceGraphic" />
+   738→                </feMerge>
+   739→              </filter>
+   740→              <radialGradient id="map-vignette" cx="50%" cy="50%" r="50%">
+   741→                <stop offset="0%" stopColor="transparent" />
+   742→                <stop offset="100%" stopColor="#030712" stopOpacity="0.4" />
+   743→              </radialGradient>
+   744→              {/* Scanline effect */}
+   745→              <pattern id="scanlines" patternUnits="userSpaceOnUse" width="100" height="2">
+   746→                <line x1="0" y1="0" x2="100" y2="0" stroke="#7c3aed" strokeWidth="0.15" opacity="0.03" />
+   747→              </pattern>
+   748→            </defs>
+   749→
+   750→            {/* Background layers */}
+   751→            <rect x="0" y="0" width="100" height="100" fill="#0f172a" />
+   752→
+   753→            {/* Grid */}
+   754→            <CyberpunkGrid />
+   755→
+   756→            {/* Water */}
+   757→            <WaterAreas />
+   758→
+   759→            {/* Roads */}
+   760→            <MajorRoads />
+   761→
+   762→            {/* Buildings */}
+   763→            <BuildingBlocks />
+   764→
+   765→            {/* Scanlines overlay */}
+   766→            <rect x="0" y="0" width="100" height="100" fill="url(#scanlines)" />
+   767→
+   768→            {/* Vignette */}
+   769→            <rect x="0" y="0" width="100" height="100" fill="url(#map-vignette)" />
+   770→
+   771→            {/* Location Markers */}
+   772→            {locations.map((location) => (
+   773→              <LocationMarker
+   774→                key={location.id}
+   775→                location={location}
+   776→                isSelected={selectedLocation?.id === location.id}
+   777→                isHovered={hoveredLocation === location.id}
+   778→                onSelect={() => handleLocationSelect(location)}
+   779→                onHover={setHoveredLocation}
+   780→                visible={isLocationVisible(location)}
+   781→              />
+   782→            ))}
+   783→          </svg>
+   784→
+   785→          {/* Map border glow animation */}
+   786→          <motion.div
+   787→            className="absolute inset-0 rounded-2xl pointer-events-none"
+   788→            animate={{
+   789→              boxShadow: [
+   790→                '0 0 30px rgba(124, 58, 237, 0.1), inset 0 0 30px rgba(0,0,0,0.3)',
+   791→                '0 0 40px rgba(124, 58, 237, 0.15), inset 0 0 30px rgba(0,0,0,0.3)',
+   792→                '0 0 30px rgba(124, 58, 237, 0.1), inset 0 0 30px rgba(0,0,0,0.3)',
+   793→              ],
+   794→            }}
+   795→            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+   796→          />
+   797→
+   798→          {/* Corner decorations */}
+   799→          <div className="absolute top-3 left-3 w-6 h-6 border-t-2 border-l-2 border-[#7c3aed]/40 rounded-tl-sm pointer-events-none" />
+   800→          <div className="absolute top-3 right-3 w-6 h-6 border-t-2 border-r-2 border-[#7c3aed]/40 rounded-tr-sm pointer-events-none" />
+   801→          <div className="absolute bottom-3 left-3 w-6 h-6 border-b-2 border-l-2 border-[#7c3aed]/40 rounded-bl-sm pointer-events-none" />
+   802→          <div className="absolute bottom-3 right-3 w-6 h-6 border-b-2 border-r-2 border-[#7c3aed]/40 rounded-br-sm pointer-events-none" />
+   803→
+   804→          {/* Map label */}
+   805→          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 text-[#64748b] text-xs pointer-events-none">
+   806→            <div className="w-1.5 h-1.5 rounded-full bg-[#7c3aed]" style={{ boxShadow: '0 0 4px #7c3aed' }} />
+   807→            <span className="tracking-widest uppercase font-mono">Los Santos City Map</span>
+   808→            <div className="w-1.5 h-1.5 rounded-full bg-[#7c3aed]" style={{ boxShadow: '0 0 4px #7c3aed' }} />
+   809→          </div>
+   810→
+   811→          {/* Details Panel */}
+   812→          <DetailsPanel
+   813→            location={selectedLocation}
+   814→            onClose={() => setSelectedLocation(null)}
+   815→          />
+   816→        </motion.div>
+   817→
+   818→        {/* Location Quick List (below map on mobile) */}
+   819→        <motion.div
+   820→          initial={{ opacity: 0, y: 20 }}
+   821→          whileInView={{ opacity: 1, y: 0 }}
+   822→          viewport={{ once: true }}
+   823→          transition={{ duration: 0.6, delay: 0.5 }}
+   824→          className="mt-8"
+   825→        >
+   826→          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+   827→            {categoryKeys.map((category) => {
+   828→              const config = categoryConfig[category]
+   829→              const Icon = config.icon
+   830→              const categoryLocations = locations.filter((l) => l.category === category)
+   831→              const isFiltered = activeFilters.has(category)
+   832→
+   833→              return (
+   834→                <motion.button
+   835→                  key={category}
+   836→                  onClick={() => {
+   837→                    if (!isFiltered) toggleFilter(category)
+   838→                    const firstLoc = categoryLocations[0]
+   839→                    if (firstLoc && isFiltered) {
+   840→                      setSelectedLocation(firstLoc)
+   841→                    }
+   842→                  }}
+   843→                  className="p-3 rounded-xl text-left transition-all duration-300 group"
+   844→                  style={{
+   845→                    backgroundColor: isFiltered ? `${config.color}08` : '#0f172a',
+   846→                    border: `1px solid ${isFiltered ? `${config.color}25` : '#1e293b'}`,
+   847→                    opacity: isFiltered ? 1 : 0.4,
+   848→                  }}
+   849→                  whileHover={{ scale: 1.02 }}
+   850→                  whileTap={{ scale: 0.98 }}
+   851→                >
+   852→                  <div className="flex items-center gap-2 mb-1">
+   853→                    <Icon className="w-4 h-4 shrink-0" style={{ color: config.color }} />
+   854→                    <span className="text-xs font-semibold truncate" style={{ color: config.color }}>
+   855→                      {config.label}
+   856→                    </span>
+   857→                  </div>
+   858→                  <span className="text-[#64748b] text-xs">
+   859→                    {categoryLocations.length} {categoryLocations.length === 1 ? 'lugar' : 'lugares'}
+   860→                  </span>
+   861→                </motion.button>
+   862→              )
+   863→            })}
+   864→          </div>
+   865→        </motion.div>
+   866→      </div>
+   867→    </section>
+   868→  )
+   869→}
+   870→

@@ -345,7 +345,7 @@ export default function Facciones() {
                 key={faction.name}
                 variants={cardVariants}
                 layout
-                className="group relative bg-[#0f172a] rounded-xl cursor-pointer transition-shadow duration-500 overflow-hidden card-hover-lift"
+                className="group relative bg-[#0f172a] rounded-xl cursor-pointer transition-all duration-500 overflow-hidden card-hover-lift shimmer-sweep"
                 style={{
                   border: `1px solid ${faction.borderColor}`,
                   boxShadow: faction.glowClass,

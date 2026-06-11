@@ -29,7 +29,7 @@ import Normativa from '@/components/sections/Normativa'
 import Gallery from '@/components/sections/Gallery'
 import Facciones from '@/components/sections/Facciones'
 import ServerInfo from '@/components/sections/ServerInfo'
-import ServerStatusWidget from '@/components/sections/ServerStatusWidget'
+import ServerStatusDashboard from '@/components/sections/ServerStatusDashboard'
 import Changelog from '@/components/sections/Changelog'
 import CommunityStats from '@/components/sections/CommunityStats'
 import EventCalendar from '@/components/sections/EventCalendar'
@@ -45,6 +45,7 @@ import SectionDivider from '@/components/layout/SectionDivider'
 import VehicleShowcase from '@/components/sections/VehicleShowcase'
 import ServerTimeline from '@/components/sections/ServerTimeline'
 import DiscordWidget from '@/components/sections/DiscordWidget'
+import MemberSpotlight from '@/components/sections/MemberSpotlight'
 import { WhitelistForm } from '@/components/whitelist/WhitelistForm'
 import StaffPanel from '@/components/staff/StaffPanel'
 import AdminPanel from '@/components/admin/AdminPanel'
@@ -85,8 +86,10 @@ function HomePage() {
       <SectionDivider variant="cyan" />
       <Achievements />
       <SectionDivider variant="amber" />
-      <ServerStatusWidget />
+      <ServerStatusDashboard />
       <SectionDivider variant="amber" />
+      <MemberSpotlight />
+      <SectionDivider variant="cyan" />
       <NextEvent />
       <SectionDivider />
       <DiscordWidget />

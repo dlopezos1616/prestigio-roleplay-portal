@@ -196,7 +196,7 @@ export default function Gallery() {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8 }}
                 transition={{ duration: 0.3 }}
-                className="relative group cursor-pointer rounded-xl overflow-hidden neon-border card-lift"
+                className="relative group cursor-pointer rounded-xl overflow-hidden neon-border card-lift neon-hover-glow shimmer-sweep"
                 style={{ gridRow: `span ${item.rowSpan}` }}
                 onClick={() => setSelectedItem(item)}
               >
@@ -224,14 +224,15 @@ export default function Gallery() {
                   <h3 className="text-white font-bold text-lg leading-tight">{item.title}</h3>
                 </div>
 
-                {/* Hover overlay with expand icon */}
-                <div className="absolute inset-0 bg-[#030712]/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                {/* Hover overlay with expand icon + description */}
+                <div className="absolute inset-0 bg-[#030712]/60 opacity-0 group-hover:opacity-100 transition-all duration-300 flex flex-col items-center justify-center gap-2 p-4">
                   <motion.div
                     whileHover={{ scale: 1.1 }}
-                    className="w-12 h-12 rounded-full bg-[#7c3aed]/30 flex items-center justify-center backdrop-blur-sm border border-[#7c3aed]/40"
+                    className="w-12 h-12 rounded-full bg-[#7c3aed]/30 flex items-center justify-center backdrop-blur-sm border border-[#7c3aed]/40 transition-transform duration-300 group-hover:scale-110"
                   >
                     <Maximize2 className="w-5 h-5 text-white" />
                   </motion.div>
+                  <p className="text-gray-300 text-xs text-center line-clamp-2 max-w-[200px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">{item.description}</p>
                 </div>
 
                 {/* Hover glow */}

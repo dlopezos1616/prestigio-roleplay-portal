@@ -2050,3 +2050,276 @@ section[id] {
   0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
   50% { transform: translate(-50%, -50%) scale(1.5); opacity: 0.1; }
 }
+
+/* ===== Phase 11 Enhanced Styles ===== */
+
+/* 1. Neon Hover Glow Transition - for cards and interactive elements */
+.neon-hover-glow {
+  transition: box-shadow 0.4s ease, border-color 0.4s ease, transform 0.3s ease;
+}
+.neon-hover-glow:hover {
+  box-shadow: 0 0 15px rgba(124, 58, 237, 0.4),
+    0 0 40px rgba(124, 58, 237, 0.2),
+    0 0 80px rgba(124, 58, 237, 0.1);
+  transform: translateY(-4px);
+}
+
+/* Cyan variant */
+.neon-hover-glow-cyan:hover {
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.4),
+    0 0 40px rgba(6, 182, 212, 0.2),
+    0 0 80px rgba(6, 182, 212, 0.1);
+}
+
+/* Amber variant */
+.neon-hover-glow-amber:hover {
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.4),
+    0 0 40px rgba(245, 158, 11, 0.2),
+    0 0 80px rgba(245, 158, 11, 0.1);
+}
+
+/* 2. Neon Button Hover Effect */
+.neon-btn {
+  position: relative;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+.neon-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), transparent 50%, rgba(6, 182, 212, 0.2));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.neon-btn:hover::before {
+  opacity: 1;
+}
+.neon-btn:hover {
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.5),
+    0 0 40px rgba(124, 58, 237, 0.2);
+}
+
+/* 3. Card Glow Border on Hover */
+.glow-border-hover {
+  position: relative;
+  transition: all 0.4s ease;
+}
+.glow-border-hover::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.5), rgba(6, 182, 212, 0.5), rgba(245, 158, 11, 0.3));
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: -1;
+}
+.glow-border-hover:hover::before {
+  opacity: 1;
+}
+
+/* 4. Reveal animations for scroll */
+@keyframes revealFadeIn {
+  0% { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes revealScaleIn {
+  0% { opacity: 0; transform: scale(0.9); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes revealSlideLeft {
+  0% { opacity: 0; transform: translateX(-40px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes revealSlideRight {
+  0% { opacity: 0; transform: translateX(40px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+/* 5. Neon Ripple Click Effect */
+@keyframes neonRipple {
+  0% { transform: scale(0); opacity: 0.6; }
+  100% { transform: scale(4); opacity: 0; }
+}
+
+.neon-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+/* 6. Text Gradient Animation */
+@keyframes textGradientFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-text-gradient {
+  background: linear-gradient(90deg, #7c3aed, #06b6d4, #f59e0b, #7c3aed);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textGradientFlow 4s linear infinite;
+}
+
+/* 7. Floating animation variants */
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(2deg); }
+}
+
+@keyframes floatMedium {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(-1deg); }
+}
+
+.animate-float-slow {
+  animation: floatSlow 8s ease-in-out infinite;
+}
+
+.animate-float-medium {
+  animation: floatMedium 5s ease-in-out infinite;
+}
+
+/* 8. Neon underline effect */
+.neon-underline-animated {
+  position: relative;
+  display: inline-block;
+}
+.neon-underline-animated::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #7c3aed, #06b6d4);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 8px rgba(124, 58, 237, 0.5);
+  transform: translateX(-50%);
+}
+.neon-underline-animated:hover::after {
+  width: 100%;
+}
+
+/* 9. Pulse dot for live indicators */
+@keyframes livePulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 4px currentColor; }
+  50% { opacity: 0.5; box-shadow: 0 0 12px currentColor, 0 0 24px currentColor; }
+}
+
+.animate-live-pulse {
+  animation: livePulse 2s ease-in-out infinite;
+}
+
+/* 10. Section entrance animation class */
+.section-reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.section-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 11. Neon card with animated border */
+@keyframes neonBorderRotate {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.neon-card-animated {
+  position: relative;
+  background: rgba(15, 23, 42, 0.8);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.neon-card-animated::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  padding: 1px;
+  background: linear-gradient(135deg, #7c3aed, #06b6d4, #f59e0b, #7c3aed);
+  background-size: 300% 300%;
+  animation: neonBorderRotate 4s ease infinite;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* 12. Enhanced scrollbar for dark theme */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 3px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(124, 58, 237, 0.5), rgba(6, 182, 212, 0.5));
+  border-radius: 3px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(124, 58, 237, 0.8), rgba(6, 182, 212, 0.8));
+}
+
+/* 13. Typing cursor effect */
+@keyframes typingCursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.animate-typing-cursor {
+  animation: typingCursor 1s step-end infinite;
+}
+
+/* 14. Glow text highlight effect */
+@keyframes glowTextHighlight {
+  0%, 100% { text-shadow: 0 0 5px rgba(124, 58, 237, 0.3); }
+  50% { text-shadow: 0 0 20px rgba(124, 58, 237, 0.8), 0 0 40px rgba(124, 58, 237, 0.4), 0 0 60px rgba(6, 182, 212, 0.2); }
+}
+
+.animate-glow-text {
+  animation: glowTextHighlight 3s ease-in-out infinite;
+}
+
+/* 15. Radar sweep effect for server status */
+@keyframes radarSweep {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.animate-radar-sweep {
+  animation: radarSweep 3s linear infinite;
+}
+
+/* 16. Holographic shimmer effect */
+@keyframes holoShimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.holo-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(124, 58, 237, 0.05) 25%,
+    rgba(6, 182, 212, 0.08) 50%,
+    rgba(245, 158, 11, 0.05) 75%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: holoShimmer 3s ease-in-out infinite;
+}

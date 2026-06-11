@@ -12,16 +12,19 @@ interface ChatMessage {
   timestamp: Date
 }
 
-const BOT_RESPONSES: Record<string, string> = {
+// Fallback responses for when the AI API is unavailable
+const FALLBACK_RESPONSES: Record<string, string> = {
   servidor:
-    '🖥️ **Estado del Servidor:** El servidor está actualmente en línea con 64/128 jugadores. Ping promedio: 32ms. Último reinicio fue hace 4 horas. ¡Todo funcionando con normalidad!',
+    '🖥️ El servidor está actualmente en línea con 64/128 jugadores. Ping promedio: 32ms. ¡Todo funcionando con normalidad!',
   whitelist:
-    '📝 **Proceso de Whitelist:** Para entrar al servidor necesitas: 1) Registrarte en nuestro Discord, 2) Completar el formulario de whitelist en nuestro portal, 3) Esperar la revisión del staff (24-48h). ¡Buena suerte!',
+    '📝 Para entrar al servidor necesitas: 1) Unirte al Discord, 2) Completar el formulario de whitelist, 3) Esperar revisión del staff (24-48h).',
   normativa:
-    '📖 **Normativa:** Puedes consultar la normativa completa en la sección "Normativa" del menú. Las reglas principales son: respetar el roleplay, no hacer RDM/VDM, no metear información OOC, y siempre mantener el Fear RP. ¡Léela completa antes de entrar!',
+    '📖 Consulta la normativa completa en la sección "Normativa". Las reglas principales: respetar el roleplay, no RDM/VDM, no metagaming, mantener Fear RP.',
   staff:
-    '🎧 **Contactar Staff:** Puedes abrir un ticket en Discord (#support) o usar el comando /reporte en el servidor. Nuestro equipo de staff está disponible de 18:00 a 02:00 CET. Para urgencias, contacta a un administrador en Discord.',
+    '🎧 Abre un ticket en Discord (#support) o usa /reporte en el servidor. Staff disponible de 18:00 a 02:00 CET.',
 }
+
+const FALLBACK_DEFAULT = '🤔 No estoy seguro de entender tu consulta. Prueba preguntando sobre: servidor, whitelist, normativa o staff.'
 
 const QUICK_ACTIONS = [
   { label: 'Estado del servidor', keyword: 'servidor', icon: Server },
@@ -44,14 +47,14 @@ function getTimestamp(date: Date): string {
   })
 }
 
-function findBotResponse(text: string): string | null {
+function findFallbackResponse(text: string): string {
   const lower = text.toLowerCase()
-  for (const [keyword, response] of Object.entries(BOT_RESPONSES)) {
+  for (const [keyword, response] of Object.entries(FALLBACK_RESPONSES)) {
     if (lower.includes(keyword)) {
       return response
     }
   }
-  return '🤔 No estoy seguro de entender tu consulta. Prueba preguntando sobre: **servidor**, **whitelist**, **normativa** o **staff**. ¡Estoy aquí para ayudarte!'
+  return FALLBACK_DEFAULT
 }
 
 export default function ChatWidget() {
@@ -88,40 +91,53 @@ export default function ChatWidget() {
   }, [])
 
   const handleSend = useCallback(
-    (text?: string) => {
+    async (text?: string) => {
       const messageText = (text ?? inputValue).trim()
       if (!messageText || isTyping) return
 
       setInputValue('')
       addMessage('user', messageText)
-
-      // Show typing indicator
       setIsTyping(true)
 
-      // Simulate bot thinking
-      const delay = 1000 + Math.random() * 1000
-      setTimeout(() => {
-        const response = findBotResponse(messageText)
-        addMessage('bot', response)
+      try {
+        // Build conversation history for context
+        const history = messages
+          .filter((m) => m.id !== 'greeting')
+          .slice(-8)
+          .map((m) => ({
+            role: m.sender === 'user' ? 'user' as const : 'assistant' as const,
+            content: m.text,
+          }))
+
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: messageText, history }),
+        })
+
+        if (res.ok) {
+          const data = await res.json()
+          addMessage('bot', data.reply || data.error || FALLBACK_DEFAULT)
+        } else {
+          // Fallback to keyword matching on API error
+          addMessage('bot', findFallbackResponse(messageText))
+        }
+      } catch {
+        // Network error - fallback to static responses
+        addMessage('bot', findFallbackResponse(messageText))
+      } finally {
         setIsTyping(false)
-      }, delay)
+      }
     },
-    [inputValue, isTyping, addMessage]
+    [inputValue, isTyping, addMessage, messages]
   )
 
   const handleQuickAction = useCallback(
     (keyword: string, label: string) => {
       if (isTyping) return
-      addMessage('user', label)
-      setIsTyping(true)
-      const delay = 1000 + Math.random() * 1000
-      setTimeout(() => {
-        const response = BOT_RESPONSES[keyword] ?? 'Información no disponible.'
-        addMessage('bot', response)
-        setIsTyping(false)
-      }, delay)
+      handleSend(label)
     },
-    [isTyping, addMessage]
+    [isTyping, handleSend]
   )
 
   const handleKeyDown = useCallback(
@@ -157,9 +173,12 @@ export default function ChatWidget() {
                 </div>
                 <div>
                   <h3 className="text-sm font-semibold text-white">
-                    Soporte Prestigio RP
+                    PrestiBot AI
                   </h3>
-                  <p className="text-[11px] text-emerald-400">En línea</p>
+                  <p className="text-[11px] text-emerald-400 flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-breathe" />
+                    AI Activo
+                  </p>
                 </div>
               </div>
               <button
