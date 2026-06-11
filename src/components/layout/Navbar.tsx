@@ -1,10 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   Menu, X, Home, BookOpen, ImageIcon, Swords, Info, Heart, 
-  Shield, Crown, LogIn, LogOut, User, ChevronDown
+  Shield, Crown, LogIn, LogOut, User, ChevronDown, Bell, UserCircle
 } from 'lucide-react'
 import { useNavigation, type PageId } from '@/lib/navigation'
 import { useSession } from '@/hooks/useSession'
@@ -22,6 +22,7 @@ import {
   SheetTrigger,
   SheetTitle,
 } from '@/components/ui/sheet'
+import { toast } from 'sonner'
 
 const navItems: { id: PageId; label: string; icon: React.ReactNode; auth?: boolean; role?: string }[] = [
   { id: 'home', label: 'Inicio', icon: <Home className="w-4 h-4" /> },
@@ -35,11 +36,98 @@ const navItems: { id: PageId; label: string; icon: React.ReactNode; auth?: boole
   { id: 'admin', label: 'Admin', icon: <Crown className="w-4 h-4" />, auth: true, role: 'ADMIN' },
 ]
 
+function NotificationBell() {
+  const user = useSession((s) => s.user)
+  const { navigate } = useNavigation()
+  const [unreadCount, setUnreadCount] = useState(0)
+  const [isAnimating, setIsAnimating] = useState(false)
+  const prevCountRef = useRef(0)
+
+  useEffect(() => {
+    if (!user?.dbId) return
+
+    let cancelled = false
+    const userId = user.dbId
+
+    const fetchUnreadCount = async () => {
+      try {
+        const res = await fetch(`/api/notifications/unread-count?userId=${userId}`)
+        if (!cancelled && res.ok) {
+          const data = await res.json()
+          const newCount = data.unreadCount ?? 0
+          // Animate when new notifications arrive
+          if (newCount > prevCountRef.current) {
+            setIsAnimating(true)
+            setTimeout(() => setIsAnimating(false), 600)
+          }
+          prevCountRef.current = newCount
+          setUnreadCount(newCount)
+        }
+      } catch {
+        // Silently fail
+      }
+    }
+
+    // Fetch immediately
+    fetchUnreadCount()
+    // Poll every 30 seconds
+    const interval = setInterval(fetchUnreadCount, 30000)
+    return () => {
+      cancelled = true
+      clearInterval(interval)
+    }
+  }, [user?.dbId])
+
+  const handleClick = () => {
+    if (user?.role === 'STAFF' || user?.role === 'ADMIN') {
+      navigate('staff')
+    } else {
+      toast.info('No tienes notificaciones')
+    }
+  }
+
+  if (!user) return null
+
+  return (
+    <button
+      onClick={handleClick}
+      className="relative p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+      aria-label="Notificaciones"
+    >
+      <motion.div
+        animate={isAnimating ? { 
+          rotate: [0, -15, 15, -10, 10, 0],
+          scale: [1, 1.15, 1]
+        } : {}}
+        transition={{ duration: 0.5, ease: 'easeInOut' }}
+      >
+        <Bell className="w-5 h-5" />
+      </motion.div>
+      {unreadCount > 0 && (
+        <motion.span
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 rounded-full"
+          style={{ boxShadow: '0 0 6px rgba(239, 68, 68, 0.6)' }}
+        />
+      )}
+    </button>
+  )
+}
+
 export default function Navbar() {
   const { currentPage, navigate } = useNavigation()
-  const { user, loading, setUser } = useSession()
+  const user = useSession((s) => s.user)
+  const loading = useSession((s) => s.loading)
+  const setUser = useSession((s) => s.setUser)
+  const initSession = useSession((s) => s.initSession)
   const [scrolled, setScrolled] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+
+  // Initialize session on mount
+  useEffect(() => {
+    initSession()
+  }, [initSession])
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20)
@@ -131,6 +219,9 @@ export default function Navbar() {
 
           {/* User Menu */}
           <div className="flex items-center gap-3">
+            {/* Notification Bell - between nav items and user dropdown */}
+            <NotificationBell />
+
             {loading ? (
               <div className="w-8 h-8 rounded-full bg-[#1e293b] animate-pulse" />
             ) : user ? (
@@ -153,6 +244,13 @@ export default function Navbar() {
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="bg-[#0f172a] border-[#7c3aed]/20">
+                  <DropdownMenuItem
+                    onClick={() => handleNavigate('profile')}
+                    className="text-gray-300 focus:text-white focus:bg-[#7c3aed]/10"
+                  >
+                    <UserCircle className="w-4 h-4 mr-2" />
+                    Mi Perfil
+                  </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => handleNavigate('whitelist')}
                     className="text-gray-300 focus:text-white focus:bg-[#7c3aed]/10"

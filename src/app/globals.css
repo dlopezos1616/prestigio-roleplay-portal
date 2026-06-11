@@ -275,3 +275,146 @@
 .animate-slide-up-fade {
   animation: slideUpFade 0.6s ease-out forwards;
 }
+
+/* Neon shimmer animation for headings */
+@keyframes neonShimmer {
+  0%, 100% { text-shadow: 0 0 10px rgba(124, 58, 237, 0.6), 0 0 30px rgba(124, 58, 237, 0.3); }
+  50% { text-shadow: 0 0 20px rgba(124, 58, 237, 0.8), 0 0 50px rgba(124, 58, 237, 0.4), 0 0 80px rgba(124, 58, 237, 0.2); }
+}
+
+.animate-neon-shimmer {
+  animation: neonShimmer 3s ease-in-out infinite;
+}
+
+/* Border glow pulse */
+@keyframes borderGlowPulse {
+  0%, 100% { border-color: rgba(124, 58, 237, 0.3); box-shadow: 0 0 5px rgba(124, 58, 237, 0.1); }
+  50% { border-color: rgba(124, 58, 237, 0.6); box-shadow: 0 0 15px rgba(124, 58, 237, 0.3), 0 0 30px rgba(124, 58, 237, 0.1); }
+}
+
+.animate-border-glow {
+  animation: borderGlowPulse 4s ease-in-out infinite;
+}
+
+/* Cyberpunk corner accents */
+.cyber-corner {
+  position: relative;
+}
+.cyber-corner::before,
+.cyber-corner::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: rgba(124, 58, 237, 0.5);
+  pointer-events: none;
+}
+.cyber-corner::before {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid;
+  border-left: 2px solid;
+  border-color: inherit;
+}
+.cyber-corner::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 2px solid;
+  border-right: 2px solid;
+  border-color: inherit;
+}
+
+/* Glow line separator */
+.glow-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(124, 58, 237, 0.6), transparent);
+  box-shadow: 0 0 8px rgba(124, 58, 237, 0.3);
+}
+
+/* Breathing glow for status indicators */
+@keyframes breathe {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+.animate-breathe {
+  animation: breathe 2.5s ease-in-out infinite;
+}
+
+/* Slide in from left */
+@keyframes slideInLeft {
+  0% { opacity: 0; transform: translateX(-30px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.5s ease-out forwards;
+}
+
+/* Slide in from right */
+@keyframes slideInRight {
+  0% { opacity: 0; transform: translateX(30px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.5s ease-out forwards;
+}
+
+/* Rotating border effect */
+@keyframes rotateBorder {
+  0% { border-color: rgba(124, 58, 237, 0.4); }
+  33% { border-color: rgba(6, 182, 212, 0.4); }
+  66% { border-color: rgba(245, 158, 11, 0.4); }
+  100% { border-color: rgba(124, 58, 237, 0.4); }
+}
+
+.animate-rotate-border {
+  animation: rotateBorder 6s linear infinite;
+}
+
+/* Neon text glow for amber */
+.neon-text-glow-amber {
+  text-shadow: 0 0 10px rgba(245, 158, 11, 0.6),
+    0 0 30px rgba(245, 158, 11, 0.3),
+    0 0 60px rgba(245, 158, 11, 0.15);
+}
+
+/* Neon border amber */
+.neon-border-amber {
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.15),
+    inset 0 0 10px rgba(245, 158, 11, 0.05);
+}
+
+/* Selection colors */
+::selection {
+  background: rgba(124, 58, 237, 0.4);
+  color: #ffffff;
+}
+
+/* Focus ring style */
+:focus-visible {
+  outline: 2px solid rgba(124, 58, 237, 0.5);
+  outline-offset: 2px;
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Enhanced selection for code blocks */
+code::selection {
+  background: rgba(6, 182, 212, 0.4);
+}
+
+/* Noise texture overlay */
+.noise-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}

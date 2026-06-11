@@ -1,11 +1,12 @@
 'use client'
 
 import { AnimatePresence, motion } from 'framer-motion'
-import { Shield, Crown, ClipboardCheck } from 'lucide-react'
+import { Shield, Crown, ClipboardCheck, UserCircle } from 'lucide-react'
 import { useNavigation } from '@/lib/navigation'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import AudioPlayer from '@/components/layout/AudioPlayer'
+import BackToTop from '@/components/layout/BackToTop'
 import LoadingOverlay from '@/components/layout/LoadingOverlay'
 import DevLogin from '@/components/layout/DevLogin'
 import PageHeader from '@/components/layout/PageHeader'
@@ -24,6 +25,7 @@ import Donaciones from '@/components/sections/Donaciones'
 import { WhitelistForm } from '@/components/whitelist/WhitelistForm'
 import StaffPanel from '@/components/staff/StaffPanel'
 import AdminPanel from '@/components/admin/AdminPanel'
+import UserProfile from '@/components/profile/UserProfile'
 
 const pageVariants = {
   initial: { opacity: 0, y: 20 },
@@ -93,6 +95,22 @@ function AdminPage() {
   )
 }
 
+function ProfilePage() {
+  return (
+    <div>
+      <PageHeader
+        title="Mi Perfil"
+        subtitle="Revisa tu información, estado de whitelist y historial de solicitudes."
+        icon={UserCircle}
+        accent="#7c3aed"
+      />
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 pb-20">
+        <UserProfile />
+      </div>
+    </div>
+  )
+}
+
 export default function MainRouter() {
   const { currentPage } = useNavigation()
 
@@ -116,6 +134,8 @@ export default function MainRouter() {
         return <StaffPage />
       case 'admin':
         return <AdminPage />
+      case 'profile':
+        return <ProfilePage />
       default:
         return <HomePage />
     }
@@ -141,6 +161,7 @@ export default function MainRouter() {
       </main>
       <Footer />
       <AudioPlayer />
+      <BackToTop />
       <DevLogin />
     </div>
   )

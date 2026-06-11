@@ -1,8 +1,8 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { create } from 'zustand'
 
-interface SessionUser {
+export interface SessionUser {
   name?: string | null
   email?: string | null
   image?: string | null
@@ -27,62 +27,75 @@ function getDevSession(): SessionUser | null {
   return null
 }
 
-export function useSession() {
-  const [user, setUser] = useState<SessionUser | null>(() => getDevSession())
-  const [loading, setLoading] = useState(!getDevSession())
+interface SessionState {
+  user: SessionUser | null
+  loading: boolean
+  initialized: boolean
+  setUser: (user: SessionUser | null) => void
+  initSession: () => void
+  refetch: () => void
+}
 
-  useEffect(() => {
-    let cancelled = false
+export const useSession = create<SessionState>((set, get) => ({
+  user: null,
+  loading: true,
+  initialized: false,
 
-    // If we already have a dev session, skip fetching
-    if (getDevSession()) {
-      return
-    }
-
-    fetch("/api/auth/session")
-      .then((res) => res.json())
-      .then((data) => {
-        if (!cancelled) {
-          setUser(data.user)
-          setLoading(false)
-        }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setLoading(false)
-        }
-      })
-
-    return () => {
-      cancelled = true
-    }
-  }, [])
-
-  const setDevSession = useCallback((devUser: SessionUser | null) => {
-    if (devUser) {
-      localStorage.setItem(DEV_SESSION_KEY, JSON.stringify(devUser))
+  setUser: (user) => {
+    if (user) {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem(DEV_SESSION_KEY, JSON.stringify(user))
+      }
     } else {
-      localStorage.removeItem(DEV_SESSION_KEY)
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem(DEV_SESSION_KEY)
+      }
     }
-    setUser(devUser)
-  }, [])
+    set({ user, loading: false })
+  },
 
-  const refetch = useCallback(() => {
+  initSession: () => {
+    if (get().initialized) return
+    set({ initialized: true })
+
+    // Check dev session first (client-only)
     const devSession = getDevSession()
     if (devSession) {
-      setUser(devSession)
-      setLoading(false)
+      set({ user: devSession, loading: false })
+      return
+    }
+
+    // Fetch from NextAuth session API
+    fetch("/api/auth/session")
+      .then((res) => res.json())
+      .then((data) => {
+        set({ user: data.user, loading: false })
+      })
+      .catch(() => {
+        set({ loading: false })
+      })
+  },
+
+  refetch: () => {
+    set({ loading: true })
+    const devSession = getDevSession()
+    if (devSession) {
+      set({ user: devSession, loading: false })
       return
     }
 
     fetch("/api/auth/session")
       .then((res) => res.json())
       .then((data) => {
-        setUser(data.user)
-        setLoading(false)
+        set({ user: data.user, loading: false })
       })
-      .catch(() => setLoading(false))
-  }, [])
+      .catch(() => set({ loading: false }))
+  },
+}))
 
-  return { user, loading, setUser: setDevSession, refetch }
+// Hook that auto-initializes session on first use
+export function useSessionInit() {
+  const initSession = useSession((s) => s.initSession)
+  // This will be called in a useEffect by the consuming component
+  return initSession
 }

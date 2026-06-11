@@ -9,7 +9,8 @@ import { toast } from 'sonner'
 
 export default function DevLogin() {
   const [open, setOpen] = useState(false)
-  const { user, setUser } = useSession()
+  const user = useSession((s) => s.user)
+  const setUser = useSession((s) => s.setUser)
   const { navigate } = useNavigation()
 
   const devLogin = async (role: string) => {

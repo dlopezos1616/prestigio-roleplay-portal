@@ -75,7 +75,8 @@ interface WhitelistApplication {
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function WhitelistForm() {
-  const { user, loading: sessionLoading } = useSession()
+  const user = useSession((s) => s.user)
+  const sessionLoading = useSession((s) => s.loading)
   const [submitting, setSubmitting] = useState(false)
   const [existingApps, setExistingApps] = useState<WhitelistApplication[]>([])
   const [loadingApps, setLoadingApps] = useState(true)

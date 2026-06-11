@@ -223,10 +223,6 @@ export default function StaffPanel() {
   /* ---------------------------------------------------------------- */
   return (
     <div className="rounded-xl neon-border bg-bg-card p-4 md:p-6">
-      <h2 className="mb-4 text-xl font-bold text-white neon-text-glow">
-        Panel de Staff
-      </h2>
-
       <Tabs defaultValue="whitelist" className="w-full">
         {/* ---- Tab navigation ---- */}
         <TabsList className="mb-4 flex w-full flex-wrap gap-1 bg-[#0f172a] p-1 rounded-lg border border-[rgba(124,58,237,0.3)]">
@@ -586,9 +582,10 @@ export default function StaffPanel() {
 
           <div className="max-h-96 space-y-2 overflow-y-auto pr-1">
             {notifications.length === 0 && (
-              <div className="py-12 text-center text-gray-500">
-                <Bell className="mx-auto size-8 mb-2 opacity-40" />
-                No hay notificaciones
+              <div className="flex flex-col items-center justify-center py-12 text-gray-500">
+                <BellOff className="size-8 mb-3 opacity-40" />
+                <p className="text-gray-400">Sin notificaciones</p>
+                <p className="text-sm text-gray-500 mt-1">No tienes notificaciones pendientes</p>
               </div>
             )}
             {notifications.map((n) => {

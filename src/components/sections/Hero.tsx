@@ -1,7 +1,57 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { ChevronRight } from 'lucide-react'
+
+const taglines = [
+  'Vive la experiencia de roleplay definitiva',
+  'Tu historia comienza en Los Santos',
+  'Comunidad, acción y roleplay',
+  'Únete a cientos de jugadores',
+]
+
+function useTypingEffect() {
+  const [text, setText] = useState('')
+  const [taglineIndex, setTaglineIndex] = useState(0)
+  const [isDeleting, setIsDeleting] = useState(false)
+
+  useEffect(() => {
+    const currentTagline = taglines[taglineIndex]
+    let timeout: ReturnType<typeof setTimeout>
+
+    if (!isDeleting) {
+      if (text.length < currentTagline.length) {
+        // Typing forward: add one character
+        timeout = setTimeout(() => {
+          setText(currentTagline.slice(0, text.length + 1))
+        }, 40)
+      } else {
+        // Finished typing, pause before deleting
+        timeout = setTimeout(() => {
+          setIsDeleting(true)
+        }, 2000)
+      }
+    } else {
+      if (text.length > 0) {
+        // Deleting: remove one character
+        timeout = setTimeout(() => {
+          setText(currentTagline.slice(0, text.length - 1))
+        }, 25)
+      } else {
+        // Finished deleting, pause then move to next tagline
+        timeout = setTimeout(() => {
+          setIsDeleting(false)
+          setTaglineIndex((prev) => (prev + 1) % taglines.length)
+        }, 300)
+      }
+    }
+
+    return () => clearTimeout(timeout)
+  }, [text, taglineIndex, isDeleting])
+
+  return text
+}
 
 const fadeInUp = {
   initial: { opacity: 0, y: 30 },
@@ -30,6 +80,21 @@ const particles = [
   { class: 'particleFloat2', size: 'w-1 h-1', pos: 'top-[10%] left-[75%]', delay: '0.3s', duration: '7s' },
   { class: 'particleFloat3', size: 'w-1 h-1', pos: 'top-[55%] left-[55%]', delay: '2.2s', duration: '8s' },
 ]
+
+function HeroSubtitle() {
+  const typedText = useTypingEffect()
+
+  return (
+    <motion.p
+      variants={fadeInUp}
+      transition={{ duration: 0.6 }}
+      className="text-lg sm:text-xl md:text-2xl text-[#94a3b8] max-w-2xl mb-8 sm:mb-10 min-h-[2.5rem] sm:min-h-[3rem]"
+    >
+      {typedText}
+      <span className="text-[#06b6d4] animate-pulse ml-0.5">|</span>
+    </motion.p>
+  )
+}
 
 export default function Hero() {
   return (
@@ -90,14 +155,8 @@ export default function Hero() {
           PRESTIGIO <span className="text-[#7c3aed]">ROLEPLAY</span>
         </motion.h1>
 
-        {/* Subtitle */}
-        <motion.p
-          variants={fadeInUp}
-          transition={{ duration: 0.6 }}
-          className="text-lg sm:text-xl md:text-2xl text-[#94a3b8] max-w-2xl mb-8 sm:mb-10"
-        >
-          Vive la experiencia de roleplay definitiva
-        </motion.p>
+        {/* Subtitle with typing effect */}
+        <HeroSubtitle />
 
         {/* CTA Button */}
         <motion.div variants={fadeInUp} transition={{ duration: 0.6 }}>

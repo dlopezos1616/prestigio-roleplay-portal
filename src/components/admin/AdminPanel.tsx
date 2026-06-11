@@ -200,10 +200,6 @@ export default function AdminPanel() {
   /* ---------------------------------------------------------------- */
   return (
     <div className="rounded-xl neon-border bg-bg-card p-4 md:p-6">
-      <h2 className="mb-4 text-xl font-bold text-white neon-text-glow">
-        Panel de Administración
-      </h2>
-
       <Tabs defaultValue="metrics" className="w-full">
         {/* ---- Tab navigation ---- */}
         <TabsList className="mb-4 flex w-full flex-wrap gap-1 bg-[#0f172a] p-1 rounded-lg border border-[rgba(124,58,237,0.3)]">
