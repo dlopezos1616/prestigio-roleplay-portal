@@ -18,6 +18,8 @@ import Gallery from '@/components/sections/Gallery'
 import Facciones from '@/components/sections/Facciones'
 import ServerInfo from '@/components/sections/ServerInfo'
 import ServerStatus from '@/components/layout/ServerStatus'
+import StatsCounter from '@/components/sections/StatsCounter'
+import NextEvent from '@/components/sections/NextEvent'
 import Donaciones from '@/components/sections/Donaciones'
 import { WhitelistForm } from '@/components/whitelist/WhitelistForm'
 import StaffPanel from '@/components/staff/StaffPanel'
@@ -35,7 +37,9 @@ function HomePage() {
       <Hero />
       <About />
       <Features />
+      <StatsCounter />
       <ServerStatus />
+      <NextEvent />
       <JoinDiscord />
     </div>
   )

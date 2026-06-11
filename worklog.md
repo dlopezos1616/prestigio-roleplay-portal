@@ -1,11 +1,80 @@
 # Prestigio Roleplay Portal — Work Log
 
-## Project Status: Phase 2 Complete ✅ — Enhanced with DevLogin, AI Gallery, Server Status
+## Project Status: Phase 3 Complete ✅ — Animated Stats, Event Countdown, Enhanced Facciones & Normativa
 
 ### Current State
-The Prestigio Roleplay portal now has a fully functional dev login system, AI-generated gallery images, server status indicator, loading overlay, and page headers for inner pages. All protected pages (Whitelist, Staff, Admin) can be tested without Discord OAuth.
+The Prestigio Roleplay portal is a feature-complete gaming hub with animated stat counters, live event countdown, enhanced faction cards with details, categorized rule sections, AI-generated gallery, server status widget, dev login system, and fully functional staff/admin panels. All pages tested and working with zero errors.
 
-### Phase 2 Changes
+### Phase 3 Changes
+
+---
+Task ID: 9
+Agent: Subagent (full-stack-developer)
+Task: Animated Stats Counter + Event Countdown
+
+Work Log:
+- Created StatsCounter.tsx: Animated statistics section with 4 cards (500+ jugadores, 24/7 online, 150+ eventos, 99.8% uptime)
+- Each card uses a custom useCountUp hook that animates numbers from 0 to target with ease-out-cubic easing
+- Animation triggers when card enters viewport (useInView from framer-motion)
+- Cards have colored icon containers, large animated numbers, and hover glow effects
+- Created NextEvent.tsx: Live countdown timer for next Friday 21:00 CET event ("Carreras Nocturnas")
+- useCountdown hook updates every second showing days/hours/minutes/seconds
+- Styled time-unit boxes with purple glow and neon border
+- Amber pulsing badge for event name, date display with Calendar/Clock icons
+- Fixed infinite re-render bug: memoized eventDate with useState(() => getNextEventDate()) to prevent dependency array issues
+
+Stage Summary:
+- Home page now has 7 sections: Hero, About, Features, StatsCounter, ServerStatus, NextEvent, JoinDiscord
+- Animated counters provide engaging visual metrics
+- Event countdown adds urgency and community engagement
+- Zero console errors after fixing the re-render issue
+
+---
+Task ID: 10
+Agent: Subagent (full-stack-developer)
+Task: Enhanced Facciones & Normativa Pages
+
+Work Log:
+- Rewrote Facciones.tsx with detailed faction cards:
+  - 2-column layout on sm+ screens (icon+name+members | description+requirements+tags)
+  - 4px colored left border accent matching faction color
+  - Activity level indicator (3-segment animated bar)
+  - Responsibility tags as colored badges
+  - Member count with Users icon
+  - Requirements text with Lock icon
+  - Click-to-expand cards with Framer Motion AnimatePresence
+- Rewrote Normativa.tsx with accordion rule categories:
+  - 4 expandable categories: Reglas Generales, Reglas de Combate, Reglas de Comunicación, New Life Rule
+  - Each with colored left border, icon badge, clickable header with chevron
+  - 5 detailed bullet points per category with staggered entrance animations
+  - "Leer más en la normativa completa" link in each expanded section
+  - Original external link card preserved at bottom
+
+Stage Summary:
+- Facciones page now shows rich faction details with expand/collapse
+- Normativa page has categorized rules instead of just a single link
+- Both pages have consistent neon styling with the rest of the site
+
+### Verification Results (Phase 3)
+- ✅ Lint passes with 0 errors
+- ✅ Zero browser console errors after fixing NextEvent re-render
+- ✅ StatsCounter animates numbers on scroll
+- ✅ Event countdown updates every second
+- ✅ Facciones cards expand/collapse properly
+- ✅ Normativa accordion categories expand with details
+- ✅ All 9 pages navigate without errors
+
+### Unresolved Issues / Next Steps
+1. Discord OAuth still requires real credentials for production login
+2. Bot integration (Discord role assignment) requires running bot service
+3. SEO: sitemap.xml and robots.txt generation
+4. Rate limiting on whitelist submission
+5. Real-time updates (websocket) for staff notifications
+6. Mobile responsive testing for staff/admin panels
+7. Gallery image upload from admin panel (currently URL-only)
+8. Sound effects for UI interactions
+9. Performance optimization: image lazy loading, code splitting
+10. Whitelist status tracker with visual progress timeline
 
 ---
 Task ID: 7
@@ -59,6 +128,24 @@ Stage Summary:
 8. Performance optimization: image lazy loading, code splitting
 9. Gallery image upload from admin panel (currently URL-only)
 10. Sound effects for UI interactions
+
+---
+Task ID: 9
+Agent: Main Agent
+Task: StatsCounter & NextEvent Home Page Sections
+
+Work Log:
+- Created StatsCounter.tsx: Animated statistics counter section with 4 stat cards (Jugadores Activos 500+, Servidor Online 24/7, Eventos Realizados 150+, Uptime 99.8%); uses custom useCountUp hook with ease-out-cubic animation triggered on viewport entry via useInView; each card has dark bg-[#0f172a] background with neon-border, colored icon container, animated counting numbers, and hover scale+glow effect
+- Created NextEvent.tsx: Countdown timer section for next server event (Fridays 21:00 CET); uses useCountdown hook updating every second; displays days/hours/minutes/seconds in styled time unit boxes with purple glow; shows event name "Carreras Nocturnas" with pulsing amber badge; decorative gradient top line and background glow
+- Both sections use Framer Motion for entrance animations (whileInView)
+- Lint passes with 0 errors
+- Dev server running without issues
+
+Stage Summary:
+- 2 new home page sections created in /src/components/sections/
+- StatsCounter provides social proof with animated numbers
+- NextEvent creates urgency with live countdown to next event
+- Both follow established neon theme with violet/cyan/amber accents
 
 ### Completed Work
 
@@ -221,3 +308,38 @@ Stage Summary:
 - LoadingOverlay uses Framer Motion for smooth entrance/exit animations
 - DevLogin provides development convenience tools (role switching, data seeding, navigation)
 - All files pass ESLint with 0 errors
+
+---
+Task ID: 10
+Agent: Main Agent
+Task: Enhanced Facciones & Normativa Sections
+
+Work Log:
+- Rewrote Facciones.tsx with significantly enhanced faction cards:
+  - Added detailed faction data: member counts, requirements, activity levels, responsibility tags
+  - Implemented 2-column layout on sm+ screens (left: icon + name + members, right: description + requirements + tags)
+  - Added 4px colored left border accent on each card matching faction color
+  - Created ActivityBar component showing 3-segment activity level indicator (alta/media/variable)
+  - Added responsibility tags as small colored badges with faction-specific colors
+  - Implemented click-to-expand cards using AnimatePresence for smooth expand/collapse
+  - Expanded view shows detailed faction description and specific entry requirements
+  - Changed grid to 2-column on lg screens for better use of horizontal space
+  - Added chevron indicator with rotation animation for expand state
+- Rewrote Normativa.tsx with categorized rule system:
+  - Created 4 rule categories as expandable accordion cards with Framer Motion animations
+  - Reglas Generales (BookOpen, #7c3aed), Reglas de Combate (Swords, #ef4444)
+  - Reglas de Comunicación (MessageCircle, #06b6d4), New Life Rule (RotateCcw, #f59e0b)
+  - Each category has colored left border, icon, title, description, and expandable detail list
+  - Expanded view shows 5 bullet points per category with staggered animation
+  - Each category includes "Leer más en la normativa completa" link to external site
+  - Kept the original external link card at the bottom of the section
+- Fixed string literal error (mismatched quotes) in Normativa.tsx
+- Lint passes with 0 errors
+- Dev server compiles and runs successfully
+
+Stage Summary:
+- Facciones section now shows comprehensive faction information with expandable cards
+- Normativa section features interactive accordion with 4 rule categories
+- Both sections use Framer Motion for smooth animations
+- Activity level indicators provide visual feedback on faction engagement
+- Colored left border accents provide quick visual identification per faction/category
