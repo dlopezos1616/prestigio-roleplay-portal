@@ -24,8 +24,8 @@ export default function Footer() {
 
   return (
     <footer className="relative mt-auto border-t border-[#7c3aed]/10 bg-[#030712]/80">
-      {/* Glow line at top */}
-      <div className="glow-line" />
+      {/* Animated gradient line at top */}
+      <div className="h-[2px] animate-gradient-line" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -51,24 +51,35 @@ export default function Footer() {
             <p className="text-sm text-gray-500 max-w-xs leading-relaxed">
               Vive la experiencia de roleplay definitiva. Servidor FiveM con comunidad activa y staff profesional.
             </p>
-            {/* Social icons */}
+            {/* Social icons with scale + glow effect */}
             <div className="flex items-center gap-3">
-              {socialLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-lg bg-[#0f172a] border border-[rgba(124,58,237,0.15)] flex items-center justify-center text-gray-500 hover:text-white hover:border-[rgba(124,58,237,0.4)] transition-all duration-200"
-                  title={link.label}
-                >
-                  <link.icon className="w-4 h-4" />
-                </a>
-              ))}
+              {socialLinks.map((link) => {
+                const Icon = link.icon
+                return (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group/social w-9 h-9 rounded-lg bg-[#0f172a] border border-[rgba(124,58,237,0.15)] flex items-center justify-center text-gray-500 transition-all duration-300 hover:scale-110 hover:text-white"
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = `${link.color}60`
+                      e.currentTarget.style.boxShadow = `0 0 12px ${link.color}30, 0 0 24px ${link.color}15`
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = 'rgba(124,58,237,0.15)'
+                      e.currentTarget.style.boxShadow = 'none'
+                    }}
+                    title={link.label}
+                  >
+                    <Icon className="w-4 h-4" />
+                  </a>
+                )
+              })}
             </div>
           </div>
 
-          {/* Quick Links */}
+          {/* Quick Links — with hover underline */}
           <div className="space-y-3">
             <h4 className="text-sm font-semibold text-gray-300 uppercase tracking-wider flex items-center gap-2">
               <div className="w-1 h-4 rounded-full bg-[#7c3aed]" />
@@ -79,7 +90,7 @@ export default function Footer() {
                 <button
                   key={link.page}
                   onClick={() => navigate(link.page)}
-                  className="text-sm text-gray-500 hover:text-[#7c3aed] transition-colors text-left"
+                  className="text-sm text-gray-500 hover:text-[#7c3aed] transition-colors text-left hover-underline w-fit"
                 >
                   {link.label}
                 </button>
@@ -87,7 +98,7 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* External Links */}
+          {/* External Links — with hover underline */}
           <div className="space-y-3">
             <h4 className="text-sm font-semibold text-gray-300 uppercase tracking-wider flex items-center gap-2">
               <div className="w-1 h-4 rounded-full bg-[#06b6d4]" />
@@ -100,7 +111,10 @@ export default function Footer() {
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-gray-500 hover:text-[#06b6d4] transition-colors flex items-center gap-1.5"
+                  className="text-sm text-gray-500 hover:text-[#06b6d4] transition-colors flex items-center gap-1.5 hover-underline w-fit"
+                  style={{
+                    ['--tw-underline-color' as string]: '#06b6d4',
+                  }}
                 >
                   {link.label} <ExternalLink className="w-3 h-3" />
                 </a>
@@ -116,7 +130,10 @@ export default function Footer() {
             </h4>
             <div className="flex flex-col gap-2">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-[#22c55e] animate-breathe" />
+                <div className="relative">
+                  <div className="w-2 h-2 rounded-full bg-[#22c55e]" />
+                  <div className="absolute inset-0 w-2 h-2 rounded-full bg-[#22c55e] animate-pulse-ring" />
+                </div>
                 <p className="text-sm text-gray-400">Online 24/7</p>
               </div>
               <div className="flex items-center gap-2">
@@ -139,7 +156,7 @@ export default function Footer() {
         <div className="mt-10 pt-6 border-t border-[#7c3aed]/10 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-xs text-gray-600 flex items-center gap-1">
             © {new Date().getFullYear()} Prestigio Roleplay — Hecho con{' '}
-            <Heart className="w-3 h-3 text-red-500 fill-red-500" /> por la comunidad
+            <Heart className="w-3 h-3 text-red-500 fill-red-500 animate-heartbeat" /> por la comunidad
           </p>
           <div className="flex items-center gap-4">
             <p className="text-xs text-gray-700">

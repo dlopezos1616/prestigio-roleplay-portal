@@ -4,10 +4,12 @@ import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   Menu, X, Home, BookOpen, ImageIcon, Swords, Info, Heart, 
-  Shield, Crown, LogIn, LogOut, User, ChevronDown, Bell, UserCircle
+  Shield, Crown, LogIn, LogOut, User, ChevronDown, Bell, UserCircle,
+  Search
 } from 'lucide-react'
 import { useNavigation, type PageId } from '@/lib/navigation'
 import { useSession } from '@/hooks/useSession'
+import { CommandPaletteTrigger, openCommandPalette } from '@/components/layout/CommandPalette'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -219,6 +221,9 @@ export default function Navbar() {
 
           {/* User Menu */}
           <div className="flex items-center gap-3">
+            {/* Command Palette Search Button */}
+            <CommandPaletteTrigger />
+
             {/* Notification Bell - between nav items and user dropdown */}
             <NotificationBell />
 
@@ -328,6 +333,15 @@ export default function Navbar() {
           </div>
         </div>
       </div>
+
+      {/* Mobile search FAB */}
+      <button
+        onClick={openCommandPalette}
+        className="md:hidden fixed bottom-20 right-4 z-40 p-3 rounded-full bg-[#0f172a] border border-white/10 text-gray-400 hover:text-white hover:border-[#7c3aed]/30 transition-all shadow-lg"
+        aria-label="Abrir búsqueda"
+      >
+        <Search className="w-5 h-5" />
+      </button>
     </motion.nav>
   )
 }

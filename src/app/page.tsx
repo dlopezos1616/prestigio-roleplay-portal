@@ -9,16 +9,20 @@ import AudioPlayer from '@/components/layout/AudioPlayer'
 import BackToTop from '@/components/layout/BackToTop'
 import LoadingOverlay from '@/components/layout/LoadingOverlay'
 import DevLogin from '@/components/layout/DevLogin'
+import CommandPalette from '@/components/layout/CommandPalette'
 import PageHeader from '@/components/layout/PageHeader'
 import Hero from '@/components/sections/Hero'
 import About from '@/components/sections/About'
 import Features from '@/components/sections/Features'
+import FAQ from '@/components/sections/FAQ'
+import Testimonials from '@/components/sections/Testimonials'
 import JoinDiscord from '@/components/sections/JoinDiscord'
 import Normativa from '@/components/sections/Normativa'
 import Gallery from '@/components/sections/Gallery'
 import Facciones from '@/components/sections/Facciones'
 import ServerInfo from '@/components/sections/ServerInfo'
-import ServerStatus from '@/components/layout/ServerStatus'
+import ServerStatusWidget from '@/components/sections/ServerStatusWidget'
+import Changelog from '@/components/sections/Changelog'
 import StatsCounter from '@/components/sections/StatsCounter'
 import NextEvent from '@/components/sections/NextEvent'
 import Donaciones from '@/components/sections/Donaciones'
@@ -39,9 +43,12 @@ function HomePage() {
       <Hero />
       <About />
       <Features />
+      <FAQ />
+      <Testimonials />
       <StatsCounter />
-      <ServerStatus />
+      <ServerStatusWidget />
       <NextEvent />
+      <Changelog />
       <JoinDiscord />
     </div>
   )
@@ -163,6 +170,7 @@ export default function MainRouter() {
       <AudioPlayer />
       <BackToTop />
       <DevLogin />
+      <CommandPalette />
     </div>
   )
 }

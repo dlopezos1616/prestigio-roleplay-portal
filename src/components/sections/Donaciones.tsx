@@ -14,6 +14,7 @@ interface Tier {
   perks: string[]
   featured?: boolean
   popular?: boolean
+  gradient: string
 }
 
 const tiers: Tier[] = [
@@ -24,6 +25,7 @@ const tiers: Tier[] = [
     borderClass: 'border-[#cd7f32]/30',
     icon: <Shield className="w-7 h-7" />,
     perks: ['Rango VIP', 'Vehículo exclusivo', 'Chat color'],
+    gradient: 'linear-gradient(135deg, #cd7f32, #8b5e2a)',
   },
   {
     name: 'Plata',
@@ -39,6 +41,7 @@ const tiers: Tier[] = [
       'Cosmético único',
     ],
     featured: true,
+    gradient: 'linear-gradient(135deg, #c0c0c0, #808080)',
   },
   {
     name: 'Oro',
@@ -57,8 +60,45 @@ const tiers: Tier[] = [
     ],
     featured: true,
     popular: true,
+    gradient: 'linear-gradient(135deg, #ffd700, #f59e0b, #ffd700)',
   },
 ]
+
+/* Sparkle dots for Oro tier */
+function Sparkles() {
+  const sparkles = [
+    { top: '8%', left: '12%', delay: '0s', size: 3 },
+    { top: '15%', right: '18%', delay: '0.5s', size: 2 },
+    { top: '40%', left: '8%', delay: '1s', size: 3 },
+    { top: '60%', right: '10%', delay: '1.5s', size: 2 },
+    { top: '80%', left: '15%', delay: '0.8s', size: 3 },
+    { top: '25%', right: '8%', delay: '1.2s', size: 2 },
+    { top: '70%', left: '5%', delay: '0.3s', size: 2 },
+    { top: '50%', right: '5%', delay: '0.7s', size: 3 },
+  ]
+
+  return (
+    <>
+      {sparkles.map((s, i) => (
+        <span
+          key={i}
+          className="absolute rounded-full animate-sparkle pointer-events-none"
+          style={{
+            top: s.top,
+            left: s.left,
+            right: s.right,
+            width: s.size,
+            height: s.size,
+            backgroundColor: '#ffd700',
+            boxShadow: '0 0 6px rgba(255,215,0,0.6)',
+            animationDelay: s.delay,
+            zIndex: 5,
+          }}
+        />
+      ))}
+    </>
+  )
+}
 
 export default function Donaciones() {
   return (
@@ -104,14 +144,23 @@ export default function Donaciones() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.15 * index }}
-              className={`relative bg-[#0f172a] rounded-2xl border ${tier.borderClass} overflow-hidden flex flex-col ${
+              className={`relative bg-[#0f172a] rounded-2xl overflow-hidden flex flex-col shimmer-sweep ${
                 tier.popular
-                  ? 'md:scale-105 md:shadow-[0_0_40px_rgba(255,215,0,0.15)] z-10'
-                  : tier.featured
-                    ? 'md:shadow-[0_0_20px_rgba(192,192,192,0.08)]'
-                    : ''
+                  ? 'md:scale-105 z-10 animate-rotate-border border'
+                  : `border ${tier.borderClass}`
+              } ${
+                tier.featured && !tier.popular
+                  ? 'md:shadow-[0_0_20px_rgba(192,192,192,0.08)]'
+                  : ''
               }`}
+              style={tier.popular ? {
+                boxShadow: '0 0 40px rgba(255,215,0,0.15)',
+                borderColor: 'rgba(255,215,0,0.4)',
+              } : undefined}
             >
+              {/* Sparkles for Oro tier */}
+              {tier.popular && <Sparkles />}
+
               {/* Top glow line */}
               <div
                 className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-px"
@@ -120,11 +169,11 @@ export default function Donaciones() {
                 }}
               />
 
-              {/* POPULAR badge */}
+              {/* POPULAR badge with glow animation */}
               {tier.popular && (
                 <div className="absolute top-4 right-4 z-20">
                   <span
-                    className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider"
+                    className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider animate-popular-glow"
                     style={{
                       backgroundColor: `${tier.color}20`,
                       color: tier.color,
@@ -150,7 +199,7 @@ export default function Donaciones() {
                 {/* Icon */}
                 <div className="flex justify-center mb-6">
                   <div
-                    className="w-16 h-16 rounded-2xl flex items-center justify-center"
+                    className="w-16 h-16 rounded-2xl flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
                     style={{
                       backgroundColor: `${tier.color}15`,
                       border: `1px solid ${tier.color}30`,
@@ -165,9 +214,14 @@ export default function Donaciones() {
                   {tier.name}
                 </h3>
 
-                {/* Price */}
+                {/* Price with gradient text */}
                 <div className="text-center mb-6">
-                  <span className="text-4xl font-extrabold" style={{ color: tier.color }}>
+                  <span
+                    className="text-4xl font-extrabold gradient-text"
+                    style={{
+                      backgroundImage: tier.gradient,
+                    }}
+                  >
                     €{tier.price}
                   </span>
                   <span className="text-[#64748b] text-sm ml-1">/mes</span>

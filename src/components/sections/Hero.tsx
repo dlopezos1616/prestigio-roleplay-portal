@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { ChevronRight } from 'lucide-react'
+import { ChevronRight, Shield } from 'lucide-react'
+import { useNavigation } from '@/lib/navigation'
 
 const taglines = [
   'Vive la experiencia de roleplay definitiva',
@@ -22,24 +23,20 @@ function useTypingEffect() {
 
     if (!isDeleting) {
       if (text.length < currentTagline.length) {
-        // Typing forward: add one character
         timeout = setTimeout(() => {
           setText(currentTagline.slice(0, text.length + 1))
         }, 40)
       } else {
-        // Finished typing, pause before deleting
         timeout = setTimeout(() => {
           setIsDeleting(true)
         }, 2000)
       }
     } else {
       if (text.length > 0) {
-        // Deleting: remove one character
         timeout = setTimeout(() => {
           setText(currentTagline.slice(0, text.length - 1))
         }, 25)
       } else {
-        // Finished deleting, pause then move to next tagline
         timeout = setTimeout(() => {
           setIsDeleting(false)
           setTaglineIndex((prev) => (prev + 1) % taglines.length)
@@ -66,19 +63,70 @@ const staggerContainer = {
   },
 }
 
+// Small particles (original style)
 const particles = [
-  { class: 'particleFloat1', size: 'w-1 h-1', pos: 'top-[20%] left-[15%]', delay: '0s', duration: '6s' },
-  { class: 'particleFloat2', size: 'w-1.5 h-1.5', pos: 'top-[40%] left-[80%]', delay: '1s', duration: '8s' },
-  { class: 'particleFloat3', size: 'w-1 h-1', pos: 'top-[60%] left-[25%]', delay: '2s', duration: '7s' },
-  { class: 'particleFloat1', size: 'w-2 h-2', pos: 'top-[30%] left-[65%]', delay: '0.5s', duration: '9s' },
-  { class: 'particleFloat2', size: 'w-1 h-1', pos: 'top-[70%] left-[50%]', delay: '1.5s', duration: '6s' },
-  { class: 'particleFloat3', size: 'w-1.5 h-1.5', pos: 'top-[50%] left-[10%]', delay: '3s', duration: '8s' },
-  { class: 'particleFloat1', size: 'w-1 h-1', pos: 'top-[80%] left-[70%]', delay: '2.5s', duration: '7s' },
-  { class: 'particleFloat2', size: 'w-2 h-2', pos: 'top-[15%] left-[45%]', delay: '0.8s', duration: '10s' },
-  { class: 'particleFloat3', size: 'w-1 h-1', pos: 'top-[45%] left-[90%]', delay: '1.8s', duration: '6s' },
-  { class: 'particleFloat1', size: 'w-1.5 h-1.5', pos: 'top-[75%] left-[35%]', delay: '3.5s', duration: '9s' },
-  { class: 'particleFloat2', size: 'w-1 h-1', pos: 'top-[10%] left-[75%]', delay: '0.3s', duration: '7s' },
-  { class: 'particleFloat3', size: 'w-1 h-1', pos: 'top-[55%] left-[55%]', delay: '2.2s', duration: '8s' },
+  { class: 'particleFloat1', size: 'w-1 h-1', pos: 'top-[20%] left-[15%]', delay: '0s', duration: '6s', color: 'bg-[#7c3aed]' },
+  { class: 'particleFloat2', size: 'w-1.5 h-1.5', pos: 'top-[40%] left-[80%]', delay: '1s', duration: '8s', color: 'bg-[#06b6d4]' },
+  { class: 'particleFloat3', size: 'w-1 h-1', pos: 'top-[60%] left-[25%]', delay: '2s', duration: '7s', color: 'bg-[#7c3aed]' },
+  { class: 'particleFloat1', size: 'w-2 h-2', pos: 'top-[30%] left-[65%]', delay: '0.5s', duration: '9s', color: 'bg-[#06b6d4]' },
+  { class: 'particleFloat2', size: 'w-1 h-1', pos: 'top-[70%] left-[50%]', delay: '1.5s', duration: '6s', color: 'bg-[#f59e0b]' },
+  { class: 'particleFloat3', size: 'w-1.5 h-1.5', pos: 'top-[50%] left-[10%]', delay: '3s', duration: '8s', color: 'bg-[#7c3aed]' },
+  { class: 'particleFloat1', size: 'w-1 h-1', pos: 'top-[80%] left-[70%]', delay: '2.5s', duration: '7s', color: 'bg-[#06b6d4]' },
+  { class: 'particleFloat2', size: 'w-2 h-2', pos: 'top-[15%] left-[45%]', delay: '0.8s', duration: '10s', color: 'bg-[#f59e0b]' },
+  { class: 'particleFloat3', size: 'w-1 h-1', pos: 'top-[45%] left-[90%]', delay: '1.8s', duration: '6s', color: 'bg-[#7c3aed]' },
+  { class: 'particleFloat1', size: 'w-1.5 h-1.5', pos: 'top-[75%] left-[35%]', delay: '3.5s', duration: '9s', color: 'bg-[#06b6d4]' },
+  { class: 'particleFloat2', size: 'w-1 h-1', pos: 'top-[10%] left-[75%]', delay: '0.3s', duration: '7s', color: 'bg-[#f59e0b]' },
+  { class: 'particleFloat3', size: 'w-1 h-1', pos: 'top-[55%] left-[55%]', delay: '2.2s', duration: '8s', color: 'bg-[#7c3aed]' },
+]
+
+// Nebula particles — larger, more blurred, slowly drifting
+const nebulaParticles = [
+  { size: 'w-16 h-16', pos: 'top-[15%] left-[8%]', delay: '0s', duration: '14s', color: 'bg-[#7c3aed]', anim: 'nebulaDrift1' },
+  { size: 'w-20 h-20', pos: 'top-[60%] left-[75%]', delay: '2s', duration: '18s', color: 'bg-[#06b6d4]', anim: 'nebulaDrift2' },
+  { size: 'w-12 h-12', pos: 'top-[35%] left-[50%]', delay: '4s', duration: '12s', color: 'bg-[#f59e0b]', anim: 'nebulaDrift3' },
+  { size: 'w-24 h-24', pos: 'top-[70%] left-[20%]', delay: '1s', duration: '20s', color: 'bg-[#7c3aed]', anim: 'nebulaDrift1' },
+  { size: 'w-14 h-14', pos: 'top-[25%] left-[85%]', delay: '3s', duration: '16s', color: 'bg-[#06b6d4]', anim: 'nebulaDrift2' },
+  { size: 'w-10 h-10', pos: 'top-[80%] left-[60%]', delay: '5s', duration: '15s', color: 'bg-[#f59e0b]', anim: 'nebulaDrift3' },
+]
+
+// Floating geometric shapes — hexagons, triangles, diamonds
+const geoShapes = [
+  {
+    type: 'hexagon',
+    pos: 'top-[12%] left-[10%]',
+    size: 'w-12 h-12 sm:w-16 sm:h-16',
+    color: 'border-[#7c3aed]',
+    anim: 'geoFloat1',
+    duration: '8s',
+    delay: '0s',
+  },
+  {
+    type: 'diamond',
+    pos: 'top-[65%] left-[82%]',
+    size: 'w-10 h-10 sm:w-14 sm:h-14',
+    color: 'border-[#06b6d4]',
+    anim: 'geoFloat2',
+    duration: '10s',
+    delay: '1.5s',
+  },
+  {
+    type: 'triangle',
+    pos: 'top-[30%] left-[88%]',
+    size: 'w-14 h-14 sm:w-20 sm:h-20',
+    color: 'border-[#f59e0b]',
+    anim: 'geoFloat3',
+    duration: '9s',
+    delay: '0.8s',
+  },
+  {
+    type: 'hexagon',
+    pos: 'top-[78%] left-[18%]',
+    size: 'w-8 h-8 sm:w-12 sm:h-12',
+    color: 'border-[#06b6d4]',
+    anim: 'geoFloat4',
+    duration: '11s',
+    delay: '2.5s',
+  },
 ]
 
 function HeroSubtitle() {
@@ -96,7 +144,152 @@ function HeroSubtitle() {
   )
 }
 
+/** Orbiting ring with glowing orbs around the logo */
+function LogoOrbitRing() {
+  const orbitRadius = 'clamp(70px, 10vw, 110px)'
+
+  return (
+    <div className="relative inline-flex items-center justify-center">
+      {/* Outer orbit ring (visual track) */}
+      <div
+        className="absolute rounded-full border border-[#7c3aed]/20"
+        style={{
+          width: `calc(${orbitRadius} * 2 + 8px)`,
+          height: `calc(${orbitRadius} * 2 + 8px)`,
+        }}
+      />
+
+      {/* Inner orbit ring (visual track, reverse) */}
+      <div
+        className="absolute rounded-full border border-[#06b6d4]/15"
+        style={{
+          width: `calc(${orbitRadius} * 2 - 30px)`,
+          height: `calc(${orbitRadius} * 2 - 30px)`,
+        }}
+      />
+
+      {/* Orbiting orbs - ring 1 (purple) */}
+      <div
+        className="absolute"
+        style={{
+          width: `calc(${orbitRadius} * 2)`,
+          height: `calc(${orbitRadius} * 2)`,
+          animation: 'orbitSpin 8s linear infinite',
+        }}
+      >
+        {/* Orb 1 */}
+        <div
+          className="absolute w-3 h-3 rounded-full bg-[#7c3aed] shadow-[0_0_12px_rgba(124,58,237,0.8),0_0_24px_rgba(124,58,237,0.4)]"
+          style={{ top: '-6px', left: '50%', transform: 'translateX(-50%)' }}
+        />
+        {/* Orb 2 */}
+        <div
+          className="absolute w-2 h-2 rounded-full bg-[#a78bfa] shadow-[0_0_8px_rgba(167,139,250,0.8),0_0_16px_rgba(167,139,250,0.4)]"
+          style={{ bottom: '-4px', left: '50%', transform: 'translateX(-50%)' }}
+        />
+      </div>
+
+      {/* Orbiting orbs - ring 2 (cyan, reverse) */}
+      <div
+        className="absolute"
+        style={{
+          width: `calc(${orbitRadius} * 2 - 30px)`,
+          height: `calc(${orbitRadius} * 2 - 30px)`,
+          animation: 'orbitSpinReverse 12s linear infinite',
+        }}
+      >
+        {/* Orb 3 */}
+        <div
+          className="absolute w-2.5 h-2.5 rounded-full bg-[#06b6d4] shadow-[0_0_10px_rgba(6,182,212,0.8),0_0_20px_rgba(6,182,212,0.4)]"
+          style={{ top: '-5px', right: '20%', transform: 'translateX(50%)' }}
+        />
+      </div>
+
+      {/* Logo itself */}
+      <div className="animate-pulse-glow rounded-full p-1 relative z-10">
+        <img
+          src="/prestigio-logo.png"
+          alt="Prestigio Roleplay Logo"
+          className="w-28 h-28 sm:w-36 sm:h-36 md:w-44 md:h-44 object-contain drop-shadow-[0_0_25px_rgba(124,58,237,0.5)]"
+        />
+      </div>
+    </div>
+  )
+}
+
+/** Renders a geometric shape based on type */
+function GeoShape({ type, color }: { type: string; color: string }) {
+  if (type === 'hexagon') {
+    return (
+      <svg viewBox="0 0 100 100" className="w-full h-full" fill="none">
+        <polygon
+          points="50,3 95,25 95,75 50,97 5,75 5,25"
+          className={color}
+          strokeWidth="1.5"
+          stroke="currentColor"
+          fill="none"
+        />
+      </svg>
+    )
+  }
+  if (type === 'diamond') {
+    return (
+      <svg viewBox="0 0 100 100" className="w-full h-full" fill="none">
+        <rect
+          x="15"
+          y="15"
+          width="70"
+          height="70"
+          className={color}
+          strokeWidth="1.5"
+          stroke="currentColor"
+          fill="none"
+          transform="rotate(45 50 50)"
+        />
+      </svg>
+    )
+  }
+  if (type === 'triangle') {
+    return (
+      <svg viewBox="0 0 100 100" className="w-full h-full" fill="none">
+        <polygon
+          points="50,8 95,90 5,90"
+          className={color}
+          strokeWidth="1.5"
+          stroke="currentColor"
+          fill="none"
+        />
+      </svg>
+    )
+  }
+  return null
+}
+
+/** Hero badge — SERVIDOR ACTIVO */
+function HeroBadge() {
+  return (
+    <motion.div
+      variants={fadeInUp}
+      transition={{ duration: 0.6 }}
+      className="mb-4 sm:mb-6"
+    >
+      <div
+        className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#22c55e]/30 bg-[#22c55e]/5 text-sm sm:text-base text-[#22c55e] font-medium"
+        style={{ animation: 'badgePulse 3s ease-in-out infinite' }}
+      >
+        <span
+          className="w-2 h-2 rounded-full bg-[#22c55e] inline-block"
+          style={{ animation: 'greenDotPulse 1.5s ease-in-out infinite' }}
+        />
+        🌙 SERVIDOR ACTIVO
+      </div>
+    </motion.div>
+  )
+}
+
 export default function Hero() {
+  const navigate = useNavigation((s) => s.navigate)
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Gradient background */}
@@ -114,12 +307,41 @@ export default function Hero() {
       {/* Radial glow */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(124,58,237,0.15)_0%,transparent_70%)]" />
 
-      {/* CSS Particles */}
+      {/* Floating geometric shapes */}
+      <div className="absolute inset-0 pointer-events-none">
+        {geoShapes.map((shape, i) => (
+          <div
+            key={`geo-${i}`}
+            className={`absolute ${shape.pos} ${shape.size} ${shape.color}`}
+            style={{
+              animation: `${shape.anim} ${shape.duration} ease-in-out ${shape.delay} infinite`,
+            }}
+          >
+            <GeoShape type={shape.type} color={shape.color} />
+          </div>
+        ))}
+      </div>
+
+      {/* Nebula particles — large, blurred, slowly drifting */}
+      <div className="absolute inset-0 pointer-events-none">
+        {nebulaParticles.map((p, i) => (
+          <div
+            key={`nebula-${i}`}
+            className={`absolute ${p.size} ${p.pos} ${p.color} rounded-full`}
+            style={{
+              animation: `${p.anim} ${p.duration} ease-in-out ${p.delay} infinite`,
+              filter: 'blur(20px)',
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Small CSS Particles */}
       <div className="absolute inset-0 pointer-events-none">
         {particles.map((p, i) => (
           <div
-            key={i}
-            className={`absolute ${p.size} ${p.pos} rounded-full bg-[#7c3aed]`}
+            key={`particle-${i}`}
+            className={`absolute ${p.size} ${p.pos} ${p.color} rounded-full`}
             style={{
               animation: `${p.class} ${p.duration} ease-in-out ${p.delay} infinite`,
               opacity: 0.6,
@@ -135,15 +357,12 @@ export default function Hero() {
         initial="initial"
         animate="animate"
       >
-        {/* Logo */}
+        {/* Hero Badge */}
+        <HeroBadge />
+
+        {/* Logo with orbit ring */}
         <motion.div variants={fadeInUp} transition={{ duration: 0.6 }} className="mb-6 sm:mb-8">
-          <div className="animate-pulse-glow rounded-full p-1">
-            <img
-              src="/prestigio-logo.png"
-              alt="Prestigio Roleplay Logo"
-              className="w-28 h-28 sm:w-36 sm:h-36 md:w-44 md:h-44 object-contain drop-shadow-[0_0_25px_rgba(124,58,237,0.5)]"
-            />
-          </div>
+          <LogoOrbitRing />
         </motion.div>
 
         {/* Title */}
@@ -158,8 +377,13 @@ export default function Hero() {
         {/* Subtitle with typing effect */}
         <HeroSubtitle />
 
-        {/* CTA Button */}
-        <motion.div variants={fadeInUp} transition={{ duration: 0.6 }}>
+        {/* Dual CTA Buttons */}
+        <motion.div
+          variants={fadeInUp}
+          transition={{ duration: 0.6 }}
+          className="flex flex-col sm:flex-row items-center gap-4"
+        >
+          {/* Discord CTA — Primary filled */}
           <a
             href="https://discord.gg/vGpKd6yt8M"
             target="_blank"
@@ -176,21 +400,37 @@ export default function Hero() {
             Unirse a Discord
             <ChevronRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
           </a>
+
+          {/* Whitelist CTA — Outlined/ghost variant with neon border */}
+          <button
+            onClick={() => navigate('whitelist')}
+            className="group inline-flex items-center gap-2 px-8 py-4 rounded-lg border-2 border-[#06b6d4]/50 text-[#06b6d4] font-bold text-lg sm:text-xl transition-all duration-300 hover:border-[#06b6d4] hover:bg-[#06b6d4]/10 hover:shadow-[0_0_30px_rgba(6,182,212,0.3),0_0_60px_rgba(6,182,212,0.1)] active:scale-95 bg-transparent"
+          >
+            <Shield className="w-6 h-6 sm:w-7 sm:h-7" />
+            Solicitar Whitelist
+            <ChevronRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
+          </button>
         </motion.div>
 
-        {/* Scroll indicator */}
+        {/* Scroll indicator with text */}
         <motion.div
           variants={fadeInUp}
-          transition={{ duration: 0.6 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
         >
-          <div className="w-6 h-10 rounded-full border-2 border-[#7c3aed]/50 flex items-start justify-center p-1">
+          <div className="w-6 h-10 rounded-full border-2 border-[#7c3aed]/50 flex items-start justify-center p-1.5">
             <motion.div
-              className="w-1.5 h-3 rounded-full bg-[#7c3aed]"
+              className="w-1.5 h-2.5 rounded-full bg-[#7c3aed]"
               animate={{ y: [0, 12, 0] }}
               transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
             />
           </div>
+          <span
+            className="text-xs sm:text-sm text-[#7c3aed]/60 font-medium tracking-widest uppercase"
+            style={{ animation: 'scrollBounce 2s ease-in-out infinite' }}
+          >
+            Descubre más
+          </span>
         </motion.div>
       </motion.div>
     </section>
