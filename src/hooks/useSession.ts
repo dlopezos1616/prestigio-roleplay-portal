@@ -36,6 +36,13 @@ interface SessionState {
   refetch: () => void
 }
 
+function fetchSession(): Promise<SessionUser | null> {
+  return fetch("/api/auth/session", { cache: "no-store", credentials: "include" })
+    .then((res) => res.json())
+    .then((data) => data.user ?? null)
+    .catch(() => null)
+}
+
 export const useSession = create<SessionState>((set, get) => ({
   user: null,
   loading: true,
@@ -66,14 +73,36 @@ export const useSession = create<SessionState>((set, get) => ({
     }
 
     // Fetch from NextAuth session API
-    fetch("/api/auth/session")
-      .then((res) => res.json())
-      .then((data) => {
-        set({ user: data.user, loading: false })
-      })
-      .catch(() => {
-        set({ loading: false })
-      })
+    fetchSession().then((user) => set({ user, loading: false }))
+
+    // Set up listeners so the session re-fetches when the user comes back
+    // from Discord OAuth (window regains focus) or navigates back to the app.
+    if (typeof window !== "undefined") {
+      let lastFocus = Date.now()
+      const onFocus = () => {
+        // Avoid spamming: refetch at most once every 2 seconds
+        if (Date.now() - lastFocus < 2000) return
+        lastFocus = Date.now()
+        const current = get().user
+        // Only refetch if we don't have a user yet (likely just came back from OAuth)
+        // or to keep session fresh on focus.
+        if (!current) {
+          fetchSession().then((user) => {
+            if (user) set({ user, loading: false })
+          })
+        }
+      }
+      const onStorage = (e: StorageEvent) => {
+        if (e.key === null && !get().user) {
+          // localStorage was cleared, refetch
+          fetchSession().then((user) => set({ user, loading: false }))
+        }
+      }
+      window.addEventListener("focus", onFocus)
+      window.addEventListener("pageshow", onFocus)
+      window.addEventListener("storage", onStorage)
+      // Cleanup is handled by the browser on unload (single-page app)
+    }
   },
 
   refetch: () => {
@@ -84,12 +113,7 @@ export const useSession = create<SessionState>((set, get) => ({
       return
     }
 
-    fetch("/api/auth/session")
-      .then((res) => res.json())
-      .then((data) => {
-        set({ user: data.user, loading: false })
-      })
-      .catch(() => set({ loading: false }))
+    fetchSession().then((user) => set({ user, loading: false }))
   },
 }))
 

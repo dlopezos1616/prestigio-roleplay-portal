@@ -144,9 +144,9 @@ export default function Navbar({ bannerVisible = false }: NavbarProps) {
 
   const handleLogin = () => {
     // Use next-auth/react signIn() — it handles CSRF token + OAuth redirect properly.
-    // The old `window.location.href = '/api/auth/signin/discord'` rendered an HTML
-    // confirmation page instead of triggering the Discord OAuth flow.
-    signIn('discord', { callbackUrl: window.location.origin })
+    // After successful OAuth, redirect back to the homepage so the page reloads
+    // and the session cookie is read fresh.
+    signIn('discord', { callbackUrl: '/' })
   }
 
   const handleLogout = async () => {
