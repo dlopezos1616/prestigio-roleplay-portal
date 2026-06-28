@@ -32,10 +32,10 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
-
 
 # typescript
 *.tsbuildinfo
@@ -43,12 +43,34 @@ next-env.d.ts
 local-*
 .claude
 .z-ai-config
+
+# logs
 *.log
 dev.log
 dev.out.log
+server.log
 test
 prompt
 
-server.log
+# database files (SQLite dev)
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+db/*.db
+prisma/*.db
+
+# QA screenshots & tool results
+qa-*.png
+screenshot-*.png
+tool-results/
+agent-ctx/
+download/
+upload/
+
 # Skills directory
 /skills/
+
+# OS files
+Thumbs.db
+Desktop.ini
