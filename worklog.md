@@ -2359,3 +2359,42 @@ Stage Summary:
   a) Wait 1-2 min for Vercel deploy
   b) Visit /api/dev/auth-debug and send me the JSON output
   c) If tables don't exist: clone repo, set DATABASE_URL to Neon URL, run db:push
+
+---
+Task ID: AUTH-FIX-3
+Agent: Main Agent
+Task: Fix session cookie not being set after Discord OAuth (production)
+
+Status from auth-debug endpoint:
+- database.ok: true, userCount: 1, tablesExist: true ✅
+- env: NEXTAUTH_URL correct (no trailing slash), all vars set ✅
+- session.hasSession: false ❌ (cookie not being set)
+
+Hypothesis: Vercel production requires __Secure- prefix on cookies with secure:true.
+Our previous explicit cookies config did NOT include the __Secure- prefix on
+the cookie NAME (we only set secure:true on options), which means browsers
+may have rejected the cookie or Vercel's edge may have stripped it.
+
+Fixes applied (commit ac3920a):
+1. auth.ts: cookies.sessionToken.name now uses '__Secure-next-auth.session-token'
+   in production, 'next-auth.session-token' in dev. Removed other 5 manual
+   cookie configs — let NextAuth use its built-in defaults which already
+   handle __Secure- prefix correctly.
+2. auth.ts: enabled debug:true and full debug logger in production to see
+   OAuth flow details in Vercel function logs.
+3. New endpoint /api/dev/oauth-debug — shows session state + all cookies
+   present in request, so we can verify browser is sending session cookie.
+
+Stage Summary:
+- 2 files changed: auth.ts, new api/dev/oauth-debug/route.ts
+- Lint clean
+- Pushed to GitHub (commit ac3920a)
+- Vercel auto-deploy in progress
+- User needs to:
+  a) Wait for Vercel deploy to be Ready
+  b) Try login again in incognito mode
+  c) If still fails: visit /api/dev/oauth-debug and send me the JSON
+     (this will show whether the session cookie is being sent by browser)
+  d) If session cookie IS being sent but hasSession is still false: problem
+     is in JWT verification (NEXTAUTH_SECRET mismatch between sign-in and
+     session fetch — could happen if redeployed between the two)
