@@ -2,11 +2,12 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
-import { 
-  Menu, Home, BookOpen, ImageIcon, Swords, Map, Info, Heart, 
+import {
+  Menu, Home, BookOpen, ImageIcon, Swords, Map, Info, Heart,
   Shield, Crown, LogIn, LogOut, User, ChevronDown, Bell, UserCircle,
   Search, Scale
 } from 'lucide-react'
+import { signIn, signOut } from 'next-auth/react'
 import { useNavigation, type PageId } from '@/lib/navigation'
 import { useSession } from '@/hooks/useSession'
 import { CommandPaletteTrigger, openCommandPalette } from '@/components/layout/CommandPalette'
@@ -142,13 +143,16 @@ export default function Navbar({ bannerVisible = false }: NavbarProps) {
   }
 
   const handleLogin = () => {
-    window.location.href = '/api/auth/signin/discord'
+    // Use next-auth/react signIn() — it handles CSRF token + OAuth redirect properly.
+    // The old `window.location.href = '/api/auth/signin/discord'` rendered an HTML
+    // confirmation page instead of triggering the Discord OAuth flow.
+    signIn('discord', { callbackUrl: window.location.origin })
   }
 
   const handleLogout = async () => {
-    await fetch('/api/auth/signout', { method: 'POST' })
     setUser(null)
     navigate('home')
+    signOut({ callbackUrl: window.location.origin })
   }
 
   const canAccess = (item: typeof navItems[0]) => {
