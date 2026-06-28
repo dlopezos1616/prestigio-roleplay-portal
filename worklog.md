@@ -2398,3 +2398,54 @@ Stage Summary:
   d) If session cookie IS being sent but hasSession is still false: problem
      is in JWT verification (NEXTAUTH_SECRET mismatch between sign-in and
      session fetch — could happen if redeployed between the two)
+
+---
+Task ID: AUTH-FIX-4 (THE ACTUAL ROOT CAUSE)
+Agent: Main Agent
+Task: Fix JWT_SESSION_ERROR "t.role is not a function"
+
+User shared Vercel function log:
+  [next-auth][error][JWT_SESSION_ERROR]
+  TypeError: t.role is not a function
+  at Object.session (...)
+
+ROOT CAUSE FOUND AND FIXED:
+NextAuth v4's JWT type defines `role` as a METHOD signature on the JWT class.
+When we did `token.role = 'USER'` (string assignment), TypeScript allowed it
+via our Record<string, unknown> casts, but at RUNTIME in the minified
+production build, NextAuth's internal code interpreted `token.role` as a
+method call on the JWT instance, throwing TypeError.
+
+This is why:
+- The cookie WAS being set correctly (669 chars, valid JWE)
+- The browser WAS sending it back
+- But getServerSession returned null — because the session() callback threw
+  before returning, so NextAuth treated the session as invalid
+
+FIX (commit f951052):
+- Cast `token` to Record<string, unknown> BEFORE assigning custom fields
+- Cast `session.user` to Record<string, unknown> BEFORE assigning
+- This bypasses NextAuth's strict typing entirely
+
+Files changed: src/lib/auth.ts (jwt + session callbacks rewritten)
+Lint clean
+
+Stage Summary:
+- This was a regression introduced in commit f65e266 (the auth refactor)
+- All previous fixes (cookies, schema, NEXTAUTH_URL, db push) were necessary
+  but this was the actual blocker
+- After this fix, login should work end-to-end:
+  1. User clicks Discord → OAuth redirect
+  2. Discord callback → signIn() upserts user in DB
+  3. jwt() callback creates encrypted JWT with role
+  4. Browser stores __Secure-next-auth.session-token cookie
+  5. Next request → getServerSession() decrypts JWT, session() callback
+     (now fixed) attaches role/discordId/dbId to session.user
+  6. /api/auth/session returns user data
+  7. useSession hook updates Zustand store
+  8. Navbar re-renders showing user avatar
+
+User needs to:
+  a) Wait 1-2 min for Vercel deploy of commit f951052
+  b) Test login in incognito (or clear cookies)
+  c) Report back if avatar appears in navbar
