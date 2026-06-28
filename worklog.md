@@ -2449,3 +2449,23 @@ User needs to:
   a) Wait 1-2 min for Vercel deploy of commit f951052
   b) Test login in incognito (or clear cookies)
   c) Report back if avatar appears in navbar
+
+---
+Task ID: 11
+Agent: Main Agent
+Task: Discord OAuth cleanup verification & production sync
+
+Work Log:
+- Verified the 4 debug endpoints (auth-debug, oauth-debug, jwt-debug, decode-test) were already removed in commit 7b28839
+- Verified auth.ts has debug:false and clean logger (no verbose logging)
+- Confirmed remaining /api/dev/* endpoints (seed, login, cleanup) all have production guards (NODE_ENV === 'production' → 403)
+- Pushed/synced all 14 local commits to GitHub origin/main (now at 7b28839)
+- User confirmed on production (https://prestigio-roleplay-portal.vercel.app) that Discord login works end-to-end AND session persists across page reloads
+- QA via agent-browser: homepage loads HTTP 200, /api/auth/session returns valid {"user":null} in sandbox, navbar renders correctly
+
+Stage Summary:
+- Discord OAuth flow fully operational in production: Discord authorize → callback → JWT cookie set → session persists
+- Root cause of previous "t.role is not a function" error was NextAuth v4 JWT type quirk; fixed by casting token/session.user to Record<string, unknown>
+- Production security cleanup complete: debug endpoints removed, verbose logging disabled
+- All commits synced to GitHub: https://github.com/dlopezos1616/prestigio-roleplay-portal
+- Production deployment: https://prestigio-roleplay-portal.vercel.app
