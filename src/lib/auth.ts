@@ -2,6 +2,8 @@ import NextAuth, { type NextAuthOptions } from "next-auth"
 import DiscordProvider from "next-auth/providers/discord"
 import { db } from "@/lib/db"
 
+const isProd = process.env.NODE_ENV === "production"
+
 export const authOptions: NextAuthOptions = {
   providers: [
     DiscordProvider({
@@ -13,58 +15,18 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
+  // Minimal, well-tested cookie config. In production, NextAuth prefixes
+  // cookies with __Secure- automatically when secure:true is set.
+  // We use the sameSite:'lax' default which is the safest cross-site setting
+  // that still allows the OAuth callback redirect to set the cookie.
   cookies: {
     sessionToken: {
-      name: `next-auth.session-token`,
+      name: isProd ? `__Secure-next-auth.session-token` : `next-auth.session-token`,
       options: {
         httpOnly: true,
         sameSite: "lax",
         path: "/",
-        secure: process.env.NODE_ENV === "production",
-      },
-    },
-    callbackUrl: {
-      name: `next-auth.callback-url`,
-      options: {
-        sameSite: "lax",
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
-      },
-    },
-    csrfToken: {
-      name: `next-auth.csrf-token`,
-      options: {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
-      },
-    },
-    pkceCodeVerifier: {
-      name: `next-auth.pkce.code-verifier`,
-      options: {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
-      },
-    },
-    state: {
-      name: `next-auth.state`,
-      options: {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
-      },
-    },
-    nonce: {
-      name: `next-auth.nonce`,
-      options: {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
+        secure: isProd,
       },
     },
   },
@@ -94,11 +56,9 @@ export const authOptions: NextAuthOptions = {
           console.error("[auth] signIn: failed to upsert user in DB:", {
             discordId: user.id,
             error: e instanceof Error ? e.message : String(e),
-            stack: e instanceof Error ? e.stack : undefined,
           })
           // IMPORTANT: do not block sign-in if DB write fails — JWT still works,
           // the user can still be authenticated via the JWT token alone.
-          // The DB write will succeed next time when tables exist.
         }
       }
       return true
@@ -143,23 +103,19 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/",
   },
-  // Fallback to a generated secret if env var is missing (development only).
-  // In production, NEXTAUTH_SECRET MUST be set or this will throw.
   secret: process.env.NEXTAUTH_SECRET,
   logger: {
-    error(code, message) {
-      console.error(`[next-auth][error][${code}]`, message)
+    error(code, ...message) {
+      console.error(`[next-auth][error][${code}]`, ...message)
     },
     warn(code) {
       console.warn(`[next-auth][warn][${code}]`)
     },
-    debug(code, message) {
-      if (process.env.NODE_ENV !== "production") {
-        console.log(`[next-auth][debug][${code}]`, message)
-      }
+    debug(code, ...message) {
+      console.log(`[next-auth][debug][${code}]`, ...message)
     },
   },
-  debug: process.env.NODE_ENV !== "production",
+  debug: true,
 }
 
 export default NextAuth(authOptions)
