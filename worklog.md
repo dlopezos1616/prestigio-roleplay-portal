@@ -2298,3 +2298,64 @@ Stage Summary:
   b) Verify NEXTAUTH_URL env var in Vercel matches their production URL exactly (no trailing slash)
   c) Verify NEXTAUTH_SECRET is set
   d) Wait ~1-2 min for Vercel auto-deploy, then test login again
+
+---
+Task ID: AUTH-FIX-2
+Agent: Main Agent
+Task: Fix session not persisting after Discord OAuth callback (production bug)
+
+User report: "Click Discord -> goes to Discord -> authorize -> comes back to web -> page reloads to home -> still not logged in. Repeat."
+
+Root cause analysis:
+- Discord OAuth flow itself works (user reaches Discord authorize page and back).
+- But /api/auth/session returns no user after returning from Discord.
+- Most likely causes:
+  a) Session cookie not being set/preserved across the OAuth callback redirect
+     (Vercel serverless sometimes drops cookies without explicit sameSite config)
+  b) DB tables not created in PostgreSQL (Neon) — signIn callback DB upsert fails,
+     which previously may have caused session creation to fail silently
+  c) useSession client hook not re-fetching when window regains focus after OAuth
+
+Fixes applied (commit f65e266):
+
+1. auth.ts: explicit cookies config — all NextAuth cookies (sessionToken, csrfToken,
+   state, pkceCodeVerifier, nonce, callbackUrl) now have explicit sameSite:'lax',
+   secure in prod, httpOnly, path:'/'. This prevents Vercel from dropping the
+   session cookie between OAuth callback and /api/auth/session fetch.
+
+2. auth.ts: signIn callback no longer blocks on DB write failure. Previously if
+   the DB upsert failed (e.g., tables don't exist), the error was swallowed but
+   sign-in continued. Now logs clearly with [auth] prefix and still continues —
+   the JWT alone is enough for session authentication.
+
+3. auth.ts: jwt callback defaults role='USER' if user not in DB, so session is
+   always populated with a role even before DB tables exist.
+
+4. auth.ts: explicit logger config — warnings/errors visible in Vercel logs.
+
+5. useSession.ts: fetchSession() now uses cache:'no-store' and credentials:'include'
+   for fresh, cookie-authenticated session fetches. Added window 'focus' and
+   'pageshow' event listeners so when user returns from Discord OAuth, the
+   session is re-fetched automatically.
+
+6. Navbar.tsx: handleLogin uses callbackUrl:'/' so NextAuth does a full redirect
+   to the homepage after OAuth (forces fresh page load + cookie read).
+
+7. NEW endpoint /api/dev/auth-debug — returns session state, DB tables check,
+   and env var presence. Use this to diagnose remaining issues in production:
+   https://prestigio-roleplay-portal.vercel.app/api/dev/auth-debug
+
+Likely remaining issue: User has NOT run `bun run db:push` against the Neon
+DATABASE_URL yet, so PostgreSQL tables don't exist. The new auth-debug endpoint
+will confirm this. Even without DB, login should now work (session via JWT only)
+but role will be 'USER' and notifications/whitelist won't work.
+
+Stage Summary:
+- 4 files changed: auth.ts, useSession.ts, Navbar.tsx, new api/dev/auth-debug/route.ts
+- Lint clean
+- Pushed to GitHub (commit f65e266)
+- Vercel auto-deploy in progress
+- User needs to:
+  a) Wait 1-2 min for Vercel deploy
+  b) Visit /api/dev/auth-debug and send me the JSON output
+  c) If tables don't exist: clone repo, set DATABASE_URL to Neon URL, run db:push
