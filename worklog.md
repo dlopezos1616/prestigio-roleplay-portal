@@ -2274,3 +2274,27 @@ Stage Summary:
 4. Add PostgreSQL migration guide for production
 5. Create Discord bot service for server-to-web bridge
 6. Add SEO meta tags and Open Graph tags
+
+---
+Task ID: AUTH-FIX-1
+Agent: Main Agent
+Task: Fix Discord login not triggering OAuth flow (production bug report)
+
+Work Log:
+- User reported: clicking "Discord" button in navbar reloads the page but doesn't trigger Discord OAuth and doesn't log in
+- Investigated auth flow across Navbar.tsx, WhitelistForm.tsx, auth.ts, useSession.ts, api/auth/session/route.ts
+- Identified THREE bugs:
+  1. Navbar.tsx handleLogin used `window.location.href = '/api/auth/signin/discord'` — in NextAuth v4, GET on this route renders an HTML confirmation page (looks like a reload) instead of triggering OAuth. Fixed: use signIn('discord', { callbackUrl: window.location.origin }) from next-auth/react. Also fixed handleLogout to use signOut().
+  2. WhitelistForm.tsx had `<a href='/api/auth/signin'>` — same HTML-page issue. Fixed: replaced with onClick signIn('discord').
+  3. auth.ts session callback used `{ session, user }` signature, but in JWT mode (no adapter) the second arg is `token`, not `user`. `user` was always undefined → role/discordId/dbId never attached to session → /api/auth/session returned no user → client thought user was logged out. Fixed: rewrote jwt() and session() callbacks to use token, explicitly set session.strategy: 'jwt'.
+- Ran `bun run lint` — zero errors
+- Committed and pushed to GitHub (commit 2ceae81)
+
+Stage Summary:
+- 3 files changed: src/components/layout/Navbar.tsx, src/components/whitelist/WhitelistForm.tsx, src/lib/auth.ts
+- Vercel will auto-redeploy from this push
+- User still needs to:
+  a) Verify Discord OAuth redirect URL includes production URL (https://their-project.vercel.app/api/auth/callback/discord)
+  b) Verify NEXTAUTH_URL env var in Vercel matches their production URL exactly (no trailing slash)
+  c) Verify NEXTAUTH_SECRET is set
+  d) Wait ~1-2 min for Vercel auto-deploy, then test login again
