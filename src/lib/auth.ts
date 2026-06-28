@@ -64,38 +64,45 @@ export const authOptions: NextAuthOptions = {
       return true
     },
     async jwt({ token, account, user }) {
+      // Cast to a mutable record so we can assign custom fields without TS
+      // trying to interpret them as methods on the JWT type.
+      const t = token as Record<string, unknown>
+
       // On first sign-in: account & user are populated. Persist Discord id + tokens.
       if (account && user) {
-        token.discordId = user.id
-        token.accessToken = account.access_token
-        token.refreshToken = account.refresh_token
+        t.discordId = user.id
+        t.accessToken = account.access_token
+        t.refreshToken = account.refresh_token
       }
       // Always refresh role/dbId from DB so role changes by admins are reflected
-      if (token.discordId) {
+      if (t.discordId) {
         try {
-          const dbUser = await db.user.findUnique({ where: { discordId: token.discordId } })
+          const dbUser = await db.user.findUnique({ where: { discordId: t.discordId as string } })
           if (dbUser) {
-            token.role = dbUser.role
-            token.dbId = dbUser.id
+            t.role = dbUser.role
+            t.dbId = dbUser.id
           } else {
             // User not in DB yet (e.g., tables were just created) — default role
-            token.role = "USER"
+            t.role = "USER"
           }
         } catch (e) {
           console.error("[auth] jwt: failed to fetch user from DB:", e instanceof Error ? e.message : String(e))
-          // Default role so the session still has a role field
-          token.role = "USER"
+          t.role = "USER"
         }
       }
       return token
     },
     async session({ session, token }) {
       // In JWT mode the second arg is `token`, NOT `user`.
-      if (session.user && token) {
-        (session.user as Record<string, unknown>).role = token.role
-        (session.user as Record<string, unknown>).discordId = token.discordId
-        (session.user as Record<string, unknown>).dbId = token.dbId
-        ;(session.user as Record<string, unknown>).id = token.discordId
+      // Cast both sides to plain records to avoid TS interpreting custom fields
+      // as methods (which caused "t.role is not a function" at runtime).
+      const t = token as Record<string, unknown>
+      const u = session.user as Record<string, unknown> | undefined
+      if (u && t) {
+        u.role = t.role
+        u.discordId = t.discordId
+        u.dbId = t.dbId
+        u.id = t.discordId
       }
       return session
     },
