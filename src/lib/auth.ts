@@ -118,11 +118,8 @@ export const authOptions: NextAuthOptions = {
     warn(code) {
       console.warn(`[next-auth][warn][${code}]`)
     },
-    debug(code, ...message) {
-      console.log(`[next-auth][debug][${code}]`, ...message)
-    },
   },
-  debug: true,
+  debug: false,
 }
 
 export default NextAuth(authOptions)
