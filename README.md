@@ -202,12 +202,20 @@ bun run db:studio # Prisma Studio (GUI)
 
 ## 🌐 Despliegue
 
-### Vercel (recomendado)
-1. Sube el repo a GitHub
-2. Importa el proyecto en [vercel.com](https://vercel.com)
-3. Configura las variables de entorno
-4. Para producción, cambia `DATABASE_URL` a PostgreSQL
-5. Deploy
+### Vercel (recomendado) — Guía completa
+
+Lee la guía detallada: **[VERCEL_DEPLOY.md](./VERCEL_DEPLOY.md)**
+
+**Resumen rápido:**
+1. Crea una base de datos PostgreSQL gratuita en [Neon](https://neon.tech)
+2. Importa el repo en [vercel.com](https://vercel.com) (conecta tu GitHub)
+3. Configura las variables de entorno (DATABASE_URL, NEXTAUTH_*, DISCORD_*, etc.)
+4. Click **Deploy** — Vercel detecta Next.js automáticamente
+5. Ejecuta `bun run db:push` con la URL de producción para crear las tablas
+6. ¡Listo! HTTPS, CDN global y dominio gratis
+
+> ⚠️ **Importante**: SQLite **NO** funciona en Vercel (filesystem efímero).  
+> Usa PostgreSQL en producción. La guía lo explica paso a paso.
 
 ### Producción con PostgreSQL
 Cambia en `prisma/schema.prisma`:
@@ -219,7 +227,7 @@ datasource db {
 ```
 Y en `.env`:
 ```env
-DATABASE_URL="postgresql://user:pass@host:5432/dbname"
+DATABASE_URL="postgresql://user:pass@host:5432/dbname?sslmode=require"
 ```
 
 ---
