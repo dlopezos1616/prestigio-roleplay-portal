@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef, useSyncExternalStore, useCallback } from 'react'
+import { useState, useEffect, useRef, useSyncExternalStore } from 'react'
 import { Music, Volume2, VolumeX } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -14,7 +14,7 @@ interface SavedMusicPrefs {
 
 const DEFAULT_PREFS: SavedMusicPrefs = { muted: false, volume: 0.08 }
 
-function getStoredPrefs(): SavedMusicPrefs {
+function readPrefsFromStorage(): SavedMusicPrefs {
   if (typeof window === 'undefined') return DEFAULT_PREFS
   try {
     const saved = localStorage.getItem(MUSIC_KEY)
@@ -47,15 +47,24 @@ function subscribeMusic(callback: () => void) {
 }
 
 /**
- * useSyncExternalStore: SSR-safe read of localStorage music prefs.
- * Server snapshot returns defaults; client snapshot reads actual stored values.
- * This prevents hydration mismatch without setState-in-effect.
+ * useSyncExternalStore for individual primitive values (muted, volume).
+ * Primitives are compared by value, so there's no "getSnapshot should be
+ * cached" infinite-loop issue — that only happens when getSnapshot returns a
+ * new OBJECT reference each call.
  */
-function useStoredMusicPrefs(): SavedMusicPrefs {
+function useMuted(): boolean {
   return useSyncExternalStore(
     subscribeMusic,
-    () => getStoredPrefs(),
-    () => DEFAULT_PREFS
+    () => readPrefsFromStorage().muted, // primitive — safe
+    () => DEFAULT_PREFS.muted
+  )
+}
+
+function useVolume(): number {
+  return useSyncExternalStore(
+    subscribeMusic,
+    () => readPrefsFromStorage().volume, // primitive — safe
+    () => DEFAULT_PREFS.volume
   )
 }
 
@@ -64,17 +73,19 @@ export default function AudioPlayer() {
   const [hasInteracted, setHasInteracted] = useState(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
-  // Read muted/volume directly from the store (no local state sync needed)
-  const { muted: isMuted, volume } = useStoredMusicPrefs()
+  // Read muted/volume from localStorage via useSyncExternalStore.
+  // Primitives only → no infinite loop, no hydration mismatch.
+  const isMuted = useMuted()
+  const volume = useVolume()
 
-  // Apply volume changes to the audio element (external system sync — allowed in effect)
+  // Apply volume changes to the audio element (external system sync)
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = isMuted ? 0 : volume
     }
   }, [isMuted, volume])
 
-  const togglePlay = useCallback(() => {
+  const togglePlay = () => {
     if (!hasInteracted) {
       setHasInteracted(true)
     }
@@ -97,11 +108,14 @@ export default function AudioPlayer() {
       })
       setIsPlaying(true)
     }
-  }, [hasInteracted, isPlaying, isMuted, volume])
+  }
 
-  const toggleMute = useCallback(() => {
+  const toggleMute = () => {
+    if (audioRef.current) {
+      audioRef.current.volume = isMuted ? volume : 0
+    }
     savePrefs({ volume, muted: !isMuted })
-  }, [volume, isMuted])
+  }
 
   return (
     <motion.div
@@ -135,9 +149,7 @@ export default function AudioPlayer() {
                     key={i}
                     animate={
                       isPlaying && !isMuted
-                        ? {
-                            height: [4, 12, 8, 16, 4],
-                          }
+                        ? { height: [4, 12, 8, 16, 4] }
                         : { height: 4 }
                     }
                     transition={{

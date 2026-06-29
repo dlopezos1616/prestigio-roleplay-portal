@@ -15,26 +15,39 @@ interface CookiePreferences {
 
 type ConsentState = 'accepted' | 'rejected' | 'custom' | null
 
-// Module-level constants — useSyncExternalStore requires stable references
-// for getServerSnapshot to avoid infinite loops.
-const DEFAULT_PREFS: CookiePreferences = { essential: true, analytics: false, marketing: false }
+const DEFAULT_PREFS: CookiePreferences = {
+  essential: true,
+  analytics: false,
+  marketing: false,
+}
 
 function getStoredConsent(): ConsentState {
   if (typeof window === 'undefined') return null
   return localStorage.getItem(STORAGE_KEY) as ConsentState
 }
 
-function getStoredPreferences(): CookiePreferences {
-  if (typeof window === 'undefined') {
-    return DEFAULT_PREFS
-  }
+function readPreferencesFromStorage(): CookiePreferences {
+  if (typeof window === 'undefined') return DEFAULT_PREFS
   try {
     const raw = localStorage.getItem(`${STORAGE_KEY}-prefs`)
-    if (raw) return JSON.parse(raw)
+    if (raw) return { ...DEFAULT_PREFS, ...JSON.parse(raw) }
   } catch {
     // ignore parse errors
   }
   return DEFAULT_PREFS
+}
+
+// Module-level cached snapshot for the preferences OBJECT.
+// useSyncExternalStore's getSnapshot MUST return a referentially stable value
+// for objects — returning JSON.parse(raw) each call causes an infinite loop.
+let cachedPrefsSnapshot: CookiePreferences = DEFAULT_PREFS
+
+if (typeof window !== 'undefined') {
+  cachedPrefsSnapshot = readPreferencesFromStorage()
+}
+
+function getPrefsSnapshot(): CookiePreferences {
+  return cachedPrefsSnapshot
 }
 
 function saveConsent(state: ConsentState, prefs?: CookiePreferences) {
@@ -42,57 +55,56 @@ function saveConsent(state: ConsentState, prefs?: CookiePreferences) {
   localStorage.setItem(STORAGE_KEY, state ?? '')
   if (prefs) {
     localStorage.setItem(`${STORAGE_KEY}-prefs`, JSON.stringify(prefs))
+    cachedPrefsSnapshot = prefs
   }
-  // Notify same-window subscribers that the store changed
   window.dispatchEvent(new Event(CONSENT_EVENT))
 }
 
-/**
- * useSyncExternalStore is the React 19 recommended way to read external stores
- * (like localStorage) in SSR components. The server snapshot always returns
- * `null`/`false`, matching the initial client render and preventing hydration
- * mismatches. After hydration, React re-reads the client snapshot.
- */
 function subscribeConsent(callback: () => void) {
-  window.addEventListener('storage', callback)
-  window.addEventListener(CONSENT_EVENT, callback)
+  const handler = () => {
+    cachedPrefsSnapshot = readPreferencesFromStorage()
+    callback()
+  }
+  window.addEventListener('storage', handler)
+  window.addEventListener(CONSENT_EVENT, handler)
   return () => {
-    window.removeEventListener('storage', callback)
-    window.removeEventListener(CONSENT_EVENT, callback)
+    window.removeEventListener('storage', handler)
+    window.removeEventListener(CONSENT_EVENT, handler)
   }
 }
 
 const noopSubscribe = () => () => {}
 
-function useMounted() {
+/** SSR-safe "mounted" flag via useSyncExternalStore (boolean primitive — safe). */
+function useMounted(): boolean {
   return useSyncExternalStore(
     noopSubscribe,
-    () => true, // client snapshot
-    () => false // server snapshot
+    () => true,
+    () => false
   )
 }
 
-function useStoredConsent() {
+/** Read consent state (string | null — primitive, safe with useSyncExternalStore). */
+function useStoredConsent(): ConsentState {
   return useSyncExternalStore(
     subscribeConsent,
-    () => getStoredConsent(), // client snapshot
-    () => null // server snapshot — always null to match SSR
+    () => getStoredConsent(),
+    () => null
   )
 }
 
-function useStoredPreferences() {
+/** Read cookie preferences (object — uses cached snapshot to avoid infinite loop). */
+function useStoredPreferences(): CookiePreferences {
   return useSyncExternalStore(
     subscribeConsent,
-    () => getStoredPreferences(), // client snapshot
-    () => DEFAULT_PREFS // server snapshot — stable reference to avoid infinite loop
+    getPrefsSnapshot,
+    () => DEFAULT_PREFS
   )
 }
 
 export default function CookieConsent() {
-  // SSR-safe: useSyncExternalStore returns the server snapshot during SSR and
-  // the first client render (matching), then switches to the client snapshot.
   const mounted = useMounted()
-  const storedConsent = useStoredConsent()
+  const consentState = useStoredConsent()
   const storedPrefs = useStoredPreferences()
   const [showPreferences, setShowPreferences] = useState(false)
   // Local overrides for the preferences panel toggles (merged over stored values)
@@ -101,20 +113,24 @@ export default function CookieConsent() {
   // Derived preferences: stored values + any local toggle overrides
   const preferences: CookiePreferences = { ...storedPrefs, ...localOverrides }
 
-  // Only show banner after mount AND when no consent has been given yet
-  const visible = mounted && storedConsent === null
+  // Only show banner after mount AND when no consent has been given.
+  // Before mount, visible=false on both server and client (no hydration mismatch).
+  const visible = mounted && consentState === null
 
   const handleAcceptAll = useCallback(() => {
-    const allAccepted: CookiePreferences = { essential: true, analytics: true, marketing: true }
+    const allAccepted: CookiePreferences = {
+      essential: true,
+      analytics: true,
+      marketing: true,
+    }
     setLocalOverrides(allAccepted)
     saveConsent('accepted', allAccepted)
     setShowPreferences(false)
   }, [])
 
   const handleRejectAll = useCallback(() => {
-    const onlyEssential: CookiePreferences = { essential: true, analytics: false, marketing: false }
-    setLocalOverrides(onlyEssential)
-    saveConsent('rejected', onlyEssential)
+    setLocalOverrides(DEFAULT_PREFS)
+    saveConsent('rejected', DEFAULT_PREFS)
     setShowPreferences(false)
   }, [])
 
@@ -141,7 +157,6 @@ export default function CookieConsent() {
           <div className="mx-auto max-w-3xl rounded-2xl bg-[#0f172a]/90 backdrop-blur-xl border border-[#7c3aed]/20 shadow-[0_0_40px_rgba(124,58,237,0.15)] overflow-hidden">
             {/* Main content */}
             <div className="p-5 sm:p-6">
-              {/* Close / dismiss X button */}
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-start gap-3 sm:gap-4">
                   <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-[#7c3aed]/10 border border-[#7c3aed]/20 flex items-center justify-center">
@@ -153,7 +168,9 @@ export default function CookieConsent() {
                       Configuración de Cookies
                     </h3>
                     <p className="text-sm text-gray-400 leading-relaxed max-w-xl">
-                      Utilizamos cookies para mejorar tu experiencia en el portal. Puedes aceptar todas, rechazar o configurar tus preferencias.
+                      Utilizamos cookies para mejorar tu experiencia en el
+                      portal. Puedes aceptar todas, rechazar o configurar tus
+                      preferencias.
                     </p>
                   </div>
                 </div>
@@ -202,23 +219,31 @@ export default function CookieConsent() {
                     {/* Essential */}
                     <div className="flex items-center justify-between gap-4">
                       <div className="space-y-0.5 min-w-0">
-                        <p className="text-sm font-medium text-white">Cookies Esenciales</p>
-                        <p className="text-xs text-gray-500">Necesarias para el funcionamiento del sitio</p>
+                        <p className="text-sm font-medium text-white">
+                          Cookies Esenciales
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          Necesarias para el funcionamiento del sitio
+                        </p>
                       </div>
                       <button
                         disabled
                         className="flex-shrink-0 w-11 h-6 rounded-full bg-[#7c3aed]/80 relative cursor-not-allowed opacity-80"
                         aria-label="Cookies esenciales siempre activadas"
                       >
-                        <span className="absolute right-0.5 top-0.5 w-5 h-5 rounded-full bg-white shadow-sm transition-transform" />
+                        <span className="absolute right-0.5 top-0.5 w-5 h-5 rounded-full bg-white shadow-sm" />
                       </button>
                     </div>
 
                     {/* Analytics */}
                     <div className="flex items-center justify-between gap-4">
                       <div className="space-y-0.5 min-w-0">
-                        <p className="text-sm font-medium text-white">Cookies de Análisis</p>
-                        <p className="text-xs text-gray-500">Nos ayudan a entender cómo usas el portal</p>
+                        <p className="text-sm font-medium text-white">
+                          Cookies de Análisis
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          Nos ayudan a entender cómo usas el portal
+                        </p>
                       </div>
                       <button
                         onClick={() => togglePreference('analytics')}
@@ -233,7 +258,9 @@ export default function CookieConsent() {
                       >
                         <span
                           className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-sm transition-transform duration-200 ${
-                            preferences.analytics ? 'translate-x-[22px]' : 'translate-x-0.5'
+                            preferences.analytics
+                              ? 'translate-x-[22px]'
+                              : 'translate-x-0.5'
                           }`}
                         />
                       </button>
@@ -242,8 +269,12 @@ export default function CookieConsent() {
                     {/* Marketing */}
                     <div className="flex items-center justify-between gap-4">
                       <div className="space-y-0.5 min-w-0">
-                        <p className="text-sm font-medium text-white">Cookies de Marketing</p>
-                        <p className="text-xs text-gray-500">Usadas para mostrar contenido relevante</p>
+                        <p className="text-sm font-medium text-white">
+                          Cookies de Marketing
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          Usadas para mostrar contenido relevante
+                        </p>
                       </div>
                       <button
                         onClick={() => togglePreference('marketing')}
@@ -258,7 +289,9 @@ export default function CookieConsent() {
                       >
                         <span
                           className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-sm transition-transform duration-200 ${
-                            preferences.marketing ? 'translate-x-[22px]' : 'translate-x-0.5'
+                            preferences.marketing
+                              ? 'translate-x-[22px]'
+                              : 'translate-x-0.5'
                           }`}
                         />
                       </button>
