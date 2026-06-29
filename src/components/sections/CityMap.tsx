@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   MapPin,
@@ -13,6 +13,7 @@ import {
   X,
   Navigation,
   Layers,
+  Crosshair as CrosshairIcon,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
@@ -34,109 +35,131 @@ interface MapLocation {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Data                                                               */
+/*  Data — positions calibrated to the real GTA V Los Santos map      */
+/*  (map image is 2048x2048, square, satellite view)                  */
+/*  North is up. Coordinates are approximate but match real POIs.     */
 /* ------------------------------------------------------------------ */
 
 const locations: MapLocation[] = [
   {
     id: 'lspd',
-    name: 'Comisaría LSPD',
-    x: 35,
-    y: 30,
+    name: 'Comisaría LSPD (Mission Row)',
+    x: 42,
+    y: 52,
     category: 'police',
     color: '#06b6d4',
-    description: 'Cuartel general de la policía de Los Santos. Centro de operaciones de todas las patrullas y unidades especiales.',
+    description: 'Cuartel general de la policía de Los Santos en Mission Row. Centro de operaciones de todas las patrullas y unidades especiales.',
     icon: Shield,
   },
   {
     id: 'hospital',
-    name: 'Hospital Central',
-    x: 55,
-    y: 25,
+    name: 'Hospital Central (Pillbox Hill)',
+    x: 47,
+    y: 47,
     category: 'ems',
     color: '#22c55e',
-    description: 'Centro médico principal de la ciudad. Atención 24/7, cirugías y servicios de emergencia.',
+    description: 'Centro médico principal de la ciudad en Pillbox Hill. Atención 24/7, cirugías y servicios de emergencia.',
     icon: Heart,
   },
   {
     id: 'garaje',
-    name: 'Garaje Central',
-    x: 25,
-    y: 55,
+    name: 'Garaje Central (Strawberry)',
+    x: 38,
+    y: 60,
     category: 'mechanic',
     color: '#f97316',
-    description: 'Taller de reparaciones y tuning. El lugar donde los mecánicos hacen su magia.',
+    description: 'Taller de reparaciones y tuning en Strawberry. El lugar donde los mecánicos hacen su magia.',
     icon: Wrench,
   },
   {
     id: 'crimen-norte',
-    name: 'Callejero Norte',
-    x: 70,
-    y: 20,
+    name: 'Callejero Norte (Vinewood Hills)',
+    x: 55,
+    y: 25,
     category: 'crime',
     color: '#ef4444',
-    description: 'Zona de actividad criminal conocida. Las sombras esconden los secretos más oscuros de la ciudad.',
+    description: 'Zona de actividad criminal conocida en las colinas de Vinewood. Las sombras esconden los secretos más oscuros de la ciudad.',
     icon: Skull,
   },
   {
     id: 'puerto',
-    name: 'Puerto',
-    x: 15,
-    y: 70,
+    name: 'Puerto (LSIA / Terminal)',
+    x: 28,
+    y: 75,
     category: 'business',
     color: '#f59e0b',
-    description: 'Zona portuaria y de negocios. Importaciones, exportaciones y tratos bajo la mesa.',
+    description: 'Zona portuaria y de negocios cerca del aeropuerto. Importaciones, exportaciones y tratos bajo la mesa.',
     icon: Building,
   },
   {
     id: 'centro-comercial',
-    name: 'Centro Comercial',
+    name: 'Centro Comercial (Burton)',
     x: 50,
-    y: 50,
+    y: 38,
     category: 'business',
     color: '#f59e0b',
-    description: 'Principal zona comercial de LS. Tiendas, restaurantes y vida social.',
+    description: 'Principal zona comercial de LS en Burton. Tiendas de lujo, restaurantes y vida social.',
     icon: Building,
   },
   {
     id: 'fbi',
-    name: 'FBI Headquarters',
-    x: 65,
-    y: 40,
+    name: 'FIB Headquarters (Pillbox Hill)',
+    x: 44,
+    y: 44,
     category: 'police',
     color: '#f59e0b',
-    description: 'Oficinas federales de investigación. Operaciones encubiertas y vigilancia de alto nivel.',
+    description: 'Oficinas federales de investigación en Pillbox Hill. Operaciones encubiertas y vigilancia de alto nivel.',
     icon: Crosshair,
   },
   {
     id: 'barrio-sur',
-    name: 'Barrio Sur',
-    x: 30,
-    y: 75,
+    name: 'Barrio Sur (Davis / Chamberlain)',
+    x: 40,
+    y: 68,
     category: 'crime',
     color: '#ef4444',
-    description: 'Territorio de bandas del sur. Respeta el territorio o enfrenta las consecuencias.',
+    description: 'Territorio de bandas del sur en Davis. Respeta el territorio o enfrenta las consecuencias.',
     icon: Skull,
   },
   {
     id: 'aeropuerto',
-    name: 'Aeropuerto',
-    x: 80,
-    y: 65,
+    name: 'Aeropuerto (LSIA)',
+    x: 35,
+    y: 80,
     category: 'business',
     color: '#f59e0b',
-    description: 'Aeropuerto internacional de LS. La puerta de entrada y salida de la ciudad.',
+    description: 'Aeropuerto internacional de Los Santos. La puerta de entrada y salida de la ciudad.',
     icon: Building,
   },
   {
     id: 'taller-este',
-    name: 'Taller Este',
-    x: 75,
-    y: 50,
+    name: 'Taller Este (El Burro)',
+    x: 60,
+    y: 62,
     category: 'mechanic',
     color: '#f97316',
-    description: 'Segundo taller de la ciudad. Especializado en reparaciones rápidas y tuning de alto rendimiento.',
+    description: 'Segundo taller de la ciudad en El Burro Heights. Especializado en reparaciones rápidas y tuning de alto rendimiento.',
     icon: Wrench,
+  },
+  {
+    id: 'vespucci',
+    name: 'Vespucci Beach',
+    x: 22,
+    y: 55,
+    category: 'business',
+    color: '#f59e0b',
+    description: 'Playa y zona residencial de Vespucci. Surf, sol y negocios junto al mar.',
+    icon: Building,
+  },
+  {
+    id: 'sandy',
+    name: 'Sandy Shores',
+    x: 70,
+    y: 30,
+    category: 'crime',
+    color: '#ef4444',
+    description: 'Pueblo del condado de Blaine. Zona rural con actividad criminal y contrabando.',
+    icon: Skull,
   },
 ]
 
@@ -149,167 +172,6 @@ const categoryConfig: Record<LocationCategory, { label: string; icon: LucideIcon
 }
 
 const categoryKeys = Object.keys(categoryConfig) as LocationCategory[]
-
-/* ------------------------------------------------------------------ */
-/*  SVG Map Sub-components                                             */
-/* ------------------------------------------------------------------ */
-
-function CyberpunkGrid() {
-  const lines = []
-  // Vertical lines
-  for (let i = 0; i <= 20; i++) {
-    lines.push(
-      <line
-        key={`v-${i}`}
-        x1={`${i * 5}%`}
-        y1="0%"
-        x2={`${i * 5}%`}
-        y2="100%"
-        stroke="#7c3aed"
-        strokeWidth={i % 4 === 0 ? 0.5 : 0.25}
-        opacity={i % 4 === 0 ? 0.12 : 0.05}
-      />
-    )
-  }
-  // Horizontal lines
-  for (let i = 0; i <= 14; i++) {
-    lines.push(
-      <line
-        key={`h-${i}`}
-        x1="0%"
-        y1={`${i * 7}%`}
-        x2="100%"
-        y2={`${i * 7}%`}
-        stroke="#7c3aed"
-        strokeWidth={i % 2 === 0 ? 0.5 : 0.25}
-        opacity={i % 2 === 0 ? 0.12 : 0.05}
-      />
-    )
-  }
-  return <g className="grid-lines">{lines}</g>
-}
-
-function MajorRoads() {
-  return (
-    <g className="major-roads">
-      {/* Main horizontal highway */}
-      <line x1="0%" y1="40%" x2="100%" y2="40%" stroke="#7c3aed" strokeWidth="2" opacity="0.3">
-        <animate attributeName="opacity" values="0.2;0.4;0.2" dur="3s" repeatCount="indefinite" />
-      </line>
-      {/* Main vertical highway */}
-      <line x1="50%" y1="0%" x2="50%" y2="100%" stroke="#7c3aed" strokeWidth="2" opacity="0.3">
-        <animate attributeName="opacity" values="0.2;0.4;0.2" dur="3.5s" repeatCount="indefinite" />
-      </line>
-      {/* Diagonal road NE */}
-      <line x1="20%" y1="10%" x2="85%" y2="60%" stroke="#7c3aed" strokeWidth="1.2" opacity="0.18" />
-      {/* Diagonal road SW */}
-      <line x1="10%" y1="55%" x2="65%" y2="90%" stroke="#7c3aed" strokeWidth="1.2" opacity="0.18" />
-      {/* Secondary horizontal */}
-      <line x1="5%" y1="22%" x2="90%" y2="22%" stroke="#7c3aed" strokeWidth="0.8" opacity="0.12" />
-      <line x1="10%" y1="65%" x2="95%" y2="65%" stroke="#7c3aed" strokeWidth="0.8" opacity="0.12" />
-      {/* Secondary vertical */}
-      <line x1="30%" y1="5%" x2="30%" y2="95%" stroke="#7c3aed" strokeWidth="0.8" opacity="0.12" />
-      <line x1="70%" y1="5%" x2="70%" y2="85%" stroke="#7c3aed" strokeWidth="0.8" opacity="0.12" />
-      {/* Ring road segments */}
-      <path
-        d="M 25 15 Q 50 8 75 15 Q 82 40 80 65 Q 75 85 50 90 Q 25 85 18 65 Q 15 40 25 15"
-        stroke="#7c3aed"
-        strokeWidth="1"
-        fill="none"
-        opacity="0.1"
-        transform="translate(0,0) scale(1 1)"
-      />
-      {/* Glow filter for highways */}
-      <defs>
-        <filter id="road-glow" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="3" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-      </defs>
-      {/* Re-draw highways with glow */}
-      <line x1="0%" y1="40%" x2="100%" y2="40%" stroke="#7c3aed" strokeWidth="1" opacity="0.6" filter="url(#road-glow)" />
-      <line x1="50%" y1="0%" x2="50%" y2="100%" stroke="#7c3aed" strokeWidth="1" opacity="0.6" filter="url(#road-glow)" />
-    </g>
-  )
-}
-
-function WaterAreas() {
-  return (
-    <g className="water-areas">
-      {/* Ocean / coastline on the south */}
-      <path
-        d="M 0 82 Q 15 78 30 83 Q 50 88 70 82 Q 85 79 100 83 L 100 100 L 0 100 Z"
-        fill="#06b6d4"
-        opacity="0.08"
-      />
-      {/* Water shimmer */}
-      <path
-        d="M 0 82 Q 15 78 30 83 Q 50 88 70 82 Q 85 79 100 83 L 100 100 L 0 100 Z"
-        fill="none"
-        stroke="#06b6d4"
-        strokeWidth="0.5"
-        opacity="0.25"
-      >
-        <animate attributeName="opacity" values="0.15;0.35;0.15" dur="4s" repeatCount="indefinite" />
-      </path>
-      {/* West coast water */}
-      <path
-        d="M 0 55 Q 5 60 3 70 Q 2 78 0 82 L 0 55 Z"
-        fill="#06b6d4"
-        opacity="0.08"
-      />
-      {/* Lake in the hills */}
-      <ellipse cx="82" cy="28" rx="6" ry="4" fill="#06b6d4" opacity="0.06" stroke="#06b6d4" strokeWidth="0.3" strokeOpacity="0.15" />
-    </g>
-  )
-}
-
-function BuildingBlocks() {
-  return (
-    <g className="building-blocks">
-      {/* Downtown cluster - center */}
-      <rect x="42" y="38" width="16" height="12" rx="1" fill="#1e293b" opacity="0.6" stroke="#334155" strokeWidth="0.3" />
-      <rect x="44" y="40" width="5" height="4" rx="0.5" fill="#1e293b" opacity="0.4" stroke="#475569" strokeWidth="0.2" />
-      <rect x="51" y="40" width="5" height="4" rx="0.5" fill="#1e293b" opacity="0.4" stroke="#475569" strokeWidth="0.2" />
-      <rect x="44" y="45" width="5" height="3" rx="0.5" fill="#1e293b" opacity="0.4" stroke="#475569" strokeWidth="0.2" />
-      <rect x="51" y="45" width="5" height="3" rx="0.5" fill="#1e293b" opacity="0.4" stroke="#475569" strokeWidth="0.2" />
-
-      {/* Police district - north central */}
-      <rect x="28" y="22" width="14" height="10" rx="1" fill="#1e293b" opacity="0.5" stroke="#0e7490" strokeWidth="0.3" />
-      <rect x="30" y="24" width="4" height="3" rx="0.5" fill="#1e293b" opacity="0.3" />
-      <rect x="36" y="24" width="4" height="3" rx="0.5" fill="#1e293b" opacity="0.3" />
-
-      {/* Hospital area - northeast */}
-      <rect x="50" y="18" width="12" height="9" rx="1" fill="#1e293b" opacity="0.5" stroke="#16a34a" strokeWidth="0.3" />
-      <rect x="52" y="20" width="8" height="5" rx="0.5" fill="#1e293b" opacity="0.3" />
-
-      {/* Airport - east */}
-      <rect x="73" y="58" width="18" height="8" rx="1" fill="#1e293b" opacity="0.4" stroke="#475569" strokeWidth="0.3" />
-      <line x1="75" y1="62" x2="89" y2="62" stroke="#64748b" strokeWidth="0.5" opacity="0.4" strokeDasharray="2 1" />
-
-      {/* Port - southwest */}
-      <rect x="8" y="62" width="12" height="8" rx="1" fill="#1e293b" opacity="0.4" stroke="#475569" strokeWidth="0.3" />
-
-      {/* South district */}
-      <rect x="22" y="67" width="16" height="10" rx="1" fill="#1e293b" opacity="0.5" stroke="#7f1d1d" strokeWidth="0.3" />
-      <rect x="24" y="69" width="5" height="3" rx="0.5" fill="#1e293b" opacity="0.3" />
-      <rect x="31" y="69" width="5" height="3" rx="0.5" fill="#1e293b" opacity="0.3" />
-      <rect x="24" y="73" width="12" height="2" rx="0.5" fill="#1e293b" opacity="0.3" />
-
-      {/* North hills / residential */}
-      <rect x="60" y="12" width="10" height="8" rx="1" fill="#1e293b" opacity="0.35" stroke="#475569" strokeWidth="0.2" />
-
-      {/* Garage block */}
-      <rect x="18" y="48" width="12" height="10" rx="1" fill="#1e293b" opacity="0.5" stroke="#c2410c" strokeWidth="0.3" />
-
-      {/* East workshop */}
-      <rect x="69" y="43" width="12" height="10" rx="1" fill="#1e293b" opacity="0.5" stroke="#c2410c" strokeWidth="0.3" />
-    </g>
-  )
-}
 
 /* ------------------------------------------------------------------ */
 /*  Location Marker                                                    */
@@ -335,67 +197,79 @@ function LocationMarker({
   return (
     <AnimatePresence>
       {visible && (
-        <motion.g
+        <motion.div
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0 }}
           transition={{ duration: 0.3, type: 'spring', stiffness: 200 }}
-          style={{ cursor: 'pointer' }}
-          onClick={onSelect}
+          className="absolute cursor-pointer z-10"
+          style={{
+            left: `${location.x}%`,
+            top: `${location.y}%`,
+            transform: 'translate(-50%, -50%)',
+          }}
+          onClick={(e) => {
+            e.stopPropagation()
+            onSelect()
+          }}
           onMouseEnter={() => onHover(location.id)}
           onMouseLeave={() => onHover(null)}
         >
-          {/* Pulse ring - outer */}
-          <motion.circle
-            cx={`${location.x}%`}
-            cy={`${location.y}%`}
-            r={isSelected ? 14 : isHovered ? 12 : 8}
-            fill="none"
-            stroke={location.color}
-            strokeWidth={isSelected ? 2 : 1}
-            opacity={isSelected ? 0.6 : isHovered ? 0.4 : 0.2}
-            animate={
-              isSelected
-                ? { r: [10, 16, 10], opacity: [0.6, 0.2, 0.6] }
-                : isHovered
-                ? { r: [8, 13, 8], opacity: [0.4, 0.15, 0.4] }
-                : {}
-            }
-            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-          />
-
-          {/* Second pulse ring for selected */}
-          {isSelected && (
-            <motion.circle
-              cx={`${location.x}%`}
-              cy={`${location.y}%`}
-              r={18}
-              fill="none"
-              stroke={location.color}
-              strokeWidth={1}
-              animate={{ r: [14, 22, 14], opacity: [0.3, 0, 0.3] }}
-              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut', delay: 0.3 }}
-            />
+          {/* Pulse rings */}
+          {(isHovered || isSelected) && (
+            <>
+              <motion.div
+                className="absolute rounded-full"
+                style={{
+                  width: 32,
+                  height: 32,
+                  left: -16,
+                  top: -16,
+                  border: `2px solid ${location.color}`,
+                }}
+                animate={{ scale: [1, 1.8], opacity: [0.6, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: 'easeOut' }}
+              />
+              {isSelected && (
+                <motion.div
+                  className="absolute rounded-full"
+                  style={{
+                    width: 32,
+                    height: 32,
+                    left: -16,
+                    top: -16,
+                    border: `1px solid ${location.color}`,
+                  }}
+                  animate={{ scale: [1, 2.2], opacity: [0.4, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: 'easeOut', delay: 0.4 }}
+                />
+              )}
+            </>
           )}
 
-          {/* Glow circle */}
-          <circle
-            cx={`${location.x}%`}
-            cy={`${location.y}%`}
-            r={isHovered || isSelected ? 7 : 5}
-            fill={location.color}
-            opacity={0.15}
-            filter="url(#marker-glow)"
+          {/* Glow background */}
+          <div
+            className="absolute rounded-full"
+            style={{
+              width: isHovered || isSelected ? 28 : 20,
+              height: isHovered || isSelected ? 28 : 20,
+              left: -(isHovered || isSelected ? 14 : 10),
+              top: -(isHovered || isSelected ? 14 : 10),
+              backgroundColor: location.color,
+              opacity: 0.2,
+              filter: 'blur(6px)',
+            }}
           />
 
           {/* Main dot */}
-          <motion.circle
-            cx={`${location.x}%`}
-            cy={`${location.y}%`}
-            r={isSelected ? 6 : isHovered ? 5.5 : 4}
-            fill={location.color}
+          <motion.div
+            className="relative rounded-full flex items-center justify-center"
             style={{
-              filter: `drop-shadow(0 0 4px ${location.color}) drop-shadow(0 0 8px ${location.color}40)`,
+              width: isSelected ? 22 : isHovered ? 20 : 16,
+              height: isSelected ? 22 : isHovered ? 20 : 16,
+              backgroundColor: location.color,
+              boxShadow: `0 0 8px ${location.color}, 0 0 16px ${location.color}80, 0 2px 4px rgba(0,0,0,0.5)`,
+              border: '2px solid rgba(255,255,255,0.9)',
             }}
             animate={
               isSelected
@@ -405,71 +279,49 @@ function LocationMarker({
                 : {}
             }
             transition={{ duration: 0.8, repeat: Infinity, ease: 'easeInOut' }}
-          />
-
-          {/* Inner white dot */}
-          <circle
-            cx={`${location.x}%`}
-            cy={`${location.y}%`}
-            r={1.5}
-            fill="white"
-            opacity={0.8}
-          />
-
-          {/* Icon at marker - only on hover/select */}
-          {(isHovered || isSelected) && (
-            <motion.foreignObject
-              x={`${location.x - 1.5}%`}
-              y={`${location.y - 3}%`}
-              width="3%"
-              height="3%"
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.5 }}
-              style={{ overflow: 'visible' }}
-            >
-              <div className="flex items-center justify-center w-full h-full">
-                <IconComponent
-                  style={{ color: location.color, width: '100%', height: '100%', maxWidth: 16, maxHeight: 16, filter: `drop-shadow(0 0 3px ${location.color})` }}
-                />
-              </div>
-            </motion.foreignObject>
-          )}
+          >
+            <IconComponent
+              className="text-white"
+              style={{
+                width: isSelected ? 12 : isHovered ? 11 : 9,
+                height: isSelected ? 12 : isHovered ? 11 : 9,
+              }}
+            />
+          </motion.div>
 
           {/* Label tooltip on hover */}
           {(isHovered || isSelected) && (
-            <motion.g
+            <motion.div
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 5 }}
               transition={{ duration: 0.2 }}
+              className="absolute left-1/2 -translate-x-1/2 pointer-events-none whitespace-nowrap z-20"
+              style={{ bottom: 'calc(100% + 8px)' }}
             >
-              <rect
-                x={`${location.x - 8}%`}
-                y={`${location.y - 10}%`}
-                width="16%"
-                height="5%"
-                rx="3"
-                fill="#0f172a"
-                stroke={location.color}
-                strokeWidth="0.5"
-                opacity="0.95"
-              />
-              <text
-                x={`${location.x}%`}
-                y={`${location.y - 7.2}%`}
-                textAnchor="middle"
-                fill={location.color}
-                fontSize="3.2"
-                fontFamily="system-ui, sans-serif"
-                fontWeight="600"
-                style={{ textShadow: `0 0 6px ${location.color}60` }}
+              <div
+                className="px-3 py-1.5 rounded-lg text-xs font-semibold"
+                style={{
+                  backgroundColor: '#0f172a',
+                  color: location.color,
+                  border: `1px solid ${location.color}60`,
+                  boxShadow: `0 0 12px ${location.color}30, 0 4px 12px rgba(0,0,0,0.6)`,
+                }}
               >
                 {location.name}
-              </text>
-            </motion.g>
+              </div>
+              {/* Arrow */}
+              <div
+                className="absolute left-1/2 -translate-x-1/2 -bottom-1 w-2 h-2 rotate-45"
+                style={{
+                  backgroundColor: '#0f172a',
+                  borderRight: `1px solid ${location.color}60`,
+                  borderBottom: `1px solid ${location.color}60`,
+                }}
+              />
+            </motion.div>
           )}
-        </motion.g>
+        </motion.div>
       )}
     </AnimatePresence>
   )
@@ -496,7 +348,7 @@ function DetailsPanel({
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: '100%', opacity: 0 }}
           transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-          className="absolute top-4 right-4 w-80 max-w-[calc(100%-2rem)] z-20"
+          className="absolute top-4 right-4 w-80 max-w-[calc(100%-2rem)] z-30"
         >
           <div
             className="rounded-xl overflow-hidden"
@@ -569,7 +421,7 @@ function DetailsPanel({
               >
                 <Navigation className="w-4 h-4" style={{ color: location.color }} />
                 <span className="text-xs text-[#64748b]">
-                  Coordenadas: {location.x.toFixed(0)}°N, {location.y.toFixed(0)}°W
+                  Coordenadas: {location.x.toFixed(1)}%, {location.y.toFixed(1)}%
                 </span>
               </div>
 
@@ -601,12 +453,14 @@ export default function CityMap() {
   const [activeFilters, setActiveFilters] = useState<Set<LocationCategory>>(
     new Set(categoryKeys)
   )
+  const [editMode, setEditMode] = useState(false)
+  const [hoverCoords, setHoverCoords] = useState<{ x: number; y: number } | null>(null)
+  const mapRef = useRef<HTMLDivElement>(null)
 
   const toggleFilter = useCallback((category: LocationCategory) => {
     setActiveFilters((prev) => {
       const next = new Set(prev)
       if (next.has(category)) {
-        // Don't allow deselecting all
         if (next.size > 1) {
           next.delete(category)
         }
@@ -625,6 +479,24 @@ export default function CityMap() {
     (location: MapLocation) => activeFilters.has(location.category),
     [activeFilters]
   )
+
+  // Edit mode: click anywhere on the map to read coordinates.
+  // Useful for placing new markers accurately.
+  const handleMapClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (!editMode || !mapRef.current) return
+    const rect = mapRef.current.getBoundingClientRect()
+    const x = ((e.clientX - rect.left) / rect.width) * 100
+    const y = ((e.clientY - rect.top) / rect.height) * 100
+    setHoverCoords({ x: Math.round(x * 10) / 10, y: Math.round(y * 10) / 10 })
+  }, [editMode])
+
+  const handleMapMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (!editMode || !mapRef.current) return
+    const rect = mapRef.current.getBoundingClientRect()
+    const x = ((e.clientX - rect.left) / rect.width) * 100
+    const y = ((e.clientY - rect.top) / rect.height) * 100
+    setHoverCoords({ x: Math.round(x * 10) / 10, y: Math.round(y * 10) / 10 })
+  }, [editMode])
 
   return (
     <section className="relative py-20 px-4 sm:px-6 lg:px-8">
@@ -652,7 +524,7 @@ export default function CityMap() {
             className="text-[#94a3b8] text-lg flex items-center justify-center gap-2"
           >
             <MapPin className="w-5 h-5" />
-            Explora los puntos de interés y territorios de la ciudad
+            Mapa real del GTA V — ubicaciones precisas de negocios y servicios
           </motion.p>
           <motion.div
             initial={{ scaleX: 0 }}
@@ -721,52 +593,69 @@ export default function CityMap() {
             boxShadow: '0 0 30px rgba(124, 58, 237, 0.1), 0 0 80px rgba(124, 58, 237, 0.05), inset 0 0 30px rgba(0,0,0,0.3)',
           }}
         >
-          {/* Map SVG */}
-          <svg
-            viewBox="0 0 100 100"
-            className="w-full h-auto block"
-            style={{ backgroundColor: '#0f172a', minHeight: '400px', maxHeight: '70vh' }}
-            preserveAspectRatio="xMidYMid meet"
+          {/* Real GTA V Map Image + Markers */}
+          <div
+            ref={mapRef}
+            className="relative w-full overflow-hidden"
+            style={{ aspectRatio: '1 / 1', maxHeight: '75vh', backgroundColor: '#0f172a' }}
+            onClick={handleMapClick}
+            onMouseMove={handleMapMouseMove}
+            onMouseLeave={() => setHoverCoords(null)}
           >
-            {/* SVG Defs */}
-            <defs>
-              <filter id="marker-glow" x="-50%" y="-50%" width="200%" height="200%">
-                <feGaussianBlur stdDeviation="4" result="blur" />
-                <feMerge>
-                  <feMergeNode in="blur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-              <radialGradient id="map-vignette" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stopColor="transparent" />
-                <stop offset="100%" stopColor="#030712" stopOpacity="0.4" />
-              </radialGradient>
-              {/* Scanline effect */}
-              <pattern id="scanlines" patternUnits="userSpaceOnUse" width="100" height="2">
-                <line x1="0" y1="0" x2="100" y2="0" stroke="#7c3aed" strokeWidth="0.15" opacity="0.03" />
-              </pattern>
-            </defs>
+            {/* Map image */}
+            <img
+              src="/maps/los-santos.jpg"
+              alt="Mapa real de Los Santos - GTA V"
+              className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
+              draggable={false}
+            />
 
-            {/* Background layers */}
-            <rect x="0" y="0" width="100" height="100" fill="#0f172a" />
+            {/* Subtle dark overlay so markers pop */}
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{ background: 'linear-gradient(180deg, rgba(3,7,18,0.15) 0%, rgba(3,7,18,0.35) 100%)' }}
+            />
 
-            {/* Grid */}
-            <CyberpunkGrid />
-
-            {/* Water */}
-            <WaterAreas />
-
-            {/* Roads */}
-            <MajorRoads />
-
-            {/* Buildings */}
-            <BuildingBlocks />
-
-            {/* Scanlines overlay */}
-            <rect x="0" y="0" width="100" height="100" fill="url(#scanlines)" />
+            {/* Scanline overlay (subtle, for theme consistency) */}
+            <div
+              className="absolute inset-0 pointer-events-none opacity-30"
+              style={{
+                backgroundImage: 'repeating-linear-gradient(0deg, rgba(124,58,237,0.04) 0px, rgba(124,58,237,0.04) 1px, transparent 1px, transparent 3px)',
+              }}
+            />
 
             {/* Vignette */}
-            <rect x="0" y="0" width="100" height="100" fill="url(#map-vignette)" />
+            <div
+              className="absolute inset-0 pointer-events-none"
+              style={{ boxShadow: 'inset 0 0 80px rgba(3,7,18,0.6)' }}
+            />
+
+            {/* Edit mode crosshair cursor overlay */}
+            {editMode && (
+              <div
+                className="absolute inset-0 pointer-events-none z-20"
+                style={{
+                  cursor: 'crosshair',
+                  backgroundColor: 'rgba(124,58,237,0.05)',
+                  border: '2px dashed rgba(124,58,237,0.4)',
+                }}
+              />
+            )}
+
+            {/* Edit mode coordinate readout */}
+            {editMode && hoverCoords && (
+              <div className="absolute top-4 left-4 z-30 px-3 py-2 rounded-lg bg-[#0f172a]/95 border border-[#7c3aed]/50 font-mono text-xs text-[#a78bfa] pointer-events-none">
+                <div className="flex items-center gap-2 mb-1">
+                  <CrosshairIcon className="w-3 h-3" />
+                  <span className="text-[#7c3aed] font-bold">MODO EDICIÓN</span>
+                </div>
+                <div>x: {hoverCoords.x.toFixed(1)}%</div>
+                <div>y: {hoverCoords.y.toFixed(1)}%</div>
+                <div className="mt-1 text-[10px] text-[#64748b]">
+                  Click para fijar · usa estos valores en CityMap.tsx
+                </div>
+              </div>
+            )}
 
             {/* Location Markers */}
             {locations.map((location) => (
@@ -780,7 +669,13 @@ export default function CityMap() {
                 visible={isLocationVisible(location)}
               />
             ))}
-          </svg>
+
+            {/* Details Panel */}
+            <DetailsPanel
+              location={selectedLocation}
+              onClose={() => setSelectedLocation(null)}
+            />
+          </div>
 
           {/* Map border glow animation */}
           <motion.div
@@ -801,21 +696,34 @@ export default function CityMap() {
           <div className="absolute bottom-3 left-3 w-6 h-6 border-b-2 border-l-2 border-[#7c3aed]/40 rounded-bl-sm pointer-events-none" />
           <div className="absolute bottom-3 right-3 w-6 h-6 border-b-2 border-r-2 border-[#7c3aed]/40 rounded-br-sm pointer-events-none" />
 
-          {/* Map label */}
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2 text-[#64748b] text-xs pointer-events-none">
+          {/* Map label + Edit toggle */}
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-3 pointer-events-none">
             <div className="w-1.5 h-1.5 rounded-full bg-[#7c3aed]" style={{ boxShadow: '0 0 4px #7c3aed' }} />
-            <span className="tracking-widest uppercase font-mono">Los Santos City Map</span>
+            <span className="tracking-widest uppercase font-mono text-[#64748b] text-xs">
+              Los Santos · GTA V Real Map
+            </span>
             <div className="w-1.5 h-1.5 rounded-full bg-[#7c3aed]" style={{ boxShadow: '0 0 4px #7c3aed' }} />
           </div>
 
-          {/* Details Panel */}
-          <DetailsPanel
-            location={selectedLocation}
-            onClose={() => setSelectedLocation(null)}
-          />
+          {/* Edit mode toggle — subtle, in top-right corner */}
+          <button
+            onClick={() => {
+              setEditMode((v) => !v)
+              setHoverCoords(null)
+            }}
+            className="absolute top-3 right-3 z-40 px-2 py-1 rounded-md text-[10px] font-mono uppercase tracking-wider transition-all"
+            style={{
+              backgroundColor: editMode ? 'rgba(124,58,237,0.3)' : 'rgba(15,23,42,0.7)',
+              color: editMode ? '#a78bfa' : '#475569',
+              border: `1px solid ${editMode ? 'rgba(124,58,237,0.6)' : 'rgba(71,85,105,0.3)'}`,
+            }}
+            title="Activar modo edición para ver coordenadas"
+          >
+            {editMode ? '◉ Edit ON' : '◌ Edit'}
+          </button>
         </motion.div>
 
-        {/* Location Quick List (below map on mobile) */}
+        {/* Location Quick List (below map) */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -863,6 +771,29 @@ export default function CityMap() {
             })}
           </div>
         </motion.div>
+
+        {/* Edit mode help text */}
+        <AnimatePresence>
+          {editMode && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              className="mt-4 p-4 rounded-xl bg-[#7c3aed]/10 border border-[#7c3aed]/30"
+            >
+              <p className="text-sm text-[#a78bfa] flex items-start gap-2">
+                <CrosshairIcon className="w-4 h-4 mt-0.5 shrink-0" />
+                <span>
+                  <strong className="text-[#c4b5fd]">Modo edición activo:</strong> mueve el ratón
+                  sobre el mapa para ver las coordenadas <code className="px-1 py-0.5 rounded bg-[#0f172a] text-[#a78bfa]">x</code>/<code className="px-1 py-0.5 rounded bg-[#0f172a] text-[#a78bfa]">y</code> en porcentaje.
+                  Usa estos valores en el array <code className="px-1 py-0.5 rounded bg-[#0f172a] text-[#a78bfa]">locations</code> de
+                  <code className="px-1 py-0.5 rounded bg-[#0f172a] text-[#a78bfa]">src/components/sections/CityMap.tsx</code> para
+                  colocar nuevos negocios con precisión sobre el mapa real.
+                </span>
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </section>
   )
