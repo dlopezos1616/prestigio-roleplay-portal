@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import {
   Tabs, TabsList, TabsTrigger, TabsContent,
 } from '@/components/ui/tabs'
@@ -20,8 +20,9 @@ import {
 import {
   Inbox, ClipboardList, Activity, Bell,
   CheckCircle2, XCircle, Clock, Eye,
-  Plus, Trash2, BellOff,
+  Plus, Trash2, BellOff, Pencil, Check, X, Copy,
 } from 'lucide-react'
+import { useSession } from '@/hooks/useSession'
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -109,9 +110,119 @@ function todayStr() {
 }
 
 /* ------------------------------------------------------------------ */
+/*  Inline Editable Cell (Excel-style)                                 */
+/* ------------------------------------------------------------------ */
+function EditableCell({
+  value,
+  onSave,
+  placeholder = '—',
+  multiline = false,
+  className = '',
+}: {
+  value: string
+  onSave: (val: string) => void
+  placeholder?: string
+  multiline?: boolean
+  className?: string
+}) {
+  const [editing, setEditing] = useState(false)
+  const [draft, setDraft] = useState(value)
+  const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null)
+
+  useEffect(() => {
+    if (editing && inputRef.current) {
+      inputRef.current.focus()
+      inputRef.current.select?.()
+    }
+  }, [editing])
+
+  function startEdit() {
+    setDraft(value)
+    setEditing(true)
+  }
+
+  function save() {
+    const trimmed = draft.trim()
+    if (trimmed !== value) {
+      onSave(trimmed)
+    }
+    setEditing(false)
+  }
+
+  function cancel() {
+    setDraft(value)
+    setEditing(false)
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.key === 'Enter' && !multiline) {
+      e.preventDefault()
+      save()
+    } else if (e.key === 'Enter' && multiline && e.ctrlKey) {
+      e.preventDefault()
+      save()
+    } else if (e.key === 'Escape') {
+      e.preventDefault()
+      cancel()
+    }
+  }
+
+  if (editing) {
+    return (
+      <div className="flex items-start gap-1">
+        {multiline ? (
+          <textarea
+            ref={inputRef as React.RefObject<HTMLTextAreaElement>}
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            onKeyDown={handleKeyDown}
+            onBlur={save}
+            className="w-full bg-[#030712] border border-[#7c3aed] rounded px-2 py-1 text-white text-xs outline-none focus:shadow-[0_0_8px_rgba(124,58,237,0.3)] resize-y min-h-[60px]"
+          />
+        ) : (
+          <input
+            ref={inputRef as React.RefObject<HTMLInputElement>}
+            type="text"
+            value={draft}
+            onChange={(e) => setDraft(e.target.value)}
+            onKeyDown={handleKeyDown}
+            onBlur={save}
+            className="w-full bg-[#030712] border border-[#7c3aed] rounded px-2 py-1 text-white text-xs outline-none focus:shadow-[0_0_8px_rgba(124,58,237,0.3)]"
+          />
+        )}
+        <div className="flex flex-col gap-0.5 shrink-0">
+          <button onClick={save} className="text-green-400 hover:text-green-300 p-0.5" title="Guardar (Enter)">
+            <Check className="size-3" />
+          </button>
+          <button onClick={cancel} className="text-red-400 hover:text-red-300 p-0.5" title="Cancelar (Esc)">
+            <X className="size-3" />
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div
+      onClick={startEdit}
+      className={`cursor-text rounded px-1.5 py-0.5 hover:bg-[rgba(124,58,237,0.1)] hover:shadow-[inset_0_0_0_1px_rgba(124,58,237,0.3)] transition-all group/edit ${className}`}
+      title="Click para editar"
+    >
+      <span className={value ? 'text-white' : 'text-gray-600'}>
+        {value || <span className="italic text-gray-600">{placeholder}</span>}
+      </span>
+      <Pencil className="inline-block ml-1 size-3 opacity-0 group-hover/edit:opacity-50 transition-opacity" />
+    </div>
+  )
+}
+
+/* ------------------------------------------------------------------ */
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
 export default function StaffPanel() {
+  const user = useSession((s) => s.user)
+  const [notifUserId, setNotifUserId] = useState('demo-user')
+
   /* ---- Whitelist state ---- */
   const [apps, setApps] = useState<WhitelistApp[]>([])
   const [wlFilter, setWlFilter] = useState<string>('ALL')
@@ -131,7 +242,13 @@ export default function StaffPanel() {
 
   /* ---- Notifications state ---- */
   const [notifications, setNotifications] = useState<Notification[]>([])
-  const [notifUserId] = useState('demo-user')
+
+  // Use the actual logged-in user's ID for notifications and reviewer
+  useEffect(() => {
+    if (user?.dbId) {
+      setNotifUserId(user.dbId)
+    }
+  }, [user?.dbId])
 
   /* ---- Fetchers ---- */
   const fetchApps = useCallback(async () => {
@@ -164,7 +281,11 @@ export default function StaffPanel() {
   async function handleReview(appId: string, status: 'APPROVED' | 'REJECTED') {
     setActionLoading(true)
     try {
-      const body: Record<string, unknown> = { status, reviewerId: 'staff-user' }
+      const body: Record<string, unknown> = {
+        status,
+        reviewerId: user?.dbId || 'unknown-staff',
+        reviewedAt: new Date().toISOString(),
+      }
       if (status === 'REJECTED' && rejectReason) body.rejectReason = rejectReason
       await fetch(`/api/whitelist/${appId}`, {
         method: 'PATCH',
@@ -203,6 +324,20 @@ export default function StaffPanel() {
 
   async function deleteTask(id: string) {
     await fetch(`/api/tasks/${id}`, { method: 'DELETE' })
+    fetchTasks()
+  }
+
+  async function duplicateTask(task: Task) {
+    await fetch('/api/tasks', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title: `${task.title} (copia)`,
+        priority: task.priority,
+        notes: task.notes || '',
+        date: taskDate,
+      }),
+    })
     fetchTasks()
   }
 
@@ -407,6 +542,9 @@ export default function StaffPanel() {
             <Button size="sm" className="neon-glow" onClick={() => setShowTaskForm(true)}>
               <Plus className="size-4 mr-1" /> Nueva Tarea
             </Button>
+            <span className="text-xs text-gray-500 ml-auto hidden sm:inline">
+              💡 Click en cualquier celda para editar · Enter para guardar · Esc para cancelar
+            </span>
           </div>
 
           {showTaskForm && (
@@ -466,7 +604,13 @@ export default function StaffPanel() {
                 )}
                 {tasks.map((task) => (
                   <TableRow key={task.id} className="border-[rgba(124,58,237,0.15)] hover:bg-[rgba(124,58,237,0.05)]">
-                    <TableCell className="font-medium text-white">{task.title}</TableCell>
+                    <TableCell className="font-medium text-white min-w-[180px]">
+                      <EditableCell
+                        value={task.title}
+                        onSave={(val) => updateTask(task.id, { title: val })}
+                        placeholder="Sin título"
+                      />
+                    </TableCell>
                     <TableCell className="text-gray-400 text-sm">
                       {task.assignee?.username || '—'}
                     </TableCell>
@@ -475,7 +619,7 @@ export default function StaffPanel() {
                         value={task.priority}
                         onValueChange={(v) => updateTask(task.id, { priority: v as Task['priority'] })}
                       >
-                        <SelectTrigger className="h-7 w-24 text-xs bg-transparent border-0 p-0">
+                        <SelectTrigger className="h-7 w-24 text-xs bg-transparent border-0 p-0 hover:bg-[rgba(124,58,237,0.1)] rounded">
                           <Badge className={`${priorityColor[task.priority]} border text-[10px]`}>
                             {task.priority}
                           </Badge>
@@ -492,7 +636,7 @@ export default function StaffPanel() {
                         value={task.status}
                         onValueChange={(v) => updateTask(task.id, { status: v as Task['status'] })}
                       >
-                        <SelectTrigger className="h-7 w-28 text-xs bg-transparent border-0 p-0">
+                        <SelectTrigger className="h-7 w-28 text-xs bg-transparent border-0 p-0 hover:bg-[rgba(124,58,237,0.1)] rounded">
                           <Badge className={`${taskStatusColor[task.status]} border text-[10px]`}>
                             {task.status}
                           </Badge>
@@ -504,13 +648,35 @@ export default function StaffPanel() {
                         </SelectContent>
                       </Select>
                     </TableCell>
-                    <TableCell className="text-gray-500 text-xs max-w-[140px] truncate">
-                      {task.notes || '—'}
+                    <TableCell className="text-gray-500 text-xs min-w-[200px] max-w-[280px]">
+                      <EditableCell
+                        value={task.notes || ''}
+                        onSave={(val) => updateTask(task.id, { notes: val })}
+                        placeholder="Añadir notas..."
+                        multiline
+                      />
                     </TableCell>
                     <TableCell>
-                      <Button size="icon" variant="ghost" className="text-red-400 hover:text-red-300" onClick={() => deleteTask(task.id)}>
-                        <Trash2 className="size-4" />
-                      </Button>
+                      <div className="flex items-center gap-0.5">
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="text-cyan-400 hover:text-cyan-300 h-7 w-7"
+                          onClick={() => duplicateTask(task)}
+                          title="Duplicar tarea"
+                        >
+                          <Copy className="size-3.5" />
+                        </Button>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="text-red-400 hover:text-red-300 h-7 w-7"
+                          onClick={() => deleteTask(task.id)}
+                          title="Eliminar tarea"
+                        >
+                          <Trash2 className="size-3.5" />
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}

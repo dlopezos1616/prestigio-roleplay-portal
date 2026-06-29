@@ -4,6 +4,23 @@ import { db } from "@/lib/db"
 
 const isProd = process.env.NODE_ENV === "production"
 
+/**
+ * Discord IDs that should be auto-promoted to ADMIN on login.
+ * Set in .env as a comma-separated list:
+ *   ADMIN_DISCORD_IDS=123456789,987654321
+ *
+ * You can find your Discord ID by enabling Developer Mode in Discord
+ * (User Settings → Advanced → Developer Mode), then right-click your
+ * name → Copy User ID.
+ */
+function getAdminDiscordIds(): string[] {
+  const raw = process.env.ADMIN_DISCORD_IDS || ""
+  return raw
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean)
+}
+
 export const authOptions: NextAuthOptions = {
   providers: [
     DiscordProvider({
@@ -15,10 +32,9 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
-  // Minimal, well-tested cookie config. In production, NextAuth prefixes
-  // cookies with __Secure- automatically when secure:true is set.
-  // We use the sameSite:'lax' default which is the safest cross-site setting
-  // that still allows the OAuth callback redirect to set the cookie.
+  // In production, NextAuth prefixes cookies with __Secure- when secure:true.
+  // sameSite:'lax' is the safest setting that still allows the OAuth callback
+  // redirect to set the cookie.
   cookies: {
     sessionToken: {
       name: isProd ? `__Secure-next-auth.session-token` : `next-auth.session-token`,
@@ -34,7 +50,21 @@ export const authOptions: NextAuthOptions = {
     async signIn({ user, account }) {
       if (account?.provider === "discord" && account.access_token) {
         try {
-          // user.id is the Discord user ID returned by the Discord provider
+          // Check if this Discord ID is in the ADMIN_DISCORD_IDS env var
+          const adminIds = getAdminDiscordIds()
+          const shouldBeAdmin = adminIds.includes(user.id)
+
+          // Find existing user to preserve their current role
+          const existing = await db.user.findUnique({
+            where: { discordId: user.id },
+            select: { role: true },
+          })
+
+          // Determine role: env override > existing DB role > default USER
+          const role = shouldBeAdmin
+            ? "ADMIN"
+            : existing?.role || "USER"
+
           await db.user.upsert({
             where: { discordId: user.id },
             update: {
@@ -42,6 +72,8 @@ export const authOptions: NextAuthOptions = {
               avatar: user.image || null,
               accessToken: account.access_token,
               refreshToken: account.refresh_token || null,
+              // Promote to ADMIN if listed in env (never demote existing admins)
+              ...(shouldBeAdmin ? { role: "ADMIN" } : {}),
             },
             create: {
               discordId: user.id,
@@ -49,40 +81,58 @@ export const authOptions: NextAuthOptions = {
               avatar: user.image || null,
               accessToken: account.access_token,
               refreshToken: account.refresh_token || null,
+              role,
             },
           })
         } catch (e) {
-          // Log clearly so it shows in Vercel function logs
           console.error("[auth] signIn: failed to upsert user in DB:", {
             discordId: user.id,
             error: e instanceof Error ? e.message : String(e),
           })
-          // IMPORTANT: do not block sign-in if DB write fails — JWT still works,
-          // the user can still be authenticated via the JWT token alone.
+          // Don't block sign-in if DB write fails — JWT still works
         }
       }
       return true
     },
+
+    /**
+     * JWT callback — runs on sign-in and every session read.
+     * Fetches the role from DB so admin role changes are reflected.
+     *
+     * NOTE: In JWT strategy, `user` is only present on the FIRST call
+     * (right after sign-in). Subsequent calls only have `token`.
+     * We use `token.sub` (the Discord ID) for subsequent lookups.
+     */
     async jwt({ token, account, user }) {
-      // Cast to a mutable record so we can assign custom fields without TS
-      // trying to interpret them as methods on the JWT type.
+      // Cast to mutable record to assign custom fields without TS
+      // interpreting them as methods on the JWT type (which caused
+      // "t.role is not a function" at runtime).
       const t = token as Record<string, unknown>
 
-      // On first sign-in: account & user are populated. Persist Discord id + tokens.
+      // First sign-in: persist Discord ID + access tokens
       if (account && user) {
         t.discordId = user.id
         t.accessToken = account.access_token
         t.refreshToken = account.refresh_token
       }
-      // Always refresh role/dbId from DB so role changes by admins are reflected
-      if (t.discordId) {
+
+      // Always refresh role/dbId from DB so role changes by admins
+      // are reflected on the next API call
+      const discordId = (t.discordId as string) || token.sub
+      if (discordId) {
         try {
-          const dbUser = await db.user.findUnique({ where: { discordId: t.discordId as string } })
+          const dbUser = await db.user.findUnique({
+            where: { discordId },
+            select: { id: true, role: true, discordId: true },
+          })
           if (dbUser) {
-            t.role = dbUser.role
+            // Check env override for admin promotion
+            const adminIds = getAdminDiscordIds()
+            const isAdmin = adminIds.includes(discordId)
+            t.role = isAdmin ? "ADMIN" : dbUser.role
             t.dbId = dbUser.id
+            t.discordId = dbUser.discordId
           } else {
-            // User not in DB yet (e.g., tables were just created) — default role
             t.role = "USER"
           }
         } catch (e) {
@@ -90,16 +140,21 @@ export const authOptions: NextAuthOptions = {
           t.role = "USER"
         }
       }
+
       return token
     },
+
+    /**
+     * Session callback — attaches role/discordId/dbId from the token
+     * to session.user so the client can use them.
+     *
+     * NOTE: In JWT strategy, the second argument is `token`, NOT `user`.
+     */
     async session({ session, token }) {
-      // In JWT mode the second arg is `token`, NOT `user`.
-      // Cast both sides to plain records to avoid TS interpreting custom fields
-      // as methods (which caused "t.role is not a function" at runtime).
       const t = token as Record<string, unknown>
       const u = session.user as Record<string, unknown> | undefined
       if (u && t) {
-        u.role = t.role
+        u.role = t.role || "USER"
         u.discordId = t.discordId
         u.dbId = t.dbId
         u.id = t.discordId

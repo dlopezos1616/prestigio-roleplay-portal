@@ -1,30 +1,26 @@
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { NextResponse } from "next/server"
-import { db } from "@/lib/db"
 
 export async function GET() {
   const session = await getServerSession(authOptions)
-  if (!session) {
+
+  if (!session || !session.user) {
     return NextResponse.json({ user: null })
   }
 
-  // Try to find the user by Discord ID from the session
-  const sessionUser = session.user as Record<string, unknown> | undefined
-  const discordId = (sessionUser?.id as string) || session.user?.email || ""
-
-  const dbUser = await db.user.findUnique({
-    where: { discordId },
-  })
+  // The session callback in auth.ts already attaches role/discordId/dbId
+  // to session.user via the JWT token. No extra DB lookup needed here.
+  const su = session.user as Record<string, unknown>
 
   return NextResponse.json({
-    user: session.user
-      ? {
-          ...session.user,
-          role: dbUser?.role || "USER",
-          discordId: dbUser?.discordId,
-          dbId: dbUser?.id,
-        }
-      : null,
+    user: {
+      name: su.name || null,
+      email: su.email || null,
+      image: su.image || null,
+      role: su.role || "USER",
+      discordId: su.discordId || null,
+      dbId: su.dbId || null,
+    },
   })
 }
