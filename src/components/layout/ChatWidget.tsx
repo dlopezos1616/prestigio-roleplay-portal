@@ -33,12 +33,8 @@ const QUICK_ACTIONS = [
   { label: 'Contactar Staff', keyword: 'staff', icon: Headphones },
 ]
 
-const INITIAL_GREETING: ChatMessage = {
-  id: 'greeting',
-  sender: 'bot',
-  text: '¡Hola! 👋 Soy el asistente de Prestigio RP. ¿En qué puedo ayudarte?',
-  timestamp: new Date(),
-}
+const INITIAL_GREETING_TEXT =
+  '¡Hola! 👋 Soy el asistente de Prestigio RP. ¿En qué puedo ayudarte?'
 
 function getTimestamp(date: Date): string {
   return date.toLocaleTimeString('es-ES', {
@@ -59,11 +55,24 @@ function findFallbackResponse(text: string): string {
 
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false)
-  const [messages, setMessages] = useState<ChatMessage[]>([INITIAL_GREETING])
+  // Create greeting on mount (client-only) to avoid SSR Date mismatch
+  const [messages, setMessages] = useState<ChatMessage[]>([])
   const [inputValue, setInputValue] = useState('')
   const [isTyping, setIsTyping] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  // Inject greeting after mount so the timestamp is client-side only
+  useEffect(() => {
+    setMessages([
+      {
+        id: 'greeting',
+        sender: 'bot',
+        text: INITIAL_GREETING_TEXT,
+        timestamp: new Date(),
+      },
+    ])
+  }, [])
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })

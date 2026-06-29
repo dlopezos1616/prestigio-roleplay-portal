@@ -1,48 +1,85 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useSyncExternalStore, useCallback } from 'react'
 import { Music, Volume2, VolumeX } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
+const MUSIC_KEY = 'prestigio-music'
+const MUSIC_EVENT = 'prestigio-music-change'
+
+interface SavedMusicPrefs {
+  muted: boolean
+  volume: number
+}
+
+const DEFAULT_PREFS: SavedMusicPrefs = { muted: false, volume: 0.08 }
+
+function getStoredPrefs(): SavedMusicPrefs {
+  if (typeof window === 'undefined') return DEFAULT_PREFS
+  try {
+    const saved = localStorage.getItem(MUSIC_KEY)
+    if (saved) {
+      const parsed = JSON.parse(saved)
+      return {
+        muted: parsed.muted || false,
+        volume: parsed.volume || 0.08,
+      }
+    }
+  } catch {
+    /* ignore */
+  }
+  return DEFAULT_PREFS
+}
+
+function savePrefs(prefs: SavedMusicPrefs) {
+  if (typeof window === 'undefined') return
+  localStorage.setItem(MUSIC_KEY, JSON.stringify(prefs))
+  window.dispatchEvent(new Event(MUSIC_EVENT))
+}
+
+function subscribeMusic(callback: () => void) {
+  window.addEventListener('storage', callback)
+  window.addEventListener(MUSIC_EVENT, callback)
+  return () => {
+    window.removeEventListener('storage', callback)
+    window.removeEventListener(MUSIC_EVENT, callback)
+  }
+}
+
+/**
+ * useSyncExternalStore: SSR-safe read of localStorage music prefs.
+ * Server snapshot returns defaults; client snapshot reads actual stored values.
+ * This prevents hydration mismatch without setState-in-effect.
+ */
+function useStoredMusicPrefs(): SavedMusicPrefs {
+  return useSyncExternalStore(
+    subscribeMusic,
+    () => getStoredPrefs(),
+    () => DEFAULT_PREFS
+  )
+}
+
 export default function AudioPlayer() {
   const [isPlaying, setIsPlaying] = useState(false)
-  const [isMuted, setIsMuted] = useState(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const saved = localStorage.getItem('prestigio-music')
-        if (saved) return JSON.parse(saved).muted || false
-      } catch { /* ignore */ }
-    }
-    return false
-  })
-  const [volume, setVolume] = useState(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const saved = localStorage.getItem('prestigio-music')
-        if (saved) return JSON.parse(saved).volume || 0.08
-      } catch { /* ignore */ }
-    }
-    return 0.08
-  })
   const [hasInteracted, setHasInteracted] = useState(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
-  useEffect(() => {
-    // Save state to localStorage
-    localStorage.setItem(
-      'prestigio-music',
-      JSON.stringify({ volume, muted: isMuted })
-    )
-  }, [volume, isMuted])
+  // Read muted/volume directly from the store (no local state sync needed)
+  const { muted: isMuted, volume } = useStoredMusicPrefs()
 
-  const togglePlay = () => {
+  // Apply volume changes to the audio element (external system sync — allowed in effect)
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = isMuted ? 0 : volume
+    }
+  }, [isMuted, volume])
+
+  const togglePlay = useCallback(() => {
     if (!hasInteracted) {
       setHasInteracted(true)
     }
 
     if (!audioRef.current) {
-      // Create audio element with an ambient sound
-      // We use a royalty-free ambient track URL
       const audio = new Audio(
         'https://cdn.pixabay.com/audio/2022/02/22/audio_d1718ab41b.mp3'
       )
@@ -60,14 +97,11 @@ export default function AudioPlayer() {
       })
       setIsPlaying(true)
     }
-  }
+  }, [hasInteracted, isPlaying, isMuted, volume])
 
-  const toggleMute = () => {
-    if (audioRef.current) {
-      audioRef.current.volume = isMuted ? volume : 0
-    }
-    setIsMuted(!isMuted)
-  }
+  const toggleMute = useCallback(() => {
+    savePrefs({ volume, muted: !isMuted })
+  }, [volume, isMuted])
 
   return (
     <motion.div

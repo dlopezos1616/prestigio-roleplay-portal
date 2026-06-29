@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useSyncExternalStore } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Shield, Cookie, Settings, X } from 'lucide-react'
+import { Shield, Cookie, Settings } from 'lucide-react'
 
 const STORAGE_KEY = 'prestigio-cookie-consent'
+const CONSENT_EVENT = 'prestigio-consent-change'
 
 interface CookiePreferences {
   essential: boolean
@@ -14,6 +15,10 @@ interface CookiePreferences {
 
 type ConsentState = 'accepted' | 'rejected' | 'custom' | null
 
+// Module-level constants — useSyncExternalStore requires stable references
+// for getServerSnapshot to avoid infinite loops.
+const DEFAULT_PREFS: CookiePreferences = { essential: true, analytics: false, marketing: false }
+
 function getStoredConsent(): ConsentState {
   if (typeof window === 'undefined') return null
   return localStorage.getItem(STORAGE_KEY) as ConsentState
@@ -21,7 +26,7 @@ function getStoredConsent(): ConsentState {
 
 function getStoredPreferences(): CookiePreferences {
   if (typeof window === 'undefined') {
-    return { essential: true, analytics: false, marketing: false }
+    return DEFAULT_PREFS
   }
   try {
     const raw = localStorage.getItem(`${STORAGE_KEY}-prefs`)
@@ -29,7 +34,7 @@ function getStoredPreferences(): CookiePreferences {
   } catch {
     // ignore parse errors
   }
-  return { essential: true, analytics: false, marketing: false }
+  return DEFAULT_PREFS
 }
 
 function saveConsent(state: ConsentState, prefs?: CookiePreferences) {
@@ -38,46 +43,90 @@ function saveConsent(state: ConsentState, prefs?: CookiePreferences) {
   if (prefs) {
     localStorage.setItem(`${STORAGE_KEY}-prefs`, JSON.stringify(prefs))
   }
+  // Notify same-window subscribers that the store changed
+  window.dispatchEvent(new Event(CONSENT_EVENT))
+}
+
+/**
+ * useSyncExternalStore is the React 19 recommended way to read external stores
+ * (like localStorage) in SSR components. The server snapshot always returns
+ * `null`/`false`, matching the initial client render and preventing hydration
+ * mismatches. After hydration, React re-reads the client snapshot.
+ */
+function subscribeConsent(callback: () => void) {
+  window.addEventListener('storage', callback)
+  window.addEventListener(CONSENT_EVENT, callback)
+  return () => {
+    window.removeEventListener('storage', callback)
+    window.removeEventListener(CONSENT_EVENT, callback)
+  }
+}
+
+const noopSubscribe = () => () => {}
+
+function useMounted() {
+  return useSyncExternalStore(
+    noopSubscribe,
+    () => true, // client snapshot
+    () => false // server snapshot
+  )
+}
+
+function useStoredConsent() {
+  return useSyncExternalStore(
+    subscribeConsent,
+    () => getStoredConsent(), // client snapshot
+    () => null // server snapshot — always null to match SSR
+  )
+}
+
+function useStoredPreferences() {
+  return useSyncExternalStore(
+    subscribeConsent,
+    () => getStoredPreferences(), // client snapshot
+    () => DEFAULT_PREFS // server snapshot — stable reference to avoid infinite loop
+  )
 }
 
 export default function CookieConsent() {
-  // Lazy initialization to avoid SSR mismatch
-  const [consentState, setConsentState] = useState<ConsentState>(() =>
-    typeof window !== 'undefined' ? getStoredConsent() : null
-  )
+  // SSR-safe: useSyncExternalStore returns the server snapshot during SSR and
+  // the first client render (matching), then switches to the client snapshot.
+  const mounted = useMounted()
+  const storedConsent = useStoredConsent()
+  const storedPrefs = useStoredPreferences()
   const [showPreferences, setShowPreferences] = useState(false)
-  const [preferences, setPreferences] = useState<CookiePreferences>(() =>
-    typeof window !== 'undefined' ? getStoredPreferences() : { essential: true, analytics: false, marketing: false }
-  )
+  // Local overrides for the preferences panel toggles (merged over stored values)
+  const [localOverrides, setLocalOverrides] = useState<Partial<CookiePreferences>>({})
 
-  const visible = consentState === null
+  // Derived preferences: stored values + any local toggle overrides
+  const preferences: CookiePreferences = { ...storedPrefs, ...localOverrides }
+
+  // Only show banner after mount AND when no consent has been given yet
+  const visible = mounted && storedConsent === null
 
   const handleAcceptAll = useCallback(() => {
     const allAccepted: CookiePreferences = { essential: true, analytics: true, marketing: true }
-    setPreferences(allAccepted)
-    setConsentState('accepted')
+    setLocalOverrides(allAccepted)
     saveConsent('accepted', allAccepted)
     setShowPreferences(false)
   }, [])
 
   const handleRejectAll = useCallback(() => {
     const onlyEssential: CookiePreferences = { essential: true, analytics: false, marketing: false }
-    setPreferences(onlyEssential)
-    setConsentState('rejected')
+    setLocalOverrides(onlyEssential)
     saveConsent('rejected', onlyEssential)
     setShowPreferences(false)
   }, [])
 
   const handleSavePreferences = useCallback(() => {
-    setConsentState('custom')
     saveConsent('custom', preferences)
     setShowPreferences(false)
   }, [preferences])
 
   const togglePreference = useCallback((key: keyof CookiePreferences) => {
     if (key === 'essential') return // essential is always on
-    setPreferences((prev) => ({ ...prev, [key]: !prev[key] }))
-  }, [])
+    setLocalOverrides((prev) => ({ ...prev, [key]: !preferences[key] }))
+  }, [preferences])
 
   return (
     <AnimatePresence>
